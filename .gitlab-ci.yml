@@ -26,20 +26,17 @@ stages:          # List of stages for jobs, and their order of execution
 build-job:       # This job runs in the build stage, which runs first.
   stage: build
   tags:
-    - docker-build
+    - docker
   script:
-    - rm -rf node_modules/
     - apk update && apk add nodejs
-    - rm -rf node_modules/
     - cd client
     # - rm -rf node_modules/ # test not work
     - npm install
-    - rm -rf node_modules/
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   tags:
-    - docker-build
+    - docker
   script:
     - cd client
     - npm run serve
@@ -54,7 +51,7 @@ deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
   environment: production
   tags:
-    - docker-build
+    - docker
   script:
     - echo "Deploying application..."
     - echo "Application successfully deployed."
