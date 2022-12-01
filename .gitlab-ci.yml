@@ -33,10 +33,15 @@ build-job:       # This job runs in the build stage, which runs first.
     # - rm -rf node_modules/ # test not work
     - npm install
 
-unit-test-job:   # This job runs in the test stage.
+test:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   tags:
     - docker
+  services:
+    - name: mvertes/alpine-mongo:latest
+      alias: mongo
+  variables:
+    MONGODB_URI: "mongodb://mongo:27017/serverTestDB"
   script:
     - cd client
     - npm run serve
