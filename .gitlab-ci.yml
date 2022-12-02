@@ -38,9 +38,8 @@ unit-test-job:   # This job runs in the test stage.
   tags:
     - docker
   script:
-    - rm -rf node_modules
     - cd client
-    # - rm -rf node_modules
+    # - rm -rf node_modules # If added becomes not found instead of permission denied
     - npm run serve
 
 
