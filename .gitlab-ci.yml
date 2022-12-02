@@ -38,9 +38,9 @@ unit-test-job:   # This job runs in the test stage.
   tags:
     - docker
   script:
-    # - rm -rf node_modules
-    - cd client
     - rm -rf node_modules
+    - cd client
+    # - rm -rf node_modules
     - npm run serve
 
 
