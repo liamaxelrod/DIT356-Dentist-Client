@@ -23,23 +23,20 @@ stages:          # List of stages for jobs, and their order of execution
   - install
   - build
 
-install-job:       # This job runs in the build stage, which runs first.
+install-job:       # This job runs in the install stage, which runs first.
   stage: install
   tags:
     - docker
   script:
     - apk update && apk add nodejs
     - cd client
-    # - rm -rf node_modules/ # test this it did not work
     - npm install
-    # - chmod -R a+x node_modules
 
-build-job:   # This job runs in the test stage.
-  stage: build    # It only starts when the job in the build stage completes successfully.
+build-job:   # This job runs in the build stage.
+  stage: build    # It only starts when the job in the install stage completes successfully.
   tags:
     - docker
   script:
-    # - apk update && apk add nodejs
     - cd client
     - npm install
     - chmod -R a+x node_modules
