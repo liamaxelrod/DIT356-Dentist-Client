@@ -74,7 +74,7 @@ cache:
 build site:
   stage: build
   script:
-    - npm install --progress=false
+    - npm install #--progress=false
     - npm run build
 
 unit test:
