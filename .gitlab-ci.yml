@@ -43,7 +43,7 @@ build-job:   # This job runs in the test stage.
     # - apk update && apk add nodejs
     - cd client
     - npm install
-    # - chmod -R a+x node_modules
+    - chmod -R a+x node_modules
     - npm run build
 
 
