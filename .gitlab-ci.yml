@@ -30,7 +30,7 @@ build-job:       # This job runs in the build stage, which runs first.
   script:
     - apk update && apk add nodejs
     - cd client
-    - rm -rf node_modules/ # test this it did not work
+    # - rm -rf node_modules/ # test this it did not work
     - npm install
 
 unit-test-job:   # This job runs in the test stage.
@@ -39,7 +39,7 @@ unit-test-job:   # This job runs in the test stage.
     - docker
   script:
     - cd client
-    # - rm -rf node_modules # If added becomes not found instead of permission denied
+    - rm -rf node_modules/ # If added becomes not found instead of permission denied
     - npm run serve
 
 
