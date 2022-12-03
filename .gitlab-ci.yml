@@ -30,9 +30,9 @@ build-job:       # This job runs in the build stage, which runs first.
   script:
     - apk update && apk add nodejs
     - cd client
+    - npm install -g vue-cli
     # - rm -rf node_modules/ # test this it did not work
     - npm install
-    - rm -rf node_modules/
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
@@ -46,7 +46,10 @@ unit-test-job:   # This job runs in the test stage.
 
 # lint-test-job:   # This job also runs in the test stage.
 #   stage: test    # It can run at the same time as unit-test-job (in parallel).
+#   tags:
+#     - docker
 #   script:
+#     
 
 
 deploy-job:      # This job runs in the deploy stage.
