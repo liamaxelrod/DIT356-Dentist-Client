@@ -32,6 +32,7 @@ build-job:       # This job runs in the build stage, which runs first.
     - cd client
     # - rm -rf node_modules/ # test this it did not work
     - npm install
+    - rm -rf node_modules/
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
@@ -39,7 +40,7 @@ unit-test-job:   # This job runs in the test stage.
     - docker
   script:
     - cd client
-    - rm -rf node_modules/ # If added becomes not found instead of permission denied
+    #- rm -rf node_modules/ # If added becomes not found instead of permission denied
     - npm run serve
 
 
