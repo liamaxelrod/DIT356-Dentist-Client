@@ -15,52 +15,53 @@
 # https://docs.gitlab.com/ee/development/cicd/templates.html
 # This specific template is located at:
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
+
 default:
-  image: node:14-alpine
+    image: node:14-alpine
     
-  stages:          # List of stages for jobs, and their order of execution
-    - build
-    - test
-    - deploy
+stages:          # List of stages for jobs, and their order of execution
+  - build
+  - test
+  - deploy
 
-  build-job:       # This job runs in the build stage, which runs first.
-    stage: build
-    tags:
-      - docker
-    script:
-      - apk update && apk add nodejs
-      - cd client
-      - chmod -R a+x node_modules
-      - npm install -g vue-cli
-      # - rm -rf node_modules/ # test this it did not work
-      - npm install
+build-job:       # This job runs in the build stage, which runs first.
+  stage: build
+  tags:
+    - docker
+  script:
+    - apk update && apk add nodejs
+    - cd client
+    # - rm -rf node_modules/ # test this it did not work
+    - npm install
 
-  unit-test-job:   # This job runs in the test stage.
-    stage: test    # It only starts when the job in the build stage completes successfully.
-    tags:
-      - docker
-    script:
-      - cd client
-      #- rm -rf node_modules/ # If added becomes not found instead of permission denied
-      - npm run serve
+unit-test-job:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  tags:
+    - docker
+  # services: # test this it did not work
+  #   - name: mvertes/alpine-mongo:latest
+  #     alias: mongo
+  # variables:
+  #   MONGODB_URI: "mongodb://mongo:27017/serverTestDB"
+  script:
+    - cd client
+    - npm run serve
 
 
 # lint-test-job:   # This job also runs in the test stage.
 #   stage: test    # It can run at the same time as unit-test-job (in parallel).
-#   tags:
-#     - docker
 #   script:
-#     
 
 
-  deploy-job:      # This job runs in the deploy stage.
-    stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
-    environment: production
-    tags:
+deploy-job:      # This job runs in the deploy stage.
+  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  environment: production
+  tags:
     - docker
-    script:
+  script:
     - echo "Deploying application..."
     - echo "Application successfully deployed."
+
 
 
 # image: node:10.6.0
