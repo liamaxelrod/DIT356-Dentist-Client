@@ -1,5 +1,5 @@
 <template>
-  <div>user profile
+  <div>Dentist Profile
   </div>
 </template>
 
