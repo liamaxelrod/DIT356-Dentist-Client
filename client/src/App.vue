@@ -1,10 +1,14 @@
 <template>
   <div id="app">
+    <Logo_Dentistimo/>
     <div id="nav">
-      <router-link to="/appointments">Appointments</router-link> |
-      <router-link to="/userProfile">UserProfile</router-link>
+      <div></div>
+      <router-link class ="nav" to="/appointments">Appointments</router-link> |
+      <router-link class = "nav" to="/userProfile">Profile</router-link>
     </div>
-    <div>app</div>
+    <div>
+
+    </div>
     <div>
       <router-view v-bind:user="user"/>
     </div>
@@ -12,15 +16,26 @@
 </template>
 
 <script>
+import Logo from './components/Logo.vue'
+
 export default {
-  data() {
-    return {
-      placeholder: 'placeholder'
-    }
+  components: {
+    Logo_Dentistimo: Logo
   }
 }
 </script>
 
 <style>
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+#nav {
+  padding: 1rem 1.5rem;
+  background-color: #0092CA;
+}
 
 </style>
