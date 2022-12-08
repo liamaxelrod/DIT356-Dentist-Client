@@ -1,11 +1,18 @@
 <template>
-  <div>
-    <div>
-      <p></p> <!-- learn to move this div to the side of the page-->
-      <input v-model='textChange' placeholder="enter new ID">
-      <!-- <label> Value: {{accoountInfo.ID}} </label> -->
-      <p>Dentists ID: {{accoountInfo.ID}}</p>
-      <button id="changeIDButton" @click="changeID">changeID</button>
+  <div class="container">
+    <div class="leftSide">
+      <div>
+        <p></p>
+        <input v-model='textChange' placeholder="enter new ID">
+        <p>Dentists ID: {{accoountInfo.ID}}</p>
+        <button id="changeIDButton" @click="changeID">changeID</button>
+      </div>
+    </div>
+    <div class="rightSide">
+      <div>
+        <p>dddd
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -37,5 +44,26 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.container {
+  margin: 0 0 0 0;
+  border: 0 0 0 0;
+  padding: 0 0 0 0;
+  width: 100%;
+  height: 100%;
+}
+.leftSide {
+  position: fixed;
+  width: 25%;
+  height: 100%;
+  left: 0;
+  background-color: #80BAB2;
+}
+.rightSide {
+  position: fixed;
+  width: 75%;
+  height: 100%;
+  right: 0;
+  background-color: #ba8081;
+}
 </style>
