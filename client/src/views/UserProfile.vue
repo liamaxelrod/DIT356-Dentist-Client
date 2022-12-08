@@ -3,15 +3,29 @@
     <div class="leftSide">
       <div>
         <p></p>
-        <input v-model='textChange' placeholder="enter new ID">
         <p>Dentists ID: {{accoountInfo.ID}}</p>
-        <button id="changeIDButton" @click="changeID">changeID</button>
+        <p>password: {{accoountInfo.password}}</p>
+        <p>company: {{accoountInfo.company}}</p>
       </div>
     </div>
     <div class="rightSide">
-      <div>
-        <p>dddd
-        </p>
+      <div class="changeID">
+        <p></p>
+        <input v-model='changeIDText' placeholder="enter new ID">
+        <p></p>
+        <button id="changeIDButton" @click="changeID">changeID</button>
+      </div>
+      <div class="password">
+        <p></p>
+        <input v-model='changePasswordText' placeholder="enter new password">
+        <p></p>
+        <button id="changePassword" @click="changePassword">changeID</button>
+      </div>
+      <div class="company">
+        <p></p>
+        <input v-model='changeCompanyText' placeholder="enter new company name">
+        <p></p>
+        <button id="changeCompany" @click="changeCompany">changeID</button>
       </div>
     </div>
   </div>
@@ -21,7 +35,9 @@
 export default {
   data() {
     return {
-      textChange: '',
+      changeIDText: '',
+      changePasswordText: '',
+      changeCompanyText: '',
       accoountInfo: {
         ID: 'username',
         password: 'password',
@@ -38,7 +54,13 @@ export default {
   mounted() {},
   methods: {
     changeID() {
-      this.accoountInfo.ID = this.textChange
+      this.accoountInfo.ID = this.changeIDText
+    },
+    changePassword() {
+      this.accoountInfo.password = this.changePasswordText
+    },
+    changeCompany() {
+      this.accoountInfo.company = this.changeCompanyText
     }
   }
 }
@@ -64,6 +86,13 @@ export default {
   width: 75%;
   height: 100%;
   right: 0;
-  background-color: #ba8081;
+  /* background-color: #ba8081; */
+}
+.changeID,
+.password,
+.company {
+  float: left, center;
+  display: inline-block;
+  margin: 10px;
 }
 </style>
