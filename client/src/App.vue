@@ -11,6 +11,10 @@
         <b-nav-item href="/appointments">Appointments</b-nav-item>
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
+        <b-navbar-nav>
+          <!-- TODO! If logged in change to logout button instead -->
+            <b-nav-item href="/login">Login</b-nav-item>
+          </b-navbar-nav>
         <b-nav-item-dropdown right>
           <template #button-content>
             <em>User</em>
