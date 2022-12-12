@@ -1,15 +1,23 @@
 <template>
-    <div class="row">
-      <div class="col-6 col-md-4"> </div>
-      <div class="col-6 col-md-4"> </div>
-      <div class="col-6 col-md-4">
-        <router-link to="/"><img src="@/assets/Logo_Dentistimo.png" alt="logo" width="100%" /></router-link>
-      </div>
-    </div>
-  </template>
+<div class="row">
+  <div class="column">
+    <router-link to="/"><img src="@/assets/Logo_Dentistimo.png" alt="logo" width="50%" /></router-link>
+  </div>
+</div>
+</template>
 
   <style scoped>
-    img {
-      float: left;
-    }
-  </style>
+.column {
+  float: left;
+  width: 50%;
+  padding: 1px;
+}
+/* If two pictures
+
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+*/
+</style>
