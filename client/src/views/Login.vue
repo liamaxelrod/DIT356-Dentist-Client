@@ -5,16 +5,15 @@
   <!--
     Code for connecting with MQTT and auth component will go in this page
   -->
-  <script>
-  export default {
-    data() {
-      return {
-        placeholder: 'placeholder'
-      }
+<script>
+export default {
+  data() {
+    return {
+      placeholder: 'placeholder'
     }
   }
-  </script>
-  
+}
+</script>
+
   <style>
   </style>
-  
