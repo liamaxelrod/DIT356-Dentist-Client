@@ -1,5 +1,8 @@
 <template>
-  <div>appointment
+  <div class ="background">
+    <div>
+<!-- https://github.com/EazyServer/Vue-Bootstrap-Calendar -->
+    </div>
   </div>
 </template>
 
@@ -13,5 +16,11 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.background{
+
+  height: 575px;
+  background-color:#80BAB2
+}
+
 </style>

@@ -3,8 +3,8 @@
       <section class="hero is-dark">
         <div class="hero-body">
           <div class="container">
-            <h1 class="title"></h1>
-          <h2 class="subtitle">
+            <h1 class="title"><!-- ADD SOME TEXT OR W/E HERE? --></h1>
+          <h2 class="subtitle"> <!-- ADD SOME TEXT OR W/E HERE? -->
           </h2>
         </div>
       </div>
