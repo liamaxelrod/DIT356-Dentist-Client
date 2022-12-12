@@ -5,6 +5,7 @@
       <div></div>
       <router-link class ="nav" to="/appointments">Appointments</router-link> |
       <router-link class = "nav" to="/userProfile">Profile</router-link>
+      <router-link class = "nav" to="/login">Login</router-link>
     </div>
     <div>
 
