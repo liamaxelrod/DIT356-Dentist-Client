@@ -1,19 +1,39 @@
 <template>
-    <div>login
+    <div class="center">
+        <div>
+            <p>{{this.stateIfSuccessful}}</p>
+        </div>
+        <div class="bittpnLogin">
+            <button class="btn btn-success btn-lg">login</button>
+
+        </div>
+        <div class="bittpnRegister">
+            <button class="btn btn-success btn-lg">register</button>
+        </div>
     </div>
-  </template>
-  <!--
-    Code for connecting with MQTT and auth component will go in this page
-  -->
+</template>
+
 <script>
 export default {
   data() {
     return {
-      placeholder: 'placeholder'
+      stateIfSuccessful: ''
     }
   }
 }
 </script>
 
-  <style>
-  </style>
+<style>
+.bittpnLogin {
+    display: inline-block;
+    margin: 10px;
+
+    /* background-color: red; */
+}
+.bittpnRegister {
+    display: inline-block;
+    margin: 10px;
+
+    /* background-color: red; */
+}
+</style>
