@@ -10,12 +10,15 @@
             <P></P>
             <input id="inputeEmail" v-model='changeEmailText' placeholder="enter new Email">
             <P></P>
-            <button id="registerButton" class="btn btn-success btn-lg">register</button>
+            <button id="registerButton" @click="register" class="btn btn-success btn-lg">register</button>
         </div>
     </div>
 </template>
 
 <script>
+// import App from '../App.vue'
+import mqtt from '../mymqtt'
+
 export default {
   data() {
     return {
@@ -23,11 +26,21 @@ export default {
       changePasswordText: '',
       changecompanyText: '',
       changeEmailText: '',
-      stateIfSuccessful: 'successful/failed to register'
+      stateIfSuccessful: 'successful/failed to register',
+      subscription: {
+        topic: 'dentistimo/dentistClient/test',
+        qos: 0
+      },
+      publish: {
+        topic: 'dentistimo/dentistClient/test',
+        qos: 0,
+        payload: '{"userid": ' + this.changeIDText + ', "password": ' + this.changePasswordText + ', "company name": ' + this.changecompanyText + ', "email": ' + this.changeEmailText + ' }'
+      }
     }
   },
   mounted() {
-    /* blank for now */
+    mqtt.createConnection()
+    // mqtt.subscribe()
   },
   methods: {
     checkID() {
@@ -41,6 +54,17 @@ export default {
     },
     checkEmail() {
       /* blank for now */
+    },
+    register() {
+      // const a = App.publish.payload
+      const message = {
+        payload: '{"userid": ' + this.changeIDText + ', "password": ' + this.changePasswordText + ', "company name": ' + this.changecompanyText + ', "email": ' + this.changeEmailText + ' }',
+        topic: 'dentistimo/dentistClient/test',
+        qos: this.publish.qos
+      }
+      console.log(message.topic + 'qweqwe')
+      mqtt.publish(message.topic, message.payload, message.qos)
+      console.log('register button clicked')
     }
   }
 }

@@ -130,7 +130,7 @@ export default {
         this.connecting = false
         console.log('mqtt.connect error', error)
       }
-      console.log('hello')
+      console.log('hello') // console.log says hello
       console.log(this.client)
     },
     doSubscribe() {
@@ -144,6 +144,9 @@ export default {
         console.log('Subscribe to topics res', res)
       })
     },
+    getClient() {
+      return this.client
+    },
     doUnSubscribe() {
       const { topic } = this.subscription
       this.client.unsubscribe(topic, error => {
@@ -152,8 +155,8 @@ export default {
         }
       })
     },
-    doPublish() {
-      const { topic, qos, payload } = this.publish
+    doPublish({ topic, qos, payload }) {
+      // const { topic, qos, payload } = this.publish
       this.client.publish(topic, payload, { qos }, error => {
         if (error) {
           console.log('Publish error', error)
