@@ -1,14 +1,13 @@
 <template>
     <div class="center">
-        <div>
-            <p>{{this.stateIfSuccessful}}</p>
-        </div>
-        <div class="bittpnLogin">
-            <button class="btn btn-success btn-lg">login</button>
-
-        </div>
-        <div class="bittpnRegister">
-            <button class="btn btn-success btn-lg">register</button>
+        <div class="aboveButtons">
+            <p  id="pop-up">{{this.stateIfSuccessful}}</p>
+            <input id="inputID" v-model='changeIDText' placeholder="enter new ID">
+            <P></P>
+            <input id="inputpassword" v-model='changePasswordText' placeholder="enter new password">
+            <P></P>
+            <button id="bittpnLogin" class="btn btn-success btn-lg">login</button>
+            <button id="bittpnRegister" class="btn btn-success btn-lg">register</button>
         </div>
     </div>
 </template>
@@ -17,23 +16,41 @@
 export default {
   data() {
     return {
-      stateIfSuccessful: ''
+      changeIDText: '',
+      changePasswordText: '',
+      stateIfSuccessful: 'successful/failed to register'
+    }
+  },
+  mounted() {
+    /* blank for now */
+  },
+  methods: {
+    checkID() {
+      /* blank for now */
+    },
+    checkPassword() {
+      /* blank for now */
     }
   }
 }
 </script>
 
 <style>
-.bittpnLogin {
-    display: inline-block;
-    margin: 10px;
-
-    /* background-color: red; */
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+    /*
+    height: 100%;
+    width: 100%;
+    problem with overall CSS app page I think for this part to work with the CSS
+    */
 }
-.bittpnRegister {
+/* .pop-up {blank for now}  */
+/* #bittpnLogin {blank for now}  */
+#bittpnRegister {
     display: inline-block;
     margin: 10px;
-
-    /* background-color: red; */
 }
 </style>
