@@ -79,6 +79,7 @@ export default {
     }
   },
   mounted() {
+    // mqtt.createConnection()
     this.createConnection()
     this.doSubscribe()
   },

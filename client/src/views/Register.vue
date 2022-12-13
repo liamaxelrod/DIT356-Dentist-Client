@@ -39,7 +39,7 @@ export default {
     }
   },
   mounted() {
-    mqtt.createConnection()
+    // mqtt.createConnection()
     // mqtt.subscribe()
   },
   methods: {
@@ -59,7 +59,7 @@ export default {
       // const a = App.publish.payload
       const message = {
         payload: '{"userid": ' + this.changeIDText + ', "password": ' + this.changePasswordText + ', "company name": ' + this.changecompanyText + ', "email": ' + this.changeEmailText + ' }',
-        topic: 'dentistimo/dentistClient/test',
+        topic: 'test',
         qos: this.publish.qos
       }
       console.log(message.topic + 'qweqwe')
