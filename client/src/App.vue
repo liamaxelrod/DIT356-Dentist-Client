@@ -14,6 +14,7 @@
               <b-navbar-nav>
                 <!-- TODO! If logged in change to logout button instead -->
                   <b-nav-item href="/login">Login</b-nav-item>
+                  <b-nav-item href="/register">register</b-nav-item>
                 </b-navbar-nav>
               <b-nav-item-dropdown right>
                 <template #button-content>
