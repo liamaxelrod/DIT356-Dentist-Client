@@ -11,17 +11,21 @@
             <input id="inputeEmail" v-model='changeEmailText' placeholder="enter new Email">
             <P></P>
             <button id="registerButton" @click="register" class="btn btn-success btn-lg">register</button>
+            <p></p>
+            <button @click="a" class="btn btn-success btn-lg">1</button>
         </div>
     </div>
 </template>
 
 <script>
 // import App from '../App.vue'
-import mqtt from '../mymqtt'
+import mymqtt from '../mymqtt'
 
 export default {
   data() {
     return {
+      mymqtt: mymqtt.receiveNews,
+      news: 'none',
       changeIDText: '',
       changePasswordText: '',
       changecompanyText: '',
@@ -39,8 +43,8 @@ export default {
     }
   },
   mounted() {
-    // mqtt.createConnection()
-    // mqtt.subscribe()
+    mymqtt.createConnection()
+    mymqtt.subscribe()
   },
   methods: {
     checkID() {
@@ -62,9 +66,13 @@ export default {
         topic: 'test',
         qos: this.publish.qos
       }
-      console.log(message.topic + 'qweqwe')
-      mqtt.publish(message.topic, message.payload, message.qos)
+      console.log(message.topic + ' test!')
+      mymqtt.publish(message.topic, message.payload, message.qos)
       console.log('register button clicked')
+      this.changeIDText = this.mymqtt
+    },
+    a() {
+      console.log('test button clicked')
     }
   }
 }

@@ -38,6 +38,7 @@
 <script>
 import Logo from './components/Logo.vue'
 import mqtt from 'mqtt'
+import mymqtt from './mymqtt'
 
 export default {
   components: {
@@ -79,9 +80,9 @@ export default {
     }
   },
   mounted() {
-    // mqtt.createConnection()
-    this.createConnection()
-    this.doSubscribe()
+    mymqtt.createConnection()
+    // this.createConnection()
+    // this.doSubscribe()
   },
   methods: {
     initData() {
