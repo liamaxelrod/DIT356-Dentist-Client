@@ -2,7 +2,7 @@
   <div id="app">
     <Logo_Dentistimo/>
     <div>
-      <div>
+      <div class="NavigationBar">
         <b-navbar toggleable="lg" type="dark" variant="dark">
           <b-navbar-brand href="/">Dentistimo</b-navbar-brand>
           <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -27,6 +27,7 @@
           </b-collapse>
         </b-navbar>
       </div>
+      <div class="image"><img src="https://i0.wp.com/thedentistsdorridge.co.uk/wp-content/uploads/2019/11/be_a_denist.jpg?fit=1024%2C683&ssl=1" style="width: 100%" /></div>
     </div>
     <router-view />
   <div id="footer">
@@ -183,11 +184,17 @@ export default {
 </script>
 
 <style>
+.image {
+  /* background-image: url('https://i0.wp.com/thedentistsdorridge.co.uk/wp-content/uploads/2019/11/be_a_denist.jpg?fit=1024%2C683&ssl=1'); */
+}
   #footer {
   position: absolute;
   bottom: 0;
   width: 100%;
   text-align: center;
 }
+/* body {
+  background-image: url('https://i0.wp.com/thedentistsdorridge.co.uk/wp-content/uploads/2019/11/be_a_denist.jpg?fit=1024%2C683&ssl=1');
+} */
 
 </style>

@@ -43,8 +43,11 @@ export default {
     }
   },
   mounted() {
+    console.log('test -> 1')
     mymqtt.createConnection()
+    console.log('test -> 2')
     mymqtt.subscribe()
+    console.log('test -> 3')
   },
   methods: {
     containsSpecialChars(str) {
