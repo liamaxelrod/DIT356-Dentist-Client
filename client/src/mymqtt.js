@@ -16,6 +16,15 @@ Mqtt.settings = {
     username: 'group6_dentistimo',
     password: 'dentistimo123!'
   },
+  subscription: {
+    topic: 'test',
+    qos: 0
+  },
+  publish: {
+    topic: 'test',
+    qos: 0,
+    payload: '{ "msg": "Hello, I am browser." }'
+  },
   receiveNews: '',
   qosList: [0, 1, 2],
   client: {
@@ -114,5 +123,14 @@ Mqtt.destroyConnection = () => {
     }
   }
 }
+
+// Mqtt.initData = () => {
+//   this.client = {
+//     connected: false
+//   }
+//   this.retryTimes = 0
+//   this.connecting = false
+//   this.subscribeSuccess = false
+// } // was in the other version
 
 export default Mqtt

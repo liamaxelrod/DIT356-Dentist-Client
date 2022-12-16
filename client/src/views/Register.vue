@@ -11,8 +11,8 @@
             <input id="inputeEmail" v-model='changeEmailText' placeholder="enter new Email">
             <P></P>
             <button id="registerButton" @click="register" class="btn btn-success btn-lg">register</button>
-            <p></p>
-            <button @click="a" class="btn btn-success btn-lg">1</button>
+            <p onchange="myFunction" >| {{this.receive}} |</p>
+
         </div>
     </div>
 </template>
@@ -24,7 +24,7 @@ import mymqtt from '../mymqtt'
 export default {
   data() {
     return {
-      mymqtt: mymqtt.receiveNews,
+      receive: mymqtt.receiveNews,
       news: 'none',
       changeIDText: '',
       changePasswordText: '',
@@ -32,11 +32,11 @@ export default {
       changeEmailText: '',
       stateIfSuccessful: 'successful/failed to register',
       subscription: {
-        topic: 'dentistimo/dentistClient/test',
+        topic: 'test',
         qos: 0
       },
       publish: {
-        topic: 'dentistimo/dentistClient/test',
+        topic: 'test',
         qos: 0,
         payload: '{"userid": ' + this.changeIDText + ', "password": ' + this.changePasswordText + ', "company name": ' + this.changecompanyText + ', "email": ' + this.changeEmailText + ' }'
       }
@@ -47,11 +47,35 @@ export default {
     mymqtt.subscribe()
   },
   methods: {
+    containsSpecialChars(str) {
+      const specialChars = '[`!@#$%^&*()_+-=[]{};\':"\\|,.<>/?~]/'
+      return specialChars.split('')
+        .some((specialChar) => str.includes(specialChar))
+    },
+    containsNumbers(str) {
+      const specialChars = '1234567890'
+      return specialChars.split('')
+        .some((specialChar) => str.includes(specialChar))
+    },
+    checkStringLength(str) {
+      if (str.length >= 8 && str.length <= 16) {
+        return true
+      } else {
+        return false
+      }
+    },
     checkID() {
-      /* blank for now */
+      //
     },
     checkPassword() {
-      /* blank for now */
+      const result1 = this.containsSpecialChars(this.changePasswordText)
+      const result2 = this.containsNumbers(this.changePasswordText)
+      const result3 = this.checkStringLength(this.changePasswordText)
+      if (result1 === true && result2 === true && result3 === true) {
+        return true
+      } else {
+        return false
+      }
     },
     checkCompany() {
       /* blank for now */
@@ -60,19 +84,15 @@ export default {
       /* blank for now */
     },
     register() {
-      // const a = App.publish.payload
       const message = {
         payload: '{"userid": ' + this.changeIDText + ', "password": ' + this.changePasswordText + ', "company name": ' + this.changecompanyText + ', "email": ' + this.changeEmailText + ' }',
         topic: 'test',
-        qos: this.publish.qos
+        qos: 0
       }
-      console.log(message.topic + ' test!')
       mymqtt.publish(message.topic, message.payload, message.qos)
-      console.log('register button clicked')
-      this.changeIDText = this.mymqtt
     },
-    a() {
-      console.log('test button clicked')
+    myFunction() {
+      console.log('do something')
     }
   }
 }
