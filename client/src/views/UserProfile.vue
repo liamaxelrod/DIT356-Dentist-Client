@@ -3,9 +3,9 @@
     <div class="leftSide">
       <div>
         <p></p>
-        <p>Dentists ID: {{accoountInfo.ID}}</p>
-        <p>password: {{accoountInfo.password}}</p>
-        <p>company: {{accoountInfo.company}}</p>
+        <p id="infID">Dentists ID: {{accoountInfo.ID}}</p>
+        <p id="infPas">password: {{accoountInfo.password}}</p>
+        <p id="infCom">company: {{accoountInfo.company}}</p>
       </div>
       <div class="deleteAccount">
         <button class="btn btn-danger" id="buttonDeleteAccount" @click="deleteAccount">DELETE Account</button>
@@ -81,14 +81,34 @@ export default {
   display: inline-block;
   margin: 10px;
 }
+#buttonChangeCompany,
+#buttonChangePassword,
+#buttonChangeIDButton {
+  height: 100%;
+  width: 100%;
+}
 .rightSide {
   position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 75%;
-  height: 100%;
+  height: 70vh;
   right: 0;
 }
+#infID,
+#infPas,
+#infCom {
+  display: flex;
+  justify-content: center;
+  font-size: 20px;
+  color: rgb(255, 255, 255);
+}
 .deleteAccount {
-  top: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 #buttonDeleteAccount {
   color: rgb(255, 255, 255);

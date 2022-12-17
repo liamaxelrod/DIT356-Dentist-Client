@@ -10,7 +10,9 @@
 .column {
   float: left;
   width: 50%;
-  padding: 1px;
+}
+.row {
+  width: 100%;
 }
 /* If two pictures
 
