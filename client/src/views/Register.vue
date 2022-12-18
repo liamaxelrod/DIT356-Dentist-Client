@@ -2,9 +2,10 @@
     <div class="center">
         <div class="aboveButtons">
             <p  id="pop-up">{{this.stateIfSuccessful}}</p>
-            <input id="inputID" v-model='changeIDText' placeholder="enter new ID">
             <P></P>
             <input id="inputpassword" v-model='changePasswordText' placeholder="enter new password">
+            <P></P>
+            <input id="checkPassword" v-model='changeSamePasswordText' placeholder="reenter your password">
             <P></P>
             <input id="inputCompany" v-model='changecompanyText' placeholder="enter new Company">
             <P></P>
@@ -26,8 +27,8 @@ export default {
     return {
       receive: mymqtt.receiveNews,
       news: 'none',
-      changeIDText: '',
       changePasswordText: '',
+      changeSamePasswordText: '',
       changecompanyText: '',
       changeEmailText: '',
       stateIfSuccessful: 'successful/failed to register',
@@ -67,8 +68,12 @@ export default {
         return false
       }
     },
-    checkID() {
-      //
+    checkForSamePasswords() {
+      if (this.changePasswordText === this.changeSamePasswordText) {
+        return true
+      } else {
+        return false
+      }
     },
     checkPassword() {
       const result1 = this.containsSpecialChars(this.changePasswordText)
@@ -88,7 +93,7 @@ export default {
     },
     register() {
       const message = {
-        payload: '{"userid": ' + this.changeIDText + ', "password": ' + this.changePasswordText + ', "company name": ' + this.changecompanyText + ', "email": ' + this.changeEmailText + ' }',
+        payload: '{"password": ' + this.changePasswordText + ', "company name": ' + this.changecompanyText + ', "email": ' + this.changeEmailText + ' }',
         topic: 'test',
         qos: 0
       }
