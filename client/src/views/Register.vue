@@ -25,7 +25,8 @@ import mymqtt from '../mymqtt'
 export default {
   data() {
     return {
-      receive: mymqtt.receiveNews,
+      mqtt_client: null,
+      receive: '',
       news: 'none',
       changePasswordText: '',
       changeSamePasswordText: '',
@@ -35,20 +36,26 @@ export default {
       subscription: {
         topic: 'test',
         qos: 0
-      },
-      publish: {
-        topic: 'test',
-        qos: 0,
-        payload: '{"userid": ' + this.changeIDText + ', "password": ' + this.changePasswordText + ', "company name": ' + this.changecompanyText + ', "email": ' + this.changeEmailText + ' }'
       }
     }
   },
   mounted() {
-    console.log('test -> 1')
-    mymqtt.createConnection()
-    console.log('test -> 2')
-    mymqtt.subscribe()
-    console.log('test -> 3')
+    this.mqtt_client = mymqtt.createClient()
+    const msgCallback = (topic, message) => {
+      this.receive = message.toString()
+      console.log({ topic: topic, message: message.toString() })
+    }
+    this.mqtt_client.on('message', msgCallback)
+    this.mqtt_client.on('subscribe', (topic) => {
+      console.log('Subscribed too: ', topic)
+    })
+    this.mqtt_client.subscribe('test', { qos: 0 }, (error, res) => {
+      if (error) {
+        console.log('error = ', error)
+      } else {
+        console.log('res = ', res)
+      }
+    })
   },
   methods: {
     containsSpecialChars(str) {
@@ -92,12 +99,10 @@ export default {
       /* blank for now */
     },
     register() {
-      const message = {
-        payload: '{"password": ' + this.changePasswordText + ', "company name": ' + this.changecompanyText + ', "email": ' + this.changeEmailText + ' }',
-        topic: 'test',
-        qos: 0
-      }
-      mymqtt.publish(message.topic, message.payload, message.qos)
+      const payload = '{"password": ' + this.changePasswordText + ', "company name": ' + this.changecompanyText + ', "email": ' + this.changeEmailText + ' }'
+      const topic = 'test'
+      const qos = 0
+      this.mqtt_client.publish(topic, payload, qos)
     },
     myFunction() {
       console.log('do something')

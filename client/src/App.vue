@@ -27,7 +27,9 @@
           </b-collapse>
         </b-navbar>
       </div>
-      <div class="image"><img src="https://i0.wp.com/thedentistsdorridge.co.uk/wp-content/uploads/2019/11/be_a_denist.jpg?fit=1024%2C683&ssl=1" style="width: 100%" /></div>
+      <div class="image">
+        <!-- <img src="https://i0.wp.com/thedentistsdorridge.co.uk/wp-content/uploads/2019/11/be_a_denist.jpg?fit=1024%2C683&ssl=1" style="width: 100%" /> -->
+      </div>
     </div>
     <router-view />
   <div id="footer">
@@ -39,7 +41,7 @@
 <script>
 import Logo from './components/Logo.vue'
 import mqtt from 'mqtt'
-import mymqtt from './mymqtt'
+// import mymqtt from './mymqtt'
 
 export default {
   components: {
@@ -81,7 +83,7 @@ export default {
     }
   },
   mounted() {
-    mymqtt.createConnection()
+    // mymqtt.createConnection()
     // this.createConnection()
     // this.doSubscribe()
   },

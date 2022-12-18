@@ -35,6 +35,27 @@ Mqtt.settings = {
   retryTimes: 0
 }
 
+Mqtt.createClient = () => {
+  const settings = {
+    protocol: 'wss',
+    host: 'e33e41c289ad4ac69ae5ef60f456e9c3.s2.eu.hivemq.cloud',
+    port: 8884,
+    endpoint: '/mqtt',
+    keepalive: 60,
+    clean: true,
+    connectTimeout: 4000,
+    reconnectPeriod: 4000,
+    clientId: `mqtt_${Math.random().toString(16).slice(3)}`,
+    username: 'group6_dentistimo',
+    password: 'dentistimo123!'
+  }
+  const { protocol, host, port, endpoint, ...options } = settings
+  return mqtt.connect(
+    `${protocol}://${host}:${port}${endpoint}`,
+    options
+  )
+}
+
 Mqtt.createConnection = () => {
   try {
     Mqtt.settings.connecting = true
@@ -60,9 +81,9 @@ Mqtt.createConnection = () => {
   } catch (error) {
     Mqtt.settings.connecting = false
     console.log('mqtt.connect error', error)
+    return false
   }
-  console.log('hello') // console.log says hello
-  console.log(Mqtt.settings.client)
+  return true
 }
 
 Mqtt.subscribe = (topic, qos) => {
