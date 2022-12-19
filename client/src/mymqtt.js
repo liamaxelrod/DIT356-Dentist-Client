@@ -16,6 +16,15 @@ Mqtt.settings = {
     username: 'group6_dentistimo',
     password: 'dentistimo123!'
   },
+  subscription: {
+    topic: 'test',
+    qos: 0
+  },
+  publish: {
+    topic: 'test',
+    qos: 0,
+    payload: '{ "msg": "Hello, I am browser." }'
+  },
   receiveNews: '',
   qosList: [0, 1, 2],
   client: {
@@ -24,6 +33,27 @@ Mqtt.settings = {
   subscribeSuccess: false,
   connecting: false,
   retryTimes: 0
+}
+
+Mqtt.createClient = () => {
+  const settings = {
+    protocol: 'wss',
+    host: 'e33e41c289ad4ac69ae5ef60f456e9c3.s2.eu.hivemq.cloud',
+    port: 8884,
+    endpoint: '/mqtt',
+    keepalive: 60,
+    clean: true,
+    connectTimeout: 4000,
+    reconnectPeriod: 4000,
+    clientId: `mqtt_${Math.random().toString(16).slice(3)}`,
+    username: 'group6_dentistimo',
+    password: 'dentistimo123!'
+  }
+  const { protocol, host, port, endpoint, ...options } = settings
+  return mqtt.connect(
+    `${protocol}://${host}:${port}${endpoint}`,
+    options
+  )
 }
 
 Mqtt.createConnection = () => {
@@ -50,9 +80,10 @@ Mqtt.createConnection = () => {
     }
   } catch (error) {
     Mqtt.settings.connecting = false
+    console.log('mqtt.connect error', error)
+    return false
   }
-  console.log('hello') // console.log says hello
-  console.log(Mqtt.settings.client)
+  return true
 }
 
 Mqtt.subscribe = (topic, qos) => {
@@ -61,9 +92,6 @@ Mqtt.subscribe = (topic, qos) => {
       console.log('Subscribe to topics error', error)
       return
     }
-    Mqtt.settings.client.on('message', (topic, message) => {
-      console.log(`Got message on topic ${topic} with message ${message}`)
-    })
     Mqtt.settings.subscribeSuccess = true
     console.log('Subscribe to topics res', res)
   })
@@ -116,5 +144,14 @@ Mqtt.destroyConnection = () => {
     }
   }
 }
+
+// Mqtt.initData = () => {
+//   this.client = {
+//     connected: false
+//   }
+//   this.retryTimes = 0
+//   this.connecting = false
+//   this.subscribeSuccess = false
+// } // was in the other version
 
 export default Mqtt

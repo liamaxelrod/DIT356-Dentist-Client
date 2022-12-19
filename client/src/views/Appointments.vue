@@ -36,7 +36,7 @@ export default {
   methods: {
     appointmens() {
       const message = {
-        payload: '', //FOR FILTERING ON A SPECIFIC DAY
+        payload: '',
         topic: 'dentistimo/dentist-appointment/get-all-appointments',
         qos: this.publish.qos
       }
