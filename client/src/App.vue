@@ -40,7 +40,7 @@
 
 <script>
 import Logo from './components/Logo.vue'
-// import mqtt from 'mqtt'
+//
 // import mymqtt from './mymqtt'
 
 export default {
