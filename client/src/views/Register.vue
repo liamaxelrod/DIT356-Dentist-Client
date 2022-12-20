@@ -1,7 +1,12 @@
 <template>
-    <div class="center">
+    <div class="background">
+        <div class="warning">
+          <p id="pop-up" >{{this.unsuccessful}}</p>
+        </div>
         <div class="aboveButtons">
-            <p  id="pop-up">{{this.stateIfSuccessful}}</p>
+            <input id="inputFirstName" v-model='changeFirstNameText' placeholder="enter your first name">
+            <P></P>
+            <input id="inputLastName" v-model='changeLastNameText' placeholder="enter your last name">
             <P></P>
             <input id="inputpassword" v-model='changePasswordText' placeholder="enter new password">
             <P></P>
@@ -12,8 +17,7 @@
             <input id="inputeEmail" v-model='changeEmailText' placeholder="enter new Email">
             <P></P>
             <button id="registerButton" @click="register" class="btn btn-success btn-lg">register</button>
-            <p onchange="myFunction" >| {{this.receive}} |</p>
-
+            <p> {{this.receive}} </p>
         </div>
     </div>
 </template>
@@ -27,12 +31,16 @@ export default {
     return {
       mqtt_client: null,
       receive: '',
-      news: 'none',
+      qos: 0,
+      topic: 'dentist/client/register',
+      topic2: 'test/dentistClient/register',
+      changeFirstNameText: '',
+      changeLastNameText: '',
       changePasswordText: '',
       changeSamePasswordText: '',
       changecompanyText: '',
       changeEmailText: '',
-      stateIfSuccessful: 'successful/failed to register',
+      unsuccessful: '',
       subscription: {
         topic: 'test',
         qos: 0
@@ -49,7 +57,7 @@ export default {
     this.mqtt_client.on('subscribe', (topic) => {
       console.log('Subscribed too: ', topic)
     })
-    this.mqtt_client.subscribe('test', { qos: 0 }, (error, res) => {
+    this.mqtt_client.subscribe('dentist/client/register', { qos: 0 }, (error, res) => {
       if (error) {
         console.log('error = ', error)
       } else {
@@ -84,49 +92,60 @@ export default {
     },
     checkPassword() {
       const result1 = this.containsSpecialChars(this.changePasswordText)
+      console.log(result1)
       const result2 = this.containsNumbers(this.changePasswordText)
       const result3 = this.checkStringLength(this.changePasswordText)
-      if (result1 === true && result2 === true && result3 === true) {
-        return true
-      } else {
+      if (result1 === false) {
+        this.unsuccessful = 'password needs a special character'
         return false
+      } else if (result2 === false) {
+        this.unsuccessful = 'password needs a number'
+        return false
+      } else if (result3 === false) {
+        this.unsuccessful = 'password needs to be between 8 and 16 characters'
+        return false
+      } else {
+        this.unsuccessful = ''
+        return true
       }
     },
-    checkCompany() {
-      /* blank for now */
-    },
-    checkEmail() {
-      /* blank for now */
-    },
     register() {
-      const payload = '{"password": ' + this.changePasswordText + ', "company name": ' + this.changecompanyText + ', "email": ' + this.changeEmailText + ' }'
-      const topic = 'test'
-      const qos = 0
-      this.mqtt_client.publish(topic, payload, qos)
-    },
-    myFunction() {
-      console.log('do something')
+      if (this.checkPassword() === false) {
+        // nothing happens
+      } else if (this.checkForSamePasswords() === false) {
+        this.unsuccessful = 'passwords are not the same'
+      } else if (this.changeFirstNameText === '') {
+        this.unsuccessful = 'first name is empty'
+      } else if (this.changeLastNameText === '') {
+        this.unsuccessful = 'last name is empty'
+      } else if (this.changecompanyText === '') {
+        this.unsuccessful = 'company is empty'
+      } else if (this.changeEmailText === '') {
+        this.unsuccessful = 'email is empty'
+      } else {
+        const payload = '{"firstName": ' + this.changeFirstNameText + ', "lastName": ' + this.changeLastNameText + ', "password": ' + this.changePasswordText + ', "companyName": ' + this.changecompanyText + ', "email": ' + this.changeEmailText + ' }'
+        this.mqtt_client.publish(this.topic, payload, this.qos)
+      }
     }
   }
 }
 </script>
 
 <style>
-.center {
+.background {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     height: 70vh;
     background-color: #80BAB2;
-    /*
-    height: 100%;
-    width: 100%;
-    problem with overall CSS app page I think for this part to work with the CSS
-    */
 }
-/* .pop-up {blank for now}  */
+#pop-up {
+    color: red;
+    font-size: 20px;
+}
+
 #registerButton {
-    height: 100%;
     width: 100%;
 }
 </style>
