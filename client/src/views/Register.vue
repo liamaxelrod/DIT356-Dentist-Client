@@ -144,7 +144,6 @@ export default {
     color: red;
     font-size: 20px;
 }
-
 #registerButton {
     width: 100%;
 }
