@@ -3,6 +3,17 @@
     <div>
       <b-button class="btn_message" variant="primary" @click="appointments" >Get all appointments</b-button>
       <p onchange="myFunction" >| {{this.receive}} |</p>
+      <!-- https://bootstrap-vue.org/docs/components/calendar#comp-ref-b-calendar-props -->
+      <b-row>
+    <b-col md="auto">
+      <b-calendar v-model="value" @context="onContext" locale="en-EU"></b-calendar>
+    </b-col>
+    <b-col>
+      <p>Value: <b>'{{ value }}'</b></p>
+      <p class="mb-0">Context:</p>
+      <pre class="small">{{ context }}</pre>
+    </b-col>
+  </b-row>
     </div>
   </div>
 </template>
@@ -15,7 +26,9 @@ export default {
   data() {
     return {
       mqtt_client: null,
+      value: '',
       receive: '',
+      context: '',
       news: 'none',
       subscription: {
         topic: 'dentistimo/dentist-appointment/all-appointments',
@@ -27,6 +40,7 @@ export default {
     this.mqtt_client = mymqtt.createClient()
     const msgCallback = (topic, message) => {
       this.receive = message.toString()
+      this.context = message.toString()
       console.log({ topic: topic, message: message.toString() })
     }
     this.mqtt_client.on('message', msgCallback)
