@@ -60,7 +60,12 @@ export default {
 </script>
 
 <style>
-
+#app {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  height: 100vh;
+}
   #footer {
   position: absolute;
   bottom: 0;

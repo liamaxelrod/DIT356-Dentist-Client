@@ -1,6 +1,6 @@
-<template>
+<template class="test">
   <div class ="background">
-    <div>
+    <div class="div1">
       <b-button class="btn_message" variant="primary" @click="appointments" >Get all appointments</b-button>
       <p onchange="myFunction" >| {{this.receive}} |</p>
       <!-- https://bootstrap-vue.org/docs/components/calendar#comp-ref-b-calendar-props -->
@@ -76,10 +76,22 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
 /*
 Change so it covers 100% not PX
 */
-.background{
-
-  height: 575px;
+.background {
+  display: flex;
+  height: 100%;
+  /* justify-content: center;
+  align-items: center;
+  flex-direction: column; */
   background-color:#80BAB2
+}
+.div1 {
+  float:right;
+}
+.div2 {
+  float:left;
+}
+textarea {
+  background-color:#80BAB2;
 }
 
 </style>
