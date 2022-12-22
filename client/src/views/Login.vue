@@ -4,7 +4,7 @@
           <p id="pop-up">{{this.unsuccessful}}</p>
         </div>
         <div class="inputAndButton">
-            <input id="inputID" v-model='changeIDText' placeholder="enter new ID">
+            <input id="inputEmail" v-model='changeEmailText' placeholder="enter new email">
             <P></P>
             <input id="inputpassword" v-model='changePasswordText' placeholder="enter new password">
             <P></P>
@@ -24,7 +24,7 @@ export default {
       receive: '',
       qos: 0,
       topic: 'dentist/client/login',
-      changeIDText: '',
+      changeEmailText: '',
       changePasswordText: '',
       unsuccessful: ''
     }
@@ -48,15 +48,60 @@ export default {
     })
   },
   methods: {
-    checkID() {
-      /* blank for now */
+    containsSpecialChars(str) {
+      const specialChars = '[`!@#$%^&*()_+-=[]{};\':"\\|,.<>/?~]/'
+      return specialChars.split('')
+        .some((specialChar) => str.includes(specialChar))
+    },
+    containsNumbers(str) {
+      const specialChars = '1234567890'
+      return specialChars.split('')
+        .some((specialChar) => str.includes(specialChar))
+    },
+    checkStringLength(str) {
+      if (str.length >= 8 && str.length <= 16) {
+        return true
+      } else {
+        return false
+      }
+    },
+    checkEmail(string) {
+      const condition = string.includes('@')
+      if (condition) {
+        return true
+      } else {
+        return false
+      }
     },
     checkPassword() {
-      /* blank for now */
+      const result1 = this.containsSpecialChars(this.changePasswordText)
+      const result2 = this.containsNumbers(this.changePasswordText)
+      const result3 = this.checkStringLength(this.changePasswordText)
+      if (result1 === false) {
+        this.unsuccessful = 'password needs a special character'
+        return false
+      } else if (result2 === false) {
+        this.unsuccessful = 'password needs a number'
+        return false
+      } else if (result3 === false) {
+        this.unsuccessful = 'password needs to be between 8 and 16 characters'
+        return false
+      } else {
+        this.unsuccessful = ''
+        return true
+      }
     },
     login() {
-      const payload = '{"ID": ' + this.changeIDText + ', "password": ' + this.changePasswordText + ' }'
-      this.mqtt_client.publish(this.topic, payload, this.qos)
+      const check = this.checkPassword()
+      const check2 = this.checkEmail(this.changeEmailText)
+      if (check2 === false) {
+        this.unsuccessful = 'email needs to contain @'
+      } else if (check === false) {
+        // responses in checkPassword()
+      } else {
+        const payload = '{"email": ' + this.changeEmailText + ', "password": ' + this.changePasswordText + ' }'
+        this.mqtt_client.publish(this.topic, payload, this.qos)
+      }
     },
     register() {
       // not working
