@@ -17,6 +17,9 @@
 <script>
 import mymqtt from '../mymqtt'
 
+const jwt = require('jsonwebtoken')
+require('dotenv').config()
+
 export default {
   data() {
     return {
