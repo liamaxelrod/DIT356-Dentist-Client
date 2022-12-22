@@ -1,8 +1,8 @@
 <template>
-<!-- https://bootstrap-vue.org/docs/components/calendar -->
-<b-row>
+ <b-row>
     <b-col md="auto">
-      <b-calendar v-model="value" @context="onContext" locale="en-US"></b-calendar>
+      <!-- ADD INFORMATION IF THERE IS NO APPOINTMENT THAT DAY -->
+      <b-calendar v-model="value" @context="onContext" locale="en-EU"></b-calendar>
     </b-col>
     <b-col>
       <p>Value: <b>'{{ value }}'</b></p>
@@ -15,16 +15,6 @@
 <script>
 
 export default {
-    data() {
-      return {
-        value: '',
-        context: null
-      }
-    },
-    methods: {
-      onContext(ctx) {
-        this.context = ctx
-      }
-    }
-  }
+
+}
 </script>

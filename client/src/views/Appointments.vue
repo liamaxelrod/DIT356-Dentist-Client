@@ -4,25 +4,23 @@
       <b-button class="btn_message" variant="primary" @click="appointments" >Get all appointments</b-button>
       <p onchange="myFunction" >| {{this.receive}} |</p>
       <!-- https://bootstrap-vue.org/docs/components/calendar#comp-ref-b-calendar-props -->
-      <b-row>
-    <b-col md="auto">
-      <b-calendar v-model="value" @context="onContext" locale="en-EU"></b-calendar>
-    </b-col>
-    <b-col>
-      <p>Value: <b>'{{ value }}'</b></p>
-      <p class="mb-0">Context:</p>
-      <pre class="small">{{ context }}</pre>
-    </b-col>
-  </b-row>
+      <Calendar/>
+ <AppointsmentsCard/>
     </div>
   </div>
 </template>
 
 <script>
 
+import AppointsmentsCard from '../components/AppointmentsCard.vue'
+import Calendar from '../components/Calendar.vue'
 import mymqtt from '../mymqtt'
 
 export default {
+  components: {
+    AppointsmentsCard,
+    Calendar
+  },
   data() {
     return {
       mqtt_client: null,
@@ -31,7 +29,7 @@ export default {
       context: '',
       news: 'none',
       subscription: {
-        topic: 'dentistimo/dentist-appointment/all-appointments',
+        topic: 'dentistimo/dentist-appointment/all-appointments-day',
         qos: 0
       }
     }
@@ -47,7 +45,7 @@ export default {
     this.mqtt_client.on('subscribe', (topic) => {
       console.log('Subscribed too: ', topic)
     })
-    this.mqtt_client.subscribe('dentistimo/dentist-appointment/all-appointments', { qos: 0 }, (error, res) => {
+    this.mqtt_client.subscribe('dentistimo/dentist-appointment/all-appointments-day', { qos: 0 }, (error, res) => {
       if (error) {
         console.log('error = ', error)
       } else {
@@ -60,8 +58,17 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
   */
   methods: {
     appointments() {
-      const payload = '{ "dentistid": 687181763 }'
-      const topic = 'dentistimo/dentist-appointment/get-all-appointments'
+      const dateFormat = this.value
+      const newDate = dateFormat.replace('2022', '22')
+      const newFormat = newDate.replace('-', '.')
+      const newFormat2 = newFormat.replace('-', '.')
+      const text = newFormat2
+      const result = text.substring(0, 2)
+      const secondresult = text.substring(6, 8)
+      const thirdresult = text.substring(2, 6)
+      const finalresult = secondresult + thirdresult + result
+      const payload = '{ "dentistid": 687181763' + ', "date": ' + '"' + finalresult + '"' + ' }'
+      const topic = 'dentistimo/dentist-appointment/get-all-appointments-day'
       const qos = 0
       this.mqtt_client.publish(topic, payload, qos)
     },
