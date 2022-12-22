@@ -92,7 +92,6 @@ export default {
     },
     checkPassword() {
       const result1 = this.containsSpecialChars(this.changePasswordText)
-      console.log(result1)
       const result2 = this.containsNumbers(this.changePasswordText)
       const result3 = this.checkStringLength(this.changePasswordText)
       if (result1 === false) {
@@ -137,14 +136,13 @@ export default {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    height: 70vh;
+    height: 100%;
     background-color: #80BAB2;
 }
 #pop-up {
     color: red;
     font-size: 20px;
 }
-
 #registerButton {
     width: 100%;
 }

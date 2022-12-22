@@ -18,9 +18,7 @@ export default {
 
 <style scoped>
 .background{
-
   height: 575px;
   background-color:#80BAB2
 }
-
 </style>
