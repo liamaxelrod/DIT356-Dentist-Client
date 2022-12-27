@@ -47,13 +47,13 @@ export default {
     this.mqtt_client.on('subscribe', (topic) => {
       console.log('Subscribed too: ', topic)
     })
-    this.mqtt_client.subscribe('dentistimo/login', { qos: 0 }, (error, res) => {
-      if (error) {
-        console.log('error = ', error)
-      } else {
-        console.log('res = ', res)
-      }
-    })
+    // this.mqtt_client.subscribe('dentistimo/login', { qos: 0 }, (error, res) => {
+    //   if (error) {
+    //     console.log('error = ', error)
+    //   } else {
+    //     console.log('res = ', res)
+    //   }
+    // })
   },
   methods: {
     makeid(n) {

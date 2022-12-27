@@ -41,15 +41,26 @@
       <p> Friday: {{ this.workTime.friday }}</p>
       <p> Saturday: {{ this.workTime.saturday }}</p>
       <p> Sunday: {{ this.workTime.sunday }}</p>
-      <select id="selectFika" v-model='displayTime'>
-        <option selected>select time for fika break</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
+      <p>{{ this.unsuccessfulBreakChange }}</p>
+      <select v-model='displayDay'>
+        <option>Monday</option>
+        <option>Tuesday</option>
+        <option>Wednesday</option>
+        <option>Thursday</option>
+        <option>Friday</option>
+        <option>Saturday</option>
+        <option>Sunday</option>
       </select>
-      <h> selected time: { {{ this.displayTime }} } </h>
-      <p></p>
-      <button class="btn btn-primary" id="buttonChangeBreak" @click="changeBreak">change fika break</button>
+      <p>selected day: { {{ this.displayDay }} }</p>
+      <div class="timeBreak">
+        <input type="time" v-model='displayTime'>
+        <p>selected time: { {{ this.displayTime }} }</p>
+        <button class="btn btn-primary" id="buttonFikaBreak" @click="changeFikaBreak">change fika break</button>
+        <p></p>
+        <input type="time" v-model='displayTime'>
+        <p>selected time: { {{ this.displayTime }} }</p>
+        <button class="btn btn-primary" id="buttonLunchBreak" @click="changeLunchBreak">change lunch break</button>
+      </div>
     </div>
   </div>
 </template>
@@ -60,6 +71,8 @@ import mymqtt from '../mymqtt'
 export default {
   data() {
     return {
+      unsuccessfulBreakChange: '',
+      displayDay: '',
       selectFika: '',
       displayTime: '',
       mqtt_client: null,
@@ -72,13 +85,13 @@ export default {
         qos: 0
       },
       workTime: {
-        monday: 'monday',
-        tuesday: 'tuesday',
-        wednesday: 'wednesday',
-        thursday: 'thursday',
-        friday: 'friday',
-        saturday: 'saturday',
-        sunday: 'sunday'
+        monday: '',
+        tuesday: '',
+        wednesday: '',
+        thursday: '',
+        friday: '',
+        saturday: '',
+        sunday: ''
       }
     }
   },
@@ -105,9 +118,6 @@ export default {
 Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so it knows what dentist is logged in and uses that dentist
   */
   methods: {
-    getValue() {
-      this.displayTime = document.getElementById('selectFika').value
-    },
     appointments() {
       const payload = JSON.stringify({
         dentistid: 2,
@@ -117,12 +127,27 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
       const qos = 0
       this.mqtt_client.publish(topic, payload, qos)
     },
-    changeBreak() {
-      console.log('do something')
-      // const payload = '{ "dentistid": 687181763' + ', "break": ' + '"' + this.displayTime + '"' + ' }'
-      // const topic = 'dentistimo/dentist-appointment/change-break'
-      // const qos = 0
-      // this.mqtt_client.publish(topic, payload, qos)
+    changeFikaBreak() {
+      const payload = JSON.stringify({
+        dentistid: 'need dentistid',
+        breakType: 'Fika',
+        date: 'null',
+        time: this.displayTime
+      })
+      const topic = 'dentistimo/dentist/breaks'
+      const qos = 0
+      this.mqtt_client.publish(topic, payload, qos)
+    },
+    changeLunchBreak() {
+      const payload = JSON.stringify({
+        dentistid: 'need dentistid',
+        breakType: 'lunch',
+        date: 'null',
+        time: this.displayTime
+      })
+      const topic = 'dentistimo/dentist/breaks'
+      const qos = 0
+      this.mqtt_client.publish(topic, payload, qos)
     }
   }
 }
@@ -132,14 +157,40 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
 /*
 Change so it covers 100% not PX
 */
+@media (max-width: 800px) { /* still not working as intended */
+  .background {
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .div1 {
+  /* background:white; */
+  height: 100%;
+  width: 50%;
+  padding: 20px;
+  border: 10px
+  solid rgb(0, 255, 106);
+  flex-direction: column;
+}
+.div2 {
+  /* background: white; */
+  height: 100%;
+  width: 50%;
+  padding: 20px;
+  border: 10px
+  solid rgb(221, 255, 0);
+  flex-direction: column;
+}
+}
 .background {
   display: flex;
-  /* height: 100%;
+  height: 100%;
   justify-content: center;
-  align-items: center; */
+  align-items: center;
   flex-direction: row;
 }
-
 .div1 {
   /* background:white; */
   height: 100%;
@@ -158,14 +209,11 @@ Change so it covers 100% not PX
   solid rgb(221, 255, 0); */
 }
 #h1 {
-  float: center;
+  /* float: center; */
   font-size: 20px;
   font-weight: bold;
   text-align: right;
   /* color: rgb(0, 255, 106); */
-}
-textarea {
-  background-color:#80BAB2;
 }
 
 </style>
