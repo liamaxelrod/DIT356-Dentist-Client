@@ -17,11 +17,11 @@ Mqtt.settings = {
     password: 'dentistimo123!'
   },
   subscription: {
-    topic: 'test',
+    topic: 'dentistimo/dentist-appointment/all-appointments',
     qos: 0
   },
   publish: {
-    topic: 'test',
+    topic: 'dentistimo/dentist-appointment/get-all-appointments',
     qos: 0,
     payload: '{ "msg": "Hello, I am browser." }'
   },
