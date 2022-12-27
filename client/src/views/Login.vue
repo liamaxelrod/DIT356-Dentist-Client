@@ -47,13 +47,13 @@ export default {
     this.mqtt_client.on('subscribe', (topic) => {
       console.log('Subscribed too: ', topic)
     })
-    // this.mqtt_client.subscribe('dentistimo/login', { qos: 0 }, (error, res) => {
-    //   if (error) {
-    //     console.log('error = ', error)
-    //   } else {
-    //     console.log('res = ', res)
-    //   }
-    // })
+    this.mqtt_client.subscribe('dentistimo/login', { qos: 0 }, (error, res) => {
+      if (error) {
+        console.log('error = ', error)
+      } else {
+        console.log('res = ', res)
+      }
+    })
   },
   methods: {
     makeid(n) {
@@ -108,6 +108,7 @@ export default {
       }
     },
     login() {
+      console.log('login')
       const check = this.checkPassword()
       const check2 = this.checkEmail(this.changeEmailText)
       if (check2 === false) {
@@ -132,6 +133,7 @@ export default {
           password: this.changePasswordText,
           requestId: this.requestID
         })
+        console.log('login2')
         this.mqtt_client.publish(this.topic, payload, this.qos)
       }
     },
