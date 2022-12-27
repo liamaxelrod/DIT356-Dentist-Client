@@ -32,9 +32,10 @@
       </div>
     </div>
     <router-view />
-  <div id="footer">
+ <!-- <div id="footer">
       <p class="copy">© 2022 Dentistimo</p>
     </div>
+     -->
   </div>
 </template>
 
