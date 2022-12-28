@@ -4,7 +4,6 @@
     <p></p>
       <p id="firstName">first name: {{accoountInfo.firstName}}</p>
       <p id="lastName">last name: {{accoountInfo.lastName}}</p>
-      <p id="password">password: {{accoountInfo.password}}</p>
       <p id="company">company: {{accoountInfo.company}}</p>
       <p id="email">email: {{accoountInfo.email}}</p>
     <div class="deleteAccount">

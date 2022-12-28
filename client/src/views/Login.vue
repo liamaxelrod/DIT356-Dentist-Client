@@ -16,6 +16,7 @@
 
 <script>
 import mymqtt from '../mymqtt'
+import checkingInputs from '../checkingInputs'
 
 export default {
   data() {
@@ -47,52 +48,12 @@ export default {
     this.mqtt_client.on('subscribe', (topic) => {
       console.log('Subscribed too: ', topic)
     })
-    // this.mqtt_client.subscribe('dentistimo/login', { qos: 0 }, (error, res) => {
-    //   if (error) {
-    //     console.log('error = ', error)
-    //   } else {
-    //     console.log('res = ', res)
-    //   }
-    // })
   },
   methods: {
-    makeid(n) {
-      let text = ''
-      const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-      for (let i = 0; i < n; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length))
-      }
-      return text
-    },
-    containsSpecialChars(str) {
-      const specialChars = '[`!@#$%^&*()_+-=[]{};\':"\\|,.<>/?~]/'
-      return specialChars.split('')
-        .some((specialChar) => str.includes(specialChar))
-    },
-    containsNumbers(str) {
-      const specialChars = '1234567890'
-      return specialChars.split('')
-        .some((specialChar) => str.includes(specialChar))
-    },
-    checkStringLength(str) {
-      if (str.length >= 8 && str.length <= 16) {
-        return true
-      } else {
-        return false
-      }
-    },
-    checkEmail(string) {
-      const condition = string.includes('@')
-      if (condition) {
-        return true
-      } else {
-        return false
-      }
-    },
     checkPassword() {
-      const result1 = this.containsSpecialChars(this.changePasswordText)
-      const result2 = this.containsNumbers(this.changePasswordText)
-      const result3 = this.checkStringLength(this.changePasswordText)
+      const result1 = checkingInputs.containsSpecialChars(this.changePasswordText)
+      const result2 = checkingInputs.strinContainsNumbers(this.changePasswordText)
+      const result3 = checkingInputs.checkStringLength(this.changePasswordText)
       if (result1 === false) {
         this.unsuccessful = 'password needs a special character'
         return false
@@ -100,7 +61,7 @@ export default {
         this.unsuccessful = 'password needs a number'
         return false
       } else if (result3 === false) {
-        this.unsuccessful = 'password needs to be between 8 and 16 characters'
+        this.unsuccessful = 'password needs to be between 8 and 99 characters'
         return false
       } else {
         this.unsuccessful = ''
@@ -108,34 +69,37 @@ export default {
       }
     },
     login() {
-      console.log('login')
-      const check = this.checkPassword()
-      const check2 = this.checkEmail(this.changeEmailText)
-      if (check2 === false) {
-        this.unsuccessful = 'email needs to contain @'
-      } else if (check === false) {
-        // responses in checkPassword()
-      } else {
-        this.requestID = this.makeid(10)
-        // console.log(this.requestID)
-        this.mqtt_client.subscribe('dentistimo/login/' + this.requestID, { qos: 0 }, (error, res) => {
-          if (error) {
-            console.log('error = ', error)
-          }
-        })
-        this.mqtt_client.subscribe('dentistimo/login/error/' + this.requestID, { qos: 0 }, (error, res) => {
-          if (error) {
-            console.log('error = ', error)
-          }
-        })
-        const payload = JSON.stringify({
-          email: this.changeEmailText,
-          password: this.changePasswordText,
-          requestId: this.requestID
-        })
-        console.log('login2')
-        this.mqtt_client.publish(this.topic, payload, this.qos)
-      }
+      const test1 = JSON.stringify({
+        token: '123QWE!@#',
+        firstName: 'liam',
+        lastName: 'axelrod',
+        email: 'liamaxelrod@gmail.com',
+        companyName: 'wonder tooth'
+      })
+      localStorage.setItem('accountInfo', test1)
+      // const check = this.checkPassword()
+      // const check2 = checkingInputs.checkEmail(this.changeEmailText)
+      // if (check2 === false) {
+      //   this.unsuccessful = 'email needs to contain @'
+      // } else if (check === false) {
+      //   // responses in checkPassword()
+      // } else {
+      //   this.requestID = checkingInputs.makeRandomId(10)
+      //   this.mqtt_client.subscribe('dentistimo/login/' + this.requestID, { qos: 0 }, (error, res) => {
+      //     if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
+      //   })
+      //   this.mqtt_client.subscribe('dentistimo/login/error/' + this.requestID, { qos: 0 }, (error, res) => {
+      //     if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
+      //   })
+      //   const payload = JSON.stringify({
+      //     email: this.changeEmailText,
+      //     password: this.changePasswordText,
+      //     requestId: this.requestID
+      //   })
+      //   this.mqtt_client.publish(this.topic, payload, this.qos)
+      // }
+      this.$router.push('/')
+      location.reload()
     },
     register() {
       // not working

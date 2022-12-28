@@ -22,7 +22,7 @@
 </template>
 
 <script>
-// import App from '../App.vue'
+import checkingInputs from '../checkingInputs'
 import mymqtt from '../mymqtt'
 
 export default {
@@ -62,59 +62,21 @@ export default {
     this.mqtt_client.on('subscribe', (topic) => {
       console.log('Subscribed too: ', topic)
     })
-    // this.mqtt_client.subscribe('dentistimo/register/dentist', { qos: 0 }, (error, res) => {
-    //   if (error) {
-    //     console.log('error = ', error)
-    //   } else {
-    //     console.log('res = ', res)
-    //   }
-    // })
   },
   methods: {
-    makeid(n) {
-      let text = ''
-      const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-      for (let i = 0; i < n; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length))
-      }
-      return text
-    },
-    containsSpecialChars(str) {
-      const specialChars = '[`!@#$%^&*()_+-=[]{};\':"\\|,.<>/?~]/'
-      return specialChars.split('')
-        .some((specialChar) => str.includes(specialChar))
-    },
-    containsNumbers(str) {
-      const specialChars = '1234567890'
-      return specialChars.split('')
-        .some((specialChar) => str.includes(specialChar))
-    },
-    checkStringLength(str) {
-      if (str.length >= 8 && str.length <= 16) {
-        return true
-      } else {
-        return false
-      }
-    },
-    checkForSamePasswords() {
-      if (this.changePasswordText === this.changeCheckPasswordText) {
-        return true
-      } else {
-        return false
-      }
-    },
     checkPassword() {
-      const result1 = this.containsSpecialChars(this.changePasswordText)
-      const result2 = this.containsNumbers(this.changePasswordText)
-      const result3 = this.checkStringLength(this.changePasswordText)
+      const result1 = checkingInputs.containsSpecialChars(this.changePasswordText)
+      const result2 = checkingInputs.strinContainsNumbers(this.changePasswordText)
+      const result3 = checkingInputs.checkStringLength(this.changePasswordText)
+      console.log(result1, result2, result3)
       if (result1 === false) {
-        this.unsuccessful = 'password needs a special character'
+        this.unsuccessful = 'password needs a special character in enter new passworrd'
         return false
       } else if (result2 === false) {
-        this.unsuccessful = 'password needs a number'
+        this.unsuccessful = 'password needs a number in enter new passworrd'
         return false
       } else if (result3 === false) {
-        this.unsuccessful = 'password needs to be between 8 and 16 characters'
+        this.unsuccessful = 'password needs to be between 8 and 99 characters in enter new passworrd'
         return false
       } else {
         this.unsuccessful = ''
@@ -124,7 +86,7 @@ export default {
     register() {
       if (this.checkPassword() === false) {
         // responses are in checkPassword()
-      } else if (this.checkForSamePasswords() === false) {
+      } else if (checkingInputs.checkSameString(this.changePasswordText, this.changeCheckPasswordText) === false) {
         this.unsuccessful = 'passwords are not the same'
       } else if (this.changeFirstNameText === '') {
         this.unsuccessful = 'first name is empty'
@@ -135,21 +97,12 @@ export default {
       } else if (this.changeEmailText === '') {
         this.unsuccessful = 'email is empty'
       } else {
-        this.requestID = this.makeid(10)
-        // console.log(this.requestID)
+        this.requestID = checkingInputs.makeRandomId(10)
         this.mqtt_client.subscribe('dentistimo/register/dentist/' + this.requestID, { qos: 0 }, (error, res) => {
-          if (error) {
-            console.log('error = ', error)
-          } else {
-            console.log('res = ', res)
-          }
+          if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
         })
         this.mqtt_client.subscribe('dentistimo/register/error/' + this.requestID, { qos: 0 }, (error, res) => {
-          if (error) {
-            console.log('error = ', error)
-          } else {
-            console.log('res fail = ', res)
-          }
+          if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
         })
         const payload = JSON.stringify({
           firstName: this.changeFirstNameText,
