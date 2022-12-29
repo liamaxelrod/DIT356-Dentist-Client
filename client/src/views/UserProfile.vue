@@ -1,57 +1,72 @@
 <template>
   <div class="background">
-   <div class="div1">
-    <p></p>
+    <div class="div1">
+      <p></p>
       <p id="firstName">first name: {{accoountInfo.firstName}}</p>
       <p id="lastName">last name: {{accoountInfo.lastName}}</p>
       <p id="company">company: {{accoountInfo.company}}</p>
       <p id="email">email: {{accoountInfo.email}}</p>
-    <div class="deleteAccount">
-      <button class="btn btn-danger" id="buttonDeleteAccount" @click="deleteAccount">DELETE Account</button>
     </div>
-   </div>
-   <div class="div2">
-    <p></p>
-    <input id="inputFirstName" v-model='changeFirstNameText' placeholder="enter new first name">
-    <input id="inputLastName" v-model='changeLastNameText' placeholder="enter new last name">
-    <input id="inputPassword" v-model='changePasswordText' placeholder="enter new password">
-    <input id="inputCompany" v-model='changeCompanyText' placeholder="enter new company">
-    <input id="inputEmail" v-model='changeEmailText' placeholder="enter new email">
-    <P></P>
-    <button id="bittpnChangeFirstName" @click="changeFirstName" class="btn btn-success btn-lg">change first name</button>
-    <button id="bittpnChangeLastName" @click="changeLastName" class="btn btn-success btn-lg">change last name</button>
-    <button id="bittpnChangePassword" @click="changePassword" class="btn btn-success btn-lg">change password</button>
-    <button id="bittpnChangeCompany" @click="changeCompany" class="btn btn-success btn-lg">change company</button>
-    <button id="bittpnChangeEmail" @click="changeEmail" class="btn btn-success btn-lg">change email</button>
-   </div>
+    <div class="div2">
+      <div class="in2div1">
+        <p id="popUp">{{ this.unsuccessful }}</p>
+        <p id="popUp2">{{ this.successful }}</p>
+        <p id="checkPassword">check password</p>
+        <input id="inputCheckPassword" v-model='checkPasswordText' placeholder="enter password">
+        <button class="btn btn-success" id="buttonChange" @click="changeFirstName">change first name</button>
+        <button class="btn btn-success" id="buttonChange" @click="changeLastName">change last name</button>
+        <button class="btn btn-success" id="buttonChange" @click="changeCompanyName">change company</button>
+        <button class="btn btn-success" id="buttonChange" @click="changeEmail">change email</button>
+        <button class="btn btn-success" id="buttonChange" @click="changePassword">change password</button>    </div>
+      <div class="in2div2">
+        <p id="changeFirstName">change first name</p>
+        <input id="inputFirstName" v-model='changeFirstNameText' placeholder="enter new first name">
+        <p></p>
+        <p id="changelastName">change last name</p>
+        <input id="inputLastName" v-model='changeLastNameText' placeholder="enter new last name">
+        <p></p>
+        <p id="changeCompanyName">change company</p>
+        <input id="inputCompany" v-model='changeCompanyNameText' placeholder="enter new company">
+        </div>
+      <div class="in2div3">
+        <p id="changeEmail">change email</p>
+        <input id="inputEmail" v-model='changeEmailText' placeholder="enter new email">
+        <p></p>
+        <p id="changePassword">change password</p>
+        <input id="inputpassword" v-model='changePasswordText' placeholder="enter new password">
+        <p></p>
+        <p></p>
+        <p></p>
+        <button class="btn btn-danger" id="buttonChange" @click="deleteAccount">DELETE Account</button>
+      </div>
+    </div>
   </div>
 </template>
-
 <script>
+import checkingInputs from '../checkingInputs'
 import mymqtt from '../mymqtt'
 
 export default {
   data() {
     return {
-      topic1: 'dentistimo/dentist/account/changes/first/name',
-      topic2: 'dentistimo/dentist/account/changes/last/name',
-      topic3: 'dentistimo/dentist/account/changes/password',
-      topic4: 'dentistimo/dentist/account/changes/company',
-      topic5: 'dentistimo/dentist/account/changes/email',
-      topic6: 'dentistimo/dentist/account/changes/delete',
+      topic: 'dentistimo/update-user',
+      topicError: 'dentistimo/dentists/delete/error/',
       changeFirstNameText: '',
       changeLastNameText: '',
-      changePasswordText: '',
-      changeCompanyText: '',
+      changeCompanyNameText: '',
       changeEmailText: '',
+      changePasswordText: '',
+      checkPasswordText: '',
       mqtt_client: null,
+      receive: '',
+      unsuccessful: '',
+      successful: '',
+      Usetoken: '',
       accoountInfo: {
-        firstName: 'firstName',
-        lastName: 'lastName',
-        password: 'password',
-        company: 'companyName',
-        email: 'email'
-
+        firstName: '',
+        lastName: '',
+        company: '',
+        email: ''
       }
     }
   },
@@ -66,89 +81,103 @@ export default {
     this.mqtt_client.on('subscribe', (topic) => {
       console.log('Subscribed too: ', topic)
     })
-    // this.mqtt_client.subscribe(this.topic, { qos: 0 }, (error, res) => {
-    //   if (error) {
-    //     console.log('error = ', error)
-    //   } else {
-    //     console.log('res = ', res)
-    //   }
-    // })
+    this.accoountInfo.firstName = JSON.parse(localStorage.getItem('accountInfo')).firstName
+    this.accoountInfo.lastName = JSON.parse(localStorage.getItem('accountInfo')).lastName
+    this.accoountInfo.company = JSON.parse(localStorage.getItem('accountInfo')).companyName
+    this.accoountInfo.email = JSON.parse(localStorage.getItem('accountInfo')).email
   },
   methods: {
+    checkifblank(input) {
+      if (input === '') {
+        return true
+      } else {
+        return false
+      }
+    },
     changeFirstName() {
-      const payload = JSON.stringify({
-        dentistId: 'need dentistid',
-        category: 'first name',
-        change: this.changeFirstNameText
-      })
-      this.mqtt_client.subscribe(this.topic1, { qos: 0 }, (error, res) => {
-        if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
-      })
-      const topic = 'dentistimo/dentist/breaks'
-      const qos = 0
-      this.mqtt_client.publish(topic, payload, qos)
+      if (!this.checkifblank(this.changeFirstNameText)) {
+        const payload = JSON.stringify({
+          idToken: this.Usetoken,
+          Attribute: 'firstName',
+          newValue: this.changeFirstNameText,
+          password: this.checkPasswordText
+        })
+        this.publish(payload, this.topic, this.topicError)
+        this.changeFirstNameText = ''
+      } else {
+        this.unsuccessful = 'please enter new first name'
+      }
     },
     changeLastName() {
-      const payload = JSON.stringify({
-        dentistId: 'need dentistid',
-        category: 'last name',
-        change: this.changeLastNameText
-      })
-      this.mqtt_client.subscribe(this.topic2, { qos: 0 }, (error, res) => {
-        if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
-      })
-      const topic = 'dentistimo/dentist/breaks'
-      const qos = 0
-      this.mqtt_client.publish(topic, payload, qos)
+      if (!this.checkifblank(this.changeLastNameText)) {
+        const payload = JSON.stringify({
+          idToken: this.Usetoken,
+          Attribute: 'lastName',
+          newValue: this.changeLastNameText,
+          password: this.checkPasswordText
+        })
+        this.publish(payload, this.topic, this.topicError)
+        this.changeLastNameText = ''
+      } else {
+        this.unsuccessful = 'please enter new last name'
+      }
     },
     changePassword() {
-      const payload = JSON.stringify({
-        dentistId: 'need dentistid',
-        category: 'password',
-        change: this.changePasswordText
-      })
-      this.mqtt_client.subscribe(this.topic3, { qos: 0 }, (error, res) => {
-        if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
-      })
-      const topic = 'dentistimo/dentist/breaks'
-      const qos = 0
-      this.mqtt_client.publish(topic, payload, qos)
+      if (!this.checkifblank(this.changePasswordText)) {
+        const payload = JSON.stringify({
+          idToken: this.Usetoken,
+          Attribute: 'password',
+          newValue: this.changePasswordText,
+          password: this.checkPasswordText
+        })
+        this.publish(payload, this.topic, this.topicError)
+        this.changePasswordText = ''
+      } else {
+        this.unsuccessful = 'please enter new password'
+      }
     },
-    changeCompany() {
-      const payload = JSON.stringify({
-        dentistId: 'need dentistid',
-        category: 'company',
-        change: this.changeCompanyText
-      })
-      this.mqtt_client.subscribe(this.topic4, { qos: 0 }, (error, res) => {
-        if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
-      })
-      const topic = 'dentistimo/dentist/breaks'
-      const qos = 0
-      this.mqtt_client.publish(topic, payload, qos)
+    changeCompanyName() {
+      if (!this.checkifblank(this.changeCompanyNameText)) {
+        const payload = JSON.stringify({
+          idToken: this.Usetoken,
+          Attribute: 'companyName',
+          newValue: this.changeCompanyNameText,
+          password: this.checkPasswordText
+        })
+        this.publish(payload, this.topic, this.topicError)
+        this.changeCompanyNameText = ''
+      } else {
+        this.unsuccessful = 'please enter new company name'
+      }
     },
     changeEmail() {
-      const payload = JSON.stringify({
-        dentistId: 'need dentistid',
-        category: 'email',
-        change: this.changeEmailText
-      })
-      this.mqtt_client.subscribe(this.topic5, { qos: 0 }, (error, res) => {
-        if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
-      })
-      const topic = 'dentistimo/dentist/breaks'
-      const qos = 0
-      this.mqtt_client.publish(topic, payload, qos)
+      if (!this.checkifblank(this.changeEmailText)) {
+        const payload = JSON.stringify({
+          idToken: this.Usetoken,
+          Attribute: 'email',
+          newValue: this.changeEmailText,
+          password: this.checkPasswordText
+        })
+        this.publish(payload, this.topic, this.topicError)
+        this.changeEmailText = ''
+      } else {
+        this.unsuccessful = 'please enter new email'
+      }
     },
     deleteAccount() {
       const payload = JSON.stringify({
-        dentistId: 'need dentistid',
+        idToken: this.Usetoken,
+        password: this.checkPasswordText,
         delete: 'delete'
       })
-      this.mqtt_client.subscribe(this.topic6, { qos: 0 }, (error, res) => {
+      this.publish(payload, 'dentistimo/dentists/delete', 'dentistimo/dentists/delete/error/')
+    },
+    publish(payload, publishTopic, subscribeTopic) {
+      this.Usetoken = checkingInputs.makeRandomId(10)
+      this.mqtt_client.subscribe(subscribeTopic + this.Usetoken, { qos: 0 }, (error, res) => {
         if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
       })
-      const topic = 'dentistimo/dentist/breaks'
+      const topic = publishTopic
       const qos = 0
       this.mqtt_client.publish(topic, payload, qos)
     }
@@ -157,28 +186,79 @@ export default {
 </script>
 
 <style>
-.background {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row; /* won't turn into a row */
-  height: 100%;
-  width: 100%;
+background{
+display: flex;
+justify-content: center;
+align-items: center;
+flex-direction: column;
+height: 100%;
+width: 100%;
 }
 .div1 {
-  /* background:white; */
-  height: 100%;
-  width: 100%;
-  padding: 20px;
-  border: 10px
-  solid rgb(0, 255, 106);
+display: flex;
+justify-content: center;
+align-items: center;
+flex-direction: column;
+height: 100%;
+width: 100%;
+padding: 20px;
+/* border: 10px
+solid rgb(0, 255, 106); */
 }
 .div2 {
-  /* background: white; */
-  height: 100%;
-  width: 100%;
-  padding: 20px;
-  border: 10px
-  solid rgb(221, 255, 0);
+display: flex;
+flex-direction: row;
+height: 100%;
+width: 100%;
+/* border: 10px
+solid rgb(221, 255, 0); */
+}
+.in2div1 {
+display: flex;
+justify-content: center;
+align-items: center;
+flex-direction: column;
+height: 100%;
+width: 34%;
+padding: 20px;
+/* border: 10px
+solid rgb(0, 255, 106); */
+}
+.in2div2 {
+display: flex;
+justify-content: center;
+align-items: center;
+flex-direction: column;
+height: 100%;
+width: 33%;
+padding: 20px;
+/* border: 10px
+solid rgb(221, 255, 0); */
+}
+.in2div3 {
+display: flex;
+justify-content: center;
+align-items: center;
+flex-direction: column;
+height: 100%;
+width: 33%;
+padding: 20px;
+/* border: 10px
+solid rgb(0, 255, 106); */
+}
+#firstName, #lastName, #company, #email {
+font-size: 20px;
+}
+#popUp {
+font-size: 20px;
+color: red;
+}
+#popUp2 {
+font-size: 20px;
+color: green;
+}
+#buttonChange {
+width: 21vh;
+margin: 5px;
 }
 </style>
