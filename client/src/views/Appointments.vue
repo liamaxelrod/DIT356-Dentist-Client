@@ -22,7 +22,7 @@
           <li class="list-group-item">Time</li>
         </ul>
       </div>
-      <div class="card border-danger mb-3" style="width: 17rem;">
+      <!-- <div class="card border-danger mb-3" style="width: 17rem;">
         <div class="card-header text-danger">
           Cancel Appointment
         </div>
@@ -30,7 +30,7 @@
           <input id="inputDate" v-model="cancelDate" placeholder="Date of appointment YYYY-MM-DD"/>
           <input id="inputTime" v-model="cancelTime" placeholder="Time of appointment 00:00"/>
         </ul>
-      </div>
+      </div> -->
     </div>
     <div class="div2">
       <p class="text-center" id="h1"> working hours </p>
@@ -42,16 +42,8 @@
       <p> Saturday: {{ this.workTime.saturday }}</p>
       <p> Sunday: {{ this.workTime.sunday }}</p>
       <p>{{ this.unsuccessfulBreakChange }}</p>
-      <select v-model='displayDay'>
-        <option>Monday</option>
-        <option>Tuesday</option>
-        <option>Wednesday</option>
-        <option>Thursday</option>
-        <option>Friday</option>
-        <option>Saturday</option>
-        <option>Sunday</option>
-      </select>
-      <p>selected day: { {{ this.displayDay }} }</p>
+      <input type="date" v-model='displayData'>
+      <p>selected date: { {{ this.displayData }} }</p>
       <div class="timeBreak">
         <input type="time" v-model='displayTime'>
         <p>selected time: { {{ this.displayTime }} }</p>
@@ -72,7 +64,7 @@ export default {
   data() {
     return {
       unsuccessfulBreakChange: '',
-      displayDay: '',
+      displayData: '',
       selectFika: '',
       displayTime: '',
       mqtt_client: null,
@@ -157,56 +149,22 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
 /*
 Change so it covers 100% not PX
 */
-@media (max-width: 800px) { /* still not working as intended */
-  .background {
-    display: flex;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-  }
-  .div1 {
-  /* background:white; */
-  height: 100%;
-  width: 50%;
-  padding: 20px;
-  border: 10px
-  solid rgb(0, 255, 106);
-  flex-direction: column;
-}
-.div2 {
-  /* background: white; */
-  height: 100%;
-  width: 50%;
-  padding: 20px;
-  border: 10px
-  solid rgb(221, 255, 0);
-  flex-direction: column;
-}
-}
+@media (max-width: 800px) {}
 .background {
   display: flex;
-  height: 100%;
   justify-content: center;
   align-items: center;
   flex-direction: row;
+  height: 100%;
+  width: 100%;
 }
 .div1 {
-  /* background:white; */
-  height: 100%;
-  width: 50%;
-  padding: 20px;
-  /* border: 10px
-  solid rgb(0, 255, 106); */
+border: 10px
+solid rgb(0, 255, 106);
 }
-
 .div2 {
-  /* background: white; */
-  height: 100%;
-  width: 50%;
-  padding: 20px;
-  /* border: 10px
-  solid rgb(221, 255, 0); */
+border: 10px
+solid rgb(221, 255, 0);
 }
 #h1 {
   /* float: center; */
