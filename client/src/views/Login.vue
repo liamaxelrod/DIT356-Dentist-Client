@@ -71,7 +71,7 @@ export default {
     login() {
       const test1 = JSON.stringify({
         token: '123QWE!@#',
-        firstName: 'liam',
+        firstName: 'Liam',
         lastName: 'axelrod',
         email: 'liamaxelrod@gmail.com',
         companyName: 'wonder tooth'

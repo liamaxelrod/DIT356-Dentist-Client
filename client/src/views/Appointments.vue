@@ -12,17 +12,12 @@
           <div class="card-header text-info">
             Appointment information
           </div>
-          <div class="card border-danger mb-3" style="width: 17rem;">
-            <div class="card-header text-danger">
-              Cancel Appointment
-            </div>
             <ul class="list-group list-group-flush text-info">
-              <li class="list-group-item" v-bind="userid">Client ID: {{ userid }}</li>
-              <li class="list-group-item" v-bind="date">Date: {{ date }}</li>
-              <li class="list-group-item" v-bind="time">Time: {{ time }}</li>
-              <li class="list-group-item" v-bind="issuance">Issuance ID: {{ issuance }}</li>
+              <li class="list-group-item" v-bind="userid">Client ID: {{ userid.slice(0,-2) }}</li>
+              <li class="list-group-item" v-bind="date">Date: {{ date.slice(0,-2) }}</li>
+              <li class="list-group-item" v-bind="time">Time: {{ time.slice(0,-2) }}</li>
+              <li class="list-group-item" v-bind="issuance">Issuance ID: {{ issuance.slice(0,-2) }}</li>
             </ul>
-          </div>
             <b class="btn btn-dark" @click="appointments" style= "width: 17rem;">Get appointments</b>
         </div>
         <div class="card border-danger mb-3" style="width: 17rem;">
@@ -36,7 +31,7 @@
         </div>
       </div>
     </div>
-    <!-- <div class="div2">
+<!--<div class="div2">
       <p class="text-center" id="h1"> working hours </p>
       <p> Monday: {{ this.workTime.monday }} </p>
       <p> Tuesday: {{ this.workTime.tuesday }}</p>
@@ -57,8 +52,8 @@
         <p>selected time: { {{ this.displayTime }} }</p>
         <button class="btn btn-primary" id="buttonLunchBreak" @click="changeLunchBreak">change lunch break</button>
       </div>
-    </div> -->
-  </div>
+      -->
+    </div>
 </template>
 
 <script>
@@ -77,7 +72,7 @@ export default {
       userid: '',
       date: '',
       time: '',
-      issuanceID: '',
+      issuance: '',
       cancelIssuance: '',
       news: 'none',
       subscription: {
@@ -99,10 +94,16 @@ export default {
     this.mqtt_client = mymqtt.createClient()
     const msgCallback = (topic, message) => {
       const obj = JSON.parse(message.toString())
-      this.userid = obj[0].userid
-      this.date = obj[0].date
-      this.time = obj[0].time
-      this.issuance = obj[0].issuance
+      this.userid = ''
+      this.date = ''
+      this.time = ''
+      this.issuance = ''
+      obj.forEach(bookingInformation => {
+        this.userid += (bookingInformation.userid) + ', '
+        this.date += (bookingInformation.date) + ', '
+        this.time += (bookingInformation.time) + ', '
+        this.issuance += (bookingInformation.issuance) + ', '
+      })
       console.log({ topic: topic, message: message.toString() })
     }
     this.mqtt_client.on('message', msgCallback)
@@ -157,9 +158,9 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
         issuance: this.cancelIssuance
       })
       console.log(payload)
-      // const topic = 'dentistimo/booking/delete-booking'
-      // const qos = 0
-      // this.mqtt_client.publish(topic, payload, qos)
+      const topic = 'dentistimo/booking/delete-booking'
+      const qos = 0
+      this.mqtt_client.publish(topic, payload, qos)
     }
   }
 }
@@ -182,6 +183,7 @@ Change so it covers 100% not PX
 border: 10px
 solid rgb(0, 255, 106);
 }
+
 .div2 {
 border: 10px
 solid rgb(221, 255, 0);
