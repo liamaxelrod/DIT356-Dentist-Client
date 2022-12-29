@@ -61,7 +61,6 @@ export default {
     } else {
       this.accountStatus = 'login in'
       this.name = ': ' + JSON.parse(localStorage.getItem('accountInfo')).firstName
-      console.log(this.name)
       console.log('logged in')
     }
   },
@@ -81,6 +80,7 @@ export default {
         // do something
       } else {
         this.$router.push('/userProfile')
+        location.reload()
       }
     },
     appointments() {
@@ -88,6 +88,7 @@ export default {
         // do something
       } else {
         this.$router.push('/appointments')
+        location.reload()
       }
     },
     checkIfLogin() {

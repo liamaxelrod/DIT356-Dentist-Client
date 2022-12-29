@@ -6,18 +6,16 @@
       <p id="lastName">last name: {{accoountInfo.lastName}}</p>
       <p id="company">company: {{accoountInfo.company}}</p>
       <p id="email">email: {{accoountInfo.email}}</p>
+      <p id="popUp">{{ this.unsuccessful }}</p>
+      <p id="popUp2">{{ this.successful }}</p>
     </div>
     <div class="div2">
       <div class="in2div1">
-        <p id="popUp">{{ this.unsuccessful }}</p>
-        <p id="popUp2">{{ this.successful }}</p>
-        <p id="checkPassword">check password</p>
+        <p id="checkPassword">insert current password</p>
+        <p id="checkPassword">before making change</p>
         <input id="inputCheckPassword" v-model='checkPasswordText' placeholder="enter password">
-        <button class="btn btn-success" id="buttonChange" @click="changeFirstName">change first name</button>
-        <button class="btn btn-success" id="buttonChange" @click="changeLastName">change last name</button>
-        <button class="btn btn-success" id="buttonChange" @click="changeCompanyName">change company</button>
-        <button class="btn btn-success" id="buttonChange" @click="changeEmail">change email</button>
-        <button class="btn btn-success" id="buttonChange" @click="changePassword">change password</button>    </div>
+        <button class="btn btn-success" id="buttonChange" @click="makeChange">make change</button>
+      </div>
       <div class="in2div2">
         <p id="changeFirstName">change first name</p>
         <input id="inputFirstName" v-model='changeFirstNameText' placeholder="enter new first name">
@@ -25,8 +23,8 @@
         <p id="changelastName">change last name</p>
         <input id="inputLastName" v-model='changeLastNameText' placeholder="enter new last name">
         <p></p>
-        <p id="changeCompanyName">change company</p>
-        <input id="inputCompany" v-model='changeCompanyNameText' placeholder="enter new company">
+        <p id="changeCompanyId">change company ID</p>
+        <input id="inputCompany" v-model='changeCompanyIdText' placeholder="enter new company ID">
         </div>
       <div class="in2div3">
         <p id="changeEmail">change email</p>
@@ -43,7 +41,7 @@
   </div>
 </template>
 <script>
-import checkingInputs from '../checkingInputs'
+// import checkingInputs from '../checkingInputs'
 import mymqtt from '../mymqtt'
 
 export default {
@@ -53,7 +51,7 @@ export default {
       topicError: 'dentistimo/dentists/delete/error/',
       changeFirstNameText: '',
       changeLastNameText: '',
-      changeCompanyNameText: '',
+      changeCompanyIdText: '',
       changeEmailText: '',
       changePasswordText: '',
       checkPasswordText: '',
@@ -66,6 +64,7 @@ export default {
         firstName: '',
         lastName: '',
         company: '',
+        officeId: '',
         email: ''
       }
     }
@@ -83,85 +82,59 @@ export default {
     })
     this.accoountInfo.firstName = JSON.parse(localStorage.getItem('accountInfo')).firstName
     this.accoountInfo.lastName = JSON.parse(localStorage.getItem('accountInfo')).lastName
-    this.accoountInfo.company = JSON.parse(localStorage.getItem('accountInfo')).companyName
+    this.accoountInfo.officeId = JSON.parse(localStorage.getItem('accountInfo')).officeId
     this.accoountInfo.email = JSON.parse(localStorage.getItem('accountInfo')).email
+    this.Usetoken = JSON.parse(localStorage.getItem('accountInfo')).IdToken
+    if (this.accoountInfo.officeId === 1) {
+      this.accoountInfo.company = 'Your Dentist'
+    } else if (this.accoountInfo.officeId === 2) {
+      this.accoountInfo.company = 'Tooth Fairy Dentist'
+    } else if (this.accoountInfo.officeId === 3) {
+      this.accoountInfo.company = 'The Crown'
+    } else if (this.accoountInfo.officeId === 3) {
+      this.accoountInfo.company = 'Lisebergs Dentists'
+    }
   },
   methods: {
-    checkifblank(input) {
-      if (input === '') {
+    attributesCheck() {
+      if (this.changeFirstNameText === '' && this.changeLastNameText === '' && this.changeCompanyIdText === '' && this.changeEmailText === '' && this.changePasswordText === '') {
+        this.unsuccessful = 'please enter at least one attribute to change'
+      } else {
         return true
-      } else {
-        return false
       }
     },
-    changeFirstName() {
-      if (!this.checkifblank(this.changeFirstNameText)) {
-        const payload = JSON.stringify({
-          idToken: this.Usetoken,
-          Attribute: 'firstName',
-          newValue: this.changeFirstNameText,
-          password: this.checkPasswordText
-        })
-        this.publish(payload, this.topic, this.topicError)
+    makePayload() {
+      const payload = {
+        idToken: this.Usetoken,
+        checkPassword: this.checkPasswordText
+      }
+      if (this.changeFirstNameText !== '') {
+        payload.firstName = this.changeFirstNameText
         this.changeFirstNameText = ''
-      } else {
-        this.unsuccessful = 'please enter new first name'
       }
-    },
-    changeLastName() {
-      if (!this.checkifblank(this.changeLastNameText)) {
-        const payload = JSON.stringify({
-          idToken: this.Usetoken,
-          Attribute: 'lastName',
-          newValue: this.changeLastNameText,
-          password: this.checkPasswordText
-        })
-        this.publish(payload, this.topic, this.topicError)
+      if (this.changeLastNameText !== '') {
+        payload.lastName = this.changeLastNameText
         this.changeLastNameText = ''
-      } else {
-        this.unsuccessful = 'please enter new last name'
       }
-    },
-    changePassword() {
-      if (!this.checkifblank(this.changePasswordText)) {
-        const payload = JSON.stringify({
-          idToken: this.Usetoken,
-          Attribute: 'password',
-          newValue: this.changePasswordText,
-          password: this.checkPasswordText
-        })
-        this.publish(payload, this.topic, this.topicError)
-        this.changePasswordText = ''
-      } else {
-        this.unsuccessful = 'please enter new password'
+      if (this.changeCompanyIdText !== '') {
+        payload.officeId = this.changeCompanyIdText
+        this.changeCompanyIdText = ''
       }
-    },
-    changeCompanyName() {
-      if (!this.checkifblank(this.changeCompanyNameText)) {
-        const payload = JSON.stringify({
-          idToken: this.Usetoken,
-          Attribute: 'companyName',
-          newValue: this.changeCompanyNameText,
-          password: this.checkPasswordText
-        })
-        this.publish(payload, this.topic, this.topicError)
-        this.changeCompanyNameText = ''
-      } else {
-        this.unsuccessful = 'please enter new company name'
-      }
-    },
-    changeEmail() {
-      if (!this.checkifblank(this.changeEmailText)) {
-        const payload = JSON.stringify({
-          idToken: this.Usetoken,
-          Attribute: 'email',
-          newValue: this.changeEmailText,
-          password: this.checkPasswordText
-        })
-        this.publish(payload, this.topic, this.topicError)
+      if (this.changeEmailText !== '') {
+        payload.email = this.changeEmailText
         this.changeEmailText = ''
-      } else {
-        this.unsuccessful = 'please enter new email'
+      }
+      if (this.changePasswordText !== '') {
+        payload.password = this.changePasswordText
+        this.changePasswordText = ''
+      }
+      JSON.stringify(payload)
+      return payload
+    },
+    makeChange() {
+      if (this.attributesCheck()) {
+        const payload = this.makePayload()
+        this.publish(payload, this.topic, this.topicError)
       }
     },
     deleteAccount() {
@@ -173,7 +146,7 @@ export default {
       this.publish(payload, 'dentistimo/dentists/delete', 'dentistimo/dentists/delete/error/')
     },
     publish(payload, publishTopic, subscribeTopic) {
-      this.Usetoken = checkingInputs.makeRandomId(10)
+      // this.Usetoken = checkingInputs.makeRandomId(10)
       this.mqtt_client.subscribe(subscribeTopic + this.Usetoken, { qos: 0 }, (error, res) => {
         if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
       })
@@ -186,7 +159,7 @@ export default {
 </script>
 
 <style>
-background{
+.background{
 display: flex;
 justify-content: center;
 align-items: center;
@@ -260,5 +233,11 @@ color: green;
 #buttonChange {
 width: 21vh;
 margin: 5px;
+}
+#checkPassword {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
 }
 </style>

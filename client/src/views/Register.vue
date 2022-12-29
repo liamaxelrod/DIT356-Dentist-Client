@@ -12,7 +12,7 @@
             <P></P>
             <input id="checkPassword" v-model='changeCheckPasswordText' placeholder="reenter your password">
             <P></P>
-            <input id="inputCompany" v-model='changecompanyText' placeholder="enter new Company">
+            <input id="inputCompany" v-model='changecompanyText' placeholder="enter company ID number">
             <P></P>
             <input id="inputeEmail" v-model='changeEmailText' placeholder="enter new Email">
             <P></P>
@@ -109,7 +109,7 @@ export default {
           lastName: this.changeLastNameText,
           password: this.changePasswordText,
           passwordCheck: this.changeCheckPasswordText,
-          companyName: this.changecompanyText,
+          officeId: this.changecompanyText,
           email: this.changeEmailText,
           requestId: this.requestID
         })

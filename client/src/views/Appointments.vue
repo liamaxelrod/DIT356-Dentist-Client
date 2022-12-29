@@ -36,44 +36,54 @@
         </div>
       </div>
     </div>
-    <!-- <div class="div2">
-      <p class="text-center" id="h1"> working hours </p>
-      <p> Monday: {{ this.workTime.monday }} </p>
-      <p> Tuesday: {{ this.workTime.tuesday }}</p>
-      <p> Wednesday: {{ this.workTime.wednesday }}</p>
-      <p> Thursday: {{ this.workTime.thursday }}</p>
-      <p> Friday: {{ this.workTime.friday }}</p>
-      <p> Saturday: {{ this.workTime.saturday }}</p>
-      <p> Sunday: {{ this.workTime.sunday }}</p>
-      <p>{{ this.unsuccessfulBreakChange }}</p>
-      <input type="date" v-model='displayData'>
-      <p>selected date: { {{ this.displayData }} }</p>
-      <div class="timeBreak">
-        <input type="time" v-model='displayTime'>
-        <p>selected time: { {{ this.displayTime }} }</p>
-        <button class="btn btn-primary" id="buttonFikaBreak" @click="changeFikaBreak">change fika break</button>
-        <p></p>
-        <input type="time" v-model='displayTime'>
-        <p>selected time: { {{ this.displayTime }} }</p>
-        <button class="btn btn-primary" id="buttonLunchBreak" @click="changeLunchBreak">change lunch break</button>
+    <div class="div2">
+      <div class="div2-1">
+        <p class="text-center" id="h1"> working hours </p>
+        <p> Monday: {{ this.workTime.monday }} </p>
+        <p> Tuesday: {{ this.workTime.tuesday }}</p>
+        <p> Wednesday: {{ this.workTime.wednesday }}</p>
+        <p> Thursday: {{ this.workTime.thursday }}</p>
+        <p> Friday: {{ this.workTime.friday }}</p>
+        <p> Saturday: {{ this.workTime.saturday }}</p>
+        <p> Sunday: {{ this.workTime.sunday }}</p>
+        <p>{{ this.unsuccessfulBreak }}</p>
       </div>
-    </div> -->
+      <div class="div2-2">
+        <p>{{ this.unsuccessfulBreak }}{{ this.successfulBreak }}</p>
+        <input type="date" v-model='breakData'>
+        <p>selected Data: {{ this.breakData }}</p>
+        <input type="time" v-model='breakTime'>
+        <p>selected time: {{ this.breakTime }}</p>
+        <button class="btn btn-primary" id="buttonFikaBreak" @click="makeFikaBreak">make fika break</button>
+        <button class="btn btn-primary" id="buttonFikaBreak" @click="changeFikaBreak">change fika break</button>
+        <button class="btn btn-danger" id="buttonFikaBreak" @click="deleteFikaBreak">delete</button>
+        <p></p>
+        <input type="time" v-model='breakTime'>
+        <p>selected time: {{ this.breakTime }}</p>
+        <button class="btn btn-primary" id="buttonLunchBreak" @click="makeLunchBreak">make lunch break</button>
+        <button class="btn btn-primary" id="buttonLunchBreak" @click="changeLunchBreak">change lunch break</button>
+        <button class="btn btn-danger" id="buttonLunchBreak" @click="deleteLunchBreak">delete</button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import checkingInputs from '../checkingInputs'
 import mymqtt from '../mymqtt'
 
 export default {
   data() {
     return {
-      unsuccessfulBreakChange: '',
-      displayData: '',
-      selectFika: '',
-      displayTime: '',
+      topicBreaks: 'dentistimo/dentist/breaks',
+      topicBreaksError: 'dentistimo/dentist/breaks/error/',
+      unsuccessfulBreak: '',
+      successfulBreak: '',
+      breakData: '',
+      breakTime: '',
       mqtt_client: null,
-      value: '',
       receive: '',
+      value: '',
       userid: '',
       date: '',
       time: '',
@@ -116,6 +126,7 @@ export default {
         console.log('res = ', res)
       }
     })
+    this.Usetoken = JSON.parse(localStorage.getItem('accountInfo')).token
   },
   /*
 Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so it knows what dentist is logged in and uses that dentist
@@ -130,28 +141,6 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
       const qos = 0
       this.mqtt_client.publish(topic, payload, qos)
     },
-    changeFikaBreak() {
-      const payload = JSON.stringify({
-        dentistid: 'need dentistid',
-        breakType: 'Fika',
-        date: 'null',
-        time: this.displayTime
-      })
-      const topic = 'dentistimo/dentist/breaks'
-      const qos = 0
-      this.mqtt_client.publish(topic, payload, qos)
-    },
-    changeLunchBreak() {
-      const payload = JSON.stringify({
-        dentistid: 'need dentistid',
-        breakType: 'lunch',
-        date: 'null',
-        time: this.displayTime
-      })
-      const topic = 'dentistimo/dentist/breaks'
-      const qos = 0
-      this.mqtt_client.publish(topic, payload, qos)
-    },
     cancelAppointments() {
       const payload = JSON.stringify({
         issuance: this.cancelIssuance
@@ -160,6 +149,35 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
       // const topic = 'dentistimo/booking/delete-booking'
       // const qos = 0
       // this.mqtt_client.publish(topic, payload, qos)
+    },
+    changeFikaBreak() {
+      const payload = JSON.stringify({
+        idToken: 'need dentistid',
+        breakType: 'Fika',
+        date: this.breakData,
+        time: this.breakTime
+      })
+      this.publishMessage(payload, this.topicBreaks, this.topicBreaksError)
+    },
+    changeLunchBreak() {
+      const payload = JSON.stringify({
+        idToken: 'need dentistid',
+        breakType: 'lunch',
+        date: this.breakData,
+        time: this.breakTime
+      })
+      const topic = 'dentistimo/dentist/breaks'
+      const qos = 0
+      this.mqtt_client.publish(topic, payload, qos)
+    },
+    publishMessage(payload, publishTopic, subscribeTopic) {
+      this.Usetoken = checkingInputs.makeRandomId(10)
+      this.mqtt_client.subscribe(subscribeTopic + this.Usetoken, { qos: 0 }, (error, res) => {
+        if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
+      })
+      const topic = publishTopic
+      const qos = 0
+      this.mqtt_client.publish(topic, payload, qos)
     }
   }
 }
@@ -169,7 +187,7 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
 /*
 Change so it covers 100% not PX
 */
-@media (max-width: 800px) {}
+/* @media (max-width: 800px) {}
 .background {
   display: flex;
   justify-content: center;
@@ -185,12 +203,44 @@ solid rgb(0, 255, 106);
 .div2 {
 border: 10px
 solid rgb(221, 255, 0);
+} */
+.background {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+}
+.div1 {
+  /* border: 10px
+  solid rgb(0, 255, 106); */
+}
+.div2 {
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /* border: 10px
+  solid rgb(221, 255, 0); */
+}
+.div2-1 {
+  height: 100%;
+  width: 100%;
+}
+.div2-2 {
+  height: 100%;
+  width: 100%;
 }
 #h1 {
   /* float: center; */
   font-size: 20px;
   font-weight: bold;
   text-align: right;
+  /* color: rgb(0, 255, 106); */
+}
+#buttonFikaBreak, #buttonLunchBreak {
+  /* float: center; */
+  margin: 3px;
   /* color: rgb(0, 255, 106); */
 }
 
