@@ -1,6 +1,6 @@
 <template>
     <div class="home">
-      <img src="https://i0.wp.com/thedentistsdorridge.co.uk/wp-content/uploads/2019/11/be_a_denist.jpg?fit=1024%2C683&ssl=1" style="width: 100%" />
+      <img id="image" src="https://i0.wp.com/thedentistsdorridge.co.uk/wp-content/uploads/2019/11/be_a_denist.jpg?fit=1024%2C683&ssl=1"/>
       <section class="hero is-dark">
         <div class="hero-body">
           <div class="container">
@@ -24,11 +24,17 @@ export default {
 
 </script>
 <style>
- /* .hero {
-    background-image: url('https://i0.wp.com/thedentistsdorridge.co.uk/wp-content/uploads/2019/11/be_a_denist.jpg?fit=1024%2C683&ssl=1');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    height: 100%;
-  } */
+.home {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  background-color: #80BAB2;
+}
+#image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 </style>
