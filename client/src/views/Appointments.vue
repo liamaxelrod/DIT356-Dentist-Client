@@ -2,37 +2,41 @@
   <div class="background">
     <div class="div1">
       <b-row>
-        <b-col md="auto">
-          <!-- ADD INFORMATION IF THERE IS NO APPOINTMENT THAT DAY -->
-          <b-calendar v-model="value" locale="en-EU"></b-calendar>
-        </b-col>
-        <b-col>
-          <p>Value: <b>'{{ value }}'</b></p>
-        </b-col>
+      <b-col md="auto">
+        <!-- ADD INFORMATION IF THERE IS NO APPOINTMENT THAT DAY -->
+        <b-calendar v-model="value" locale="en-EU"></b-calendar>
+      </b-col>
       </b-row>
-      <p onchange="myFunction" >| {{this.receive}} |</p>
-      <b class="btn btn-dark" @click="appointments" style= "width: 17rem;">Get appointments</b>
-      <div class="card border-info mb-3" style="width: 17rem;">
-        <div class="card-header text-info">
-          Appointment information
+      <div>
+        <div class="card border-info mb-3" style="width: 17rem;">
+          <div class="card-header text-info">
+            Appointment information
+          </div>
+          <div class="card border-danger mb-3" style="width: 17rem;">
+            <div class="card-header text-danger">
+              Cancel Appointment
+            </div>
+            <ul class="list-group list-group-flush text-info">
+              <li class="list-group-item" v-bind="userid">Client ID: {{ userid }}</li>
+              <li class="list-group-item" v-bind="date">Date: {{ date }}</li>
+              <li class="list-group-item" v-bind="time">Time: {{ time }}</li>
+              <li class="list-group-item" v-bind="issuance">Issuance ID: {{ issuance }}</li>
+            </ul>
+          </div>
+            <b class="btn btn-dark" @click="appointments" style= "width: 17rem;">Get appointments</b>
         </div>
-        <ul class="list-group list-group-flush text-info">
-          <li class="list-group-item">Client ID</li>
-          <li class="list-group-item">Date</li>
-          <li class="list-group-item">Time</li>
-        </ul>
+        <div class="card border-danger mb-3" style="width: 17rem;">
+          <div class="card-header text-danger">
+            Cancel Appointment
+          </div>
+          <ul class="list-group list-group-flush text-info">
+            <input id="inputIssuance" v-model="cancelIssuance" placeholder="Issuance ID"/>
+            <b class="btn btn-danger" @click="cancelAppointments" style= "width: 17rem;">Cancel</b>
+          </ul>
+        </div>
       </div>
-      <!-- <div class="card border-danger mb-3" style="width: 17rem;">
-        <div class="card-header text-danger">
-          Cancel Appointment
-        </div>
-        <ul class="list-group list-group-flush text-info">
-          <input id="inputDate" v-model="cancelDate" placeholder="Date of appointment YYYY-MM-DD"/>
-          <input id="inputTime" v-model="cancelTime" placeholder="Time of appointment 00:00"/>
-        </ul>
-      </div> -->
     </div>
-    <div class="div2">
+    <!-- <div class="div2">
       <p class="text-center" id="h1"> working hours </p>
       <p> Monday: {{ this.workTime.monday }} </p>
       <p> Tuesday: {{ this.workTime.tuesday }}</p>
@@ -53,7 +57,7 @@
         <p>selected time: { {{ this.displayTime }} }</p>
         <button class="btn btn-primary" id="buttonLunchBreak" @click="changeLunchBreak">change lunch break</button>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -70,7 +74,11 @@ export default {
       mqtt_client: null,
       value: '',
       receive: '',
-      context: '',
+      userid: '',
+      date: '',
+      time: '',
+      issuanceID: '',
+      cancelIssuance: '',
       news: 'none',
       subscription: {
         topic: 'dentistimo/dentist-appointment/all-appointments-day',
@@ -90,8 +98,11 @@ export default {
   mounted() {
     this.mqtt_client = mymqtt.createClient()
     const msgCallback = (topic, message) => {
-      this.receive = message.toString()
-      this.context = message.toString()
+      const obj = JSON.parse(message.toString())
+      this.userid = obj[0].userid
+      this.date = obj[0].date
+      this.time = obj[0].time
+      this.issuance = obj[0].issuance
       console.log({ topic: topic, message: message.toString() })
     }
     this.mqtt_client.on('message', msgCallback)
@@ -140,6 +151,15 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
       const topic = 'dentistimo/dentist/breaks'
       const qos = 0
       this.mqtt_client.publish(topic, payload, qos)
+    },
+    cancelAppointments() {
+      const payload = JSON.stringify({
+        issuance: this.cancelIssuance
+      })
+      console.log(payload)
+      // const topic = 'dentistimo/booking/delete-booking'
+      // const qos = 0
+      // this.mqtt_client.publish(topic, payload, qos)
     }
   }
 }
