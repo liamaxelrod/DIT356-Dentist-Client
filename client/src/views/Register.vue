@@ -49,12 +49,15 @@ export default {
   mounted() {
     this.mqtt_client = mymqtt.createClient()
     const msgCallback = (topic, message) => {
+      this.unsuccessful = ''
       this.receive = message.toString()
       console.log(topic)
+      console.log('message received' + message.toString())
       if (topic.includes('error')) {
         this.unsuccessful = this.receive
-      } else {
+      } else if (message.includes(this.changeEmailText)) {
         console.log('success')
+        this.$router.push('/login')
       }
       // console.log({ topic: topic, message: message.toString() })
     }
@@ -68,7 +71,7 @@ export default {
       const result1 = checkingInputs.containsSpecialChars(this.changePasswordText)
       const result2 = checkingInputs.strinContainsNumbers(this.changePasswordText)
       const result3 = checkingInputs.checkStringLength(this.changePasswordText)
-      console.log(result1, result2, result3)
+      // console.log(result1, result2, result3)
       if (result1 === false) {
         this.unsuccessful = 'password needs a special character in enter new passworrd'
         return false
@@ -114,7 +117,8 @@ export default {
           requestId: this.requestID
         })
         this.mqtt_client.publish(this.topic, payload, this.qos)
-        // this.$router.push('/login')
+        console.log('message published')
+        this.unsuccessful = 'register error please try agaain later'
       }
     }
   }

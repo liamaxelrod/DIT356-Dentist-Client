@@ -35,6 +35,7 @@ export default {
   mounted() {
     this.mqtt_client = mymqtt.createClient()
     const msgCallback = (topic, message) => {
+      this.unsuccessful = ''
       this.receive = message.toString()
       if (topic.includes('error')) {
         this.unsuccessful = this.receive
@@ -43,6 +44,7 @@ export default {
         console.log('success')
         console.log(this.receive)
         if (this.receive.includes(this.changeEmailText)) {
+          // localStorage.removeItem('accountInfo') // --> don't know if there will be an error if it doesn't existwhen you first login for the first time
           localStorage.setItem('accountInfo', this.receive)
           this.$router.push('/')
           location.reload()
@@ -106,10 +108,10 @@ export default {
           requestId: this.requestID
         })
         this.mqtt_client.publish(this.topic, payload, this.qos)
+        this.unsuccessful = 'login error please try again later' // if a message is received this will return to being blank
       }
     },
     register() {
-      // not working
       this.$router.push('/register')
     }
   }
