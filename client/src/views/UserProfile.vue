@@ -10,13 +10,13 @@
       <p id="popUp2">{{ this.successful }}</p>
     </div>
     <div class="div2">
-      <div class="in2div1">
+      <div class="inDiv2Div1">
         <p id="checkPassword">insert current password</p>
         <p id="checkPassword">before making change</p>
         <input id="inputCheckPassword" v-model='checkPasswordText' placeholder="enter password">
         <button class="btn btn-success" id="buttonChange" @click="makeChange">make change</button>
       </div>
-      <div class="in2div2">
+      <div class="inDiv2Div2">
         <p id="changeFirstName">change first name</p>
         <input id="inputFirstName" v-model='changeFirstNameText' placeholder="enter new first name">
         <p></p>
@@ -25,17 +25,12 @@
         <p></p>
         <p id="changeCompanyId">change company ID</p>
         <input id="inputCompany" v-model='changeCompanyIdText' placeholder="enter new company ID">
-        </div>
-      <div class="in2div3">
+        <p></p>
         <p id="changeEmail">change email</p>
         <input id="inputEmail" v-model='changeEmailText' placeholder="enter new email">
         <p></p>
         <p id="changePassword">change password</p>
         <input id="inputpassword" v-model='changePasswordText' placeholder="enter new password">
-        <p></p>
-        <p></p>
-        <p></p>
-        <button class="btn btn-danger" id="buttonChange" @click="deleteAccount">DELETE Account</button>
       </div>
     </div>
   </div>
@@ -124,14 +119,14 @@ export default {
         this.publish(this.makePayload(), this.topic, this.topicError)
       }
     },
-    deleteAccount() {
-      const payload = JSON.stringify({
-        idToken: this.Usetoken,
-        password: this.checkPasswordText,
-        delete: 'delete'
-      })
-      this.publish(payload, 'dentistimo/dentists/delete', 'dentistimo/dentists/delete/error/')
-    },
+    // deleteAccount() { //this feature was removed from the application
+    //   const payload = JSON.stringify({
+    //     idToken: this.Usetoken,
+    //     password: this.checkPasswordText,
+    //     delete: 'delete'
+    //   })
+    //   this.publish(payload, 'dentistimo/dentists/delete', 'dentistimo/dentists/delete/error/')
+    // },
     publish(payload, publishTopic, subscribeTopic) {
       // this.Usetoken = checkingInputs.makeRandomId(10)
       this.mqtt_client.subscribe(publishTopic + '/' + this.Usetoken, { qos: 2 }, (error, res) => {
@@ -222,18 +217,28 @@ width: 100%;
 /* border: 10px
 solid rgb(221, 255, 0); */
 }
-.in2div1 {
+.inDiv2Div1 {
+display: flex;
+align-items: center;
+flex-direction: column;
+height: 100%;
+width: 30%;
+padding: 20px;
+/* border: 10px
+solid rgb(0, 255, 106); */
+}
+.inDiv2Div2 {
 display: flex;
 justify-content: center;
 align-items: center;
 flex-direction: column;
 height: 100%;
-width: 34%;
+width: 70%;
 padding: 20px;
-/* border: 10px
-solid rgb(0, 255, 106); */
+border: 10px
+solid rgb(221, 255, 0);
 }
-.in2div2 {
+/* .in2div3 {
 display: flex;
 justify-content: center;
 align-items: center;
@@ -242,19 +247,8 @@ height: 100%;
 width: 33%;
 padding: 20px;
 /* border: 10px
-solid rgb(221, 255, 0); */
-}
-.in2div3 {
-display: flex;
-justify-content: center;
-align-items: center;
-flex-direction: column;
-height: 100%;
-width: 33%;
-padding: 20px;
-/* border: 10px
-solid rgb(0, 255, 106); */
-}
+solid rgb(0, 255, 106);
+} */
 #firstName, #lastName, #company, #email {
 font-size: 20px;
 }
