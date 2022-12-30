@@ -46,6 +46,8 @@ export default {
           localStorage.setItem('accountInfo', this.receive)
           this.$router.push('/')
           location.reload()
+        } else {
+          this.unsuccessful = 'Login failed' // not working figured out when Felix is programs not running with my
         }
       }
       // console.log({ topic: topic, message: message.toString() })
@@ -92,10 +94,10 @@ export default {
         // responses in checkPassword()
       } else {
         this.requestID = checkingInputs.makeRandomId(10)
-        this.mqtt_client.subscribe('dentistimo/login/dentist/' + this.requestID, { qos: 0 }, (error, res) => {
+        this.mqtt_client.subscribe('dentistimo/login/dentist/' + this.requestID, { qos: 2 }, (error, res) => {
           if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
         })
-        this.mqtt_client.subscribe('dentistimo/login/error/' + this.requestID, { qos: 0 }, (error, res) => {
+        this.mqtt_client.subscribe('dentistimo/login/error/' + this.requestID, { qos: 2 }, (error, res) => {
           if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
         })
         const payload = JSON.stringify({

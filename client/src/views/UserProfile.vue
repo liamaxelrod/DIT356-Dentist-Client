@@ -47,8 +47,8 @@ import mymqtt from '../mymqtt'
 export default {
   data() {
     return {
-      topic: 'dentistimo/update-user',
-      topicError: 'dentistimo/dentists/delete/error/',
+      topic: 'dentistimo/modify-user',
+      topicError: 'dentistimo/modify-user/error/',
       changeFirstNameText: '',
       changeLastNameText: '',
       changeCompanyIdText: '',
@@ -75,25 +75,13 @@ export default {
       this.receive = message.toString()
       this.context = message.toString()
       console.log({ topic: topic, message: message.toString() })
+      this.buildNewLocalStorage()
     }
     this.mqtt_client.on('message', msgCallback)
     this.mqtt_client.on('subscribe', (topic) => {
       console.log('Subscribed too: ', topic)
     })
-    this.accoountInfo.firstName = JSON.parse(localStorage.getItem('accountInfo')).firstName
-    this.accoountInfo.lastName = JSON.parse(localStorage.getItem('accountInfo')).lastName
-    this.accoountInfo.officeId = JSON.parse(localStorage.getItem('accountInfo')).officeId
-    this.accoountInfo.email = JSON.parse(localStorage.getItem('accountInfo')).email
-    this.Usetoken = JSON.parse(localStorage.getItem('accountInfo')).IdToken
-    if (this.accoountInfo.officeId === 1) {
-      this.accoountInfo.company = 'Your Dentist'
-    } else if (this.accoountInfo.officeId === 2) {
-      this.accoountInfo.company = 'Tooth Fairy Dentist'
-    } else if (this.accoountInfo.officeId === 3) {
-      this.accoountInfo.company = 'The Crown'
-    } else if (this.accoountInfo.officeId === 3) {
-      this.accoountInfo.company = 'Lisebergs Dentists'
-    }
+    this.updateDisplay()
   },
   methods: {
     attributesCheck() {
@@ -128,13 +116,12 @@ export default {
         payload.password = this.changePasswordText
         this.changePasswordText = ''
       }
-      JSON.stringify(payload)
-      return payload
+      const JSONpayload = JSON.stringify(payload)
+      return JSONpayload
     },
     makeChange() {
       if (this.attributesCheck()) {
-        const payload = this.makePayload()
-        this.publish(payload, this.topic, this.topicError)
+        this.publish(this.makePayload(), this.topic, this.topicError)
       }
     },
     deleteAccount() {
@@ -147,12 +134,61 @@ export default {
     },
     publish(payload, publishTopic, subscribeTopic) {
       // this.Usetoken = checkingInputs.makeRandomId(10)
-      this.mqtt_client.subscribe(subscribeTopic + this.Usetoken, { qos: 0 }, (error, res) => {
+      this.mqtt_client.subscribe(publishTopic + '/' + this.Usetoken, { qos: 2 }, (error, res) => {
         if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
       })
-      const topic = publishTopic
-      const qos = 0
-      this.mqtt_client.publish(topic, payload, qos)
+      this.mqtt_client.subscribe(subscribeTopic + this.Usetoken, { qos: 2 }, (error, res) => {
+        if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
+      })
+      const qos = 2
+      this.mqtt_client.publish(publishTopic, payload, qos)
+      // location.reload()
+      /*
+      {topic: 'dentistimo/modify-user/eyJhbGciOiJIUzI1NiIsInR5cCI…udCJ9.5I8BgLecrrcL0qeOuy6NIstTie3yLqcjpjc6w9BK2nI',
+      message: 'Update successful: {"firstName":"liam","lastName":…od",
+      "email":"liamaxelrod@gmail.com",
+      "officeId":1}'}
+      */
+    },
+    buildNewLocalStorage() {
+      if (this.receive.includes('Update successful')) {
+        localStorage.setItem('temporary', this.receive)
+        const newFirstName = JSON.parse(localStorage.getItem('temporary')).firstName
+        const newLastName = JSON.parse(localStorage.getItem('temporary')).lastName
+        const newOfficeId = JSON.parse(localStorage.getItem('temporary')).officeId
+        const newEmail = JSON.parse(localStorage.getItem('temporary')).email
+        const oldIdToken = JSON.parse(localStorage.getItem('accountInfo')).IdToken
+        const oldDentistId = JSON.parse(localStorage.getItem('accountInfo')).dentistId
+        const newAccountInfo = JSON.stringify({
+          IdToken: oldIdToken,
+          firstName: newFirstName,
+          lastName: newLastName,
+          email: newEmail,
+          officeId: newOfficeId,
+          dentistId: oldDentistId
+        })
+        localStorage.setItem('accountInfo', newAccountInfo)
+        localStorage.removeItem('temporary')
+        this.updateDisplay()
+      } else if (this.receive.includes('dentistimo/modify-user/error')) {
+        this.unsuccessful = this.receive
+      }
+    },
+    updateDisplay() {
+      this.accoountInfo.firstName = JSON.parse(localStorage.getItem('accountInfo')).firstName
+      this.accoountInfo.lastName = JSON.parse(localStorage.getItem('accountInfo')).lastName
+      this.accoountInfo.officeId = JSON.parse(localStorage.getItem('accountInfo')).officeId
+      this.accoountInfo.email = JSON.parse(localStorage.getItem('accountInfo')).email
+      this.Usetoken = JSON.parse(localStorage.getItem('accountInfo')).IdToken
+      if (this.accoountInfo.officeId === 1) {
+        this.accoountInfo.company = 'Your Dentist'
+      } else if (this.accoountInfo.officeId === 2) {
+        this.accoountInfo.company = 'Tooth Fairy Dentist'
+      } else if (this.accoountInfo.officeId === 3) {
+        this.accoountInfo.company = 'The Crown'
+      } else if (this.accoountInfo.officeId === 3) {
+        this.accoountInfo.company = 'Lisebergs Dentists'
+      }
     }
   }
 }

@@ -31,7 +31,7 @@ export default {
       mqtt_client: null,
       receive: '', // receives messages
       requestID: '',
-      qos: 0,
+      qos: 2,
       topic: 'dentistimo/register/dentist',
       changeFirstNameText: '',
       changeLastNameText: '',
@@ -98,10 +98,10 @@ export default {
         this.unsuccessful = 'email is empty'
       } else {
         this.requestID = checkingInputs.makeRandomId(10)
-        this.mqtt_client.subscribe('dentistimo/register/dentist/' + this.requestID, { qos: 0 }, (error, res) => {
+        this.mqtt_client.subscribe('dentistimo/register/dentist/' + this.requestID, { qos: 2 }, (error, res) => {
           if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
         })
-        this.mqtt_client.subscribe('dentistimo/register/error/' + this.requestID, { qos: 0 }, (error, res) => {
+        this.mqtt_client.subscribe('dentistimo/register/error/' + this.requestID, { qos: 2 }, (error, res) => {
           if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
         })
         const payload = JSON.stringify({
@@ -114,6 +114,7 @@ export default {
           requestId: this.requestID
         })
         this.mqtt_client.publish(this.topic, payload, this.qos)
+        // this.$router.push('/login')
       }
     }
   }
