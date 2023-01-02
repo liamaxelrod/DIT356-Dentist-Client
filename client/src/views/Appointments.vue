@@ -72,6 +72,7 @@ import mymqtt from '../mymqtt'
 export default {
   data() {
     return {
+      topicSchedule: 'dentistimo/dentist-office/fetch-one',
       topicBreaks: 'dentistimo/dentist/breaks',
       topicDelete: 'dentistimo/booking/delete-break',
       successfulBreak: '',
@@ -106,6 +107,7 @@ export default {
   mounted() {
     this.mqtt_client = mymqtt.createClient()
     const msgCallback = (topic, message) => {
+      console.log(message)
       const obj = JSON.parse(message.toString())
       this.userid = obj[0].userid
       this.date = obj[0].date
@@ -132,12 +134,13 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
   */
   methods: {
     appointments() {
+      const thisDentistid = JSON.parse(localStorage.getItem('accountInfo')).dentistid
       const payload = JSON.stringify({
-        dentistid: 2,
+        dentistid: thisDentistid,
         date: this.value
       })
       const topic = 'dentistimo/dentist-appointment/get-all-appointments-day'
-      const qos = 0
+      const qos = 2
       this.mqtt_client.publish(topic, payload, qos)
     },
     cancelAppointments() {
@@ -146,12 +149,14 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
       })
       console.log(payload)
       // const topic = 'dentistimo/booking/delete-booking'
-      // const qos = 0
+      // const qos = 2
       // this.mqtt_client.publish(topic, payload, qos)
     },
     makeFikaBreak() {
+      const thisDentistid = JSON.parse(localStorage.getItem('accountInfo')).dentistid
+      console.log(thisDentistid + ' this is the dentistid')
       const payload = JSON.stringify({
-        dentistid: JSON.parse(localStorage.getItem('accountInfo')).dentistId,
+        dentistid: thisDentistid,
         date: this.breakData,
         time: this.breakTime,
         appointmentType: 'fika'
@@ -159,8 +164,9 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
       this.publishMessageSameTopic(payload, this.topicBreaks, this.topicBreaks)
     },
     makeLunchBreak() {
+      const thisDentistid = JSON.parse(localStorage.getItem('accountInfo')).dentistid
       const payload = JSON.stringify({
-        dentistid: JSON.parse(localStorage.getItem('accountInfo')).dentistId,
+        dentistid: thisDentistid,
         date: this.breakData,
         time: this.breakTime,
         appointmentType: 'lunch'
@@ -168,16 +174,18 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
       this.publishMessageSameTopic(payload, this.topicBreaks, this.topicBreaks)
     },
     deleteFikaBreak() {
+      const thisDentistid = JSON.parse(localStorage.getItem('accountInfo')).dentistid
       const payload = JSON.stringify({
-        dentistid: JSON.parse(localStorage.getItem('accountInfo')).dentistId,
+        dentistid: thisDentistid,
         date: this.breakData,
         time: this.breakTime
       })
       this.publishMessageSameTopic(payload, this.topicDelete, this.topicDelete)
     },
     deleteLunchBreak() {
+      const thisDentistid = JSON.parse(localStorage.getItem('accountInfo')).dentistid
       const payload = JSON.stringify({
-        dentistid: JSON.parse(localStorage.getItem('accountInfo')).dentistId,
+        dentistid: thisDentistid,
         date: this.breakData,
         time: this.breakTime
       })
@@ -201,6 +209,13 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
       const topic = publishTopic
       const qos = 0
       this.mqtt_client.publish(topic, payload, qos)
+    },
+    receiveSchedule() {
+      const officeId = JSON.parse(localStorage.getItem('accountInfo')).officeId
+      const payload = JSON.stringify({
+        id: officeId
+      })
+      this.publishMessageSameTopic(payload, this.topicSchedule, 'dentistimo/dentist-office/one-office')
     }
   }
 }
@@ -215,7 +230,7 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
   height: 100%;
   width: 100%;
   min-width: 700px;
-  min-height: 750px;
+  min-height: 900px;
 }
 .div1 {
   /* border: 10px
