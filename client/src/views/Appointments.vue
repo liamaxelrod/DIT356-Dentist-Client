@@ -13,12 +13,13 @@
             Appointment information
           </div>
             <ul class="list-group list-group-flush text-info">
-              <li class="list-group-item" v-bind="userid">Client ID: {{ userid.slice(0,-2) }}</li>
-              <li class="list-group-item" v-bind="date">Date: {{ date.slice(0,-2) }}</li>
-              <li class="list-group-item" v-bind="time">Time: {{ time.slice(0,-2) }}</li>
-              <li class="list-group-item" v-bind="issuance">Issuance ID: {{ issuance.slice(0,-2) }}</li>
+              <li class="list-group-item">Client ID: {{ userid.slice(0,-2) }}</li>
+              <li class="list-group-item">Date: {{ date.slice(0,-2) }}</li>
+              <li class="list-group-item">Time: {{ time.slice(0,-2) }}</li>
+              <li class="list-group-item">Issuance ID: {{ issuance.slice(0,-2) }}</li>
             </ul>
             <b class="btn btn-dark" @click="appointments" style= "width: 17rem;">Get appointments</b>
+            <p>{{ this.noAppointments }}</p>
         </div>
         <div class="card border-danger mb-3" style="width: 17rem;">
           <div class="card-header text-danger">
@@ -81,7 +82,12 @@ export default {
       userid: '',
       date: '',
       time: '',
+      lunchDate: '',
+      lunchTime: '',
+      fikaDate: '',
+      fikaTime: '',
       issuance: '',
+      noAppointments: '',
       cancelIssuance: '',
       news: 'none',
       subscription: {
@@ -102,17 +108,28 @@ export default {
   mounted() {
     this.mqtt_client = mymqtt.createClient()
     const msgCallback = (topic, message) => {
-      console.log(message)
+      this.noAppointments = ''
       const obj = JSON.parse(message.toString())
       this.userid = ''
       this.date = ''
       this.time = ''
       this.issuance = ''
       obj.forEach(bookingInformation => {
-        this.userid += (bookingInformation.userid) + ', '
-        this.date += (bookingInformation.date) + ', '
-        this.time += (bookingInformation.time) + ', '
-        this.issuance += (bookingInformation.issuance) + ', '
+        if (bookingInformation.appointmentType === 'appointment') {
+          console.log('appointment')
+          this.userid += (bookingInformation.userid) + ', '
+          this.date += (bookingInformation.date) + ', '
+          this.time += (bookingInformation.time) + ', '
+          this.issuance += (bookingInformation.issuance) + ', '
+        } else if (bookingInformation.appointmentType === 'lunch') {
+          console.log('lunch')
+          console.log(bookingInformation)
+          this.lunchDate += (bookingInformation.date)
+          this.lunchTime += (bookingInformation.time)
+          this.DisplayedLunchBreak = 'Lunch break: ' + this.lunchDate + ' ' + this.lunchTime
+        } else if (bookingInformation.appointmentType === 'fika') {
+          console.log('fika')
+        }
       })
       console.log({ topic: topic, message: message.toString() })
     }
@@ -138,6 +155,7 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
         dentistid: thisDentistid,
         date: this.value
       })
+      this.noAppointments = 'no appointments'
       const topic = 'dentistimo/dentist-appointment/get-all-appointments-day'
       const qos = 2
       this.mqtt_client.publish(topic, payload, qos)
