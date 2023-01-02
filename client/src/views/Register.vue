@@ -12,7 +12,7 @@
             <P></P>
             <input id="checkPassword" v-model='changeCheckPasswordText' placeholder="reenter your password">
             <P></P>
-            <input id="inputCompany" v-model='changecompanyText' placeholder="enter new Company">
+            <input id="inputCompany" v-model='changecompanyText' placeholder="enter company ID number">
             <P></P>
             <input id="inputeEmail" v-model='changeEmailText' placeholder="enter new Email">
             <P></P>
@@ -31,7 +31,7 @@ export default {
       mqtt_client: null,
       receive: '', // receives messages
       requestID: '',
-      qos: 0,
+      qos: 2,
       topic: 'dentistimo/register/dentist',
       changeFirstNameText: '',
       changeLastNameText: '',
@@ -49,12 +49,15 @@ export default {
   mounted() {
     this.mqtt_client = mymqtt.createClient()
     const msgCallback = (topic, message) => {
+      this.unsuccessful = ''
       this.receive = message.toString()
       console.log(topic)
+      console.log('message received' + message.toString())
       if (topic.includes('error')) {
         this.unsuccessful = this.receive
-      } else {
+      } else if (message.includes(this.changeEmailText)) {
         console.log('success')
+        this.$router.push('/login')
       }
       // console.log({ topic: topic, message: message.toString() })
     }
@@ -68,7 +71,7 @@ export default {
       const result1 = checkingInputs.containsSpecialChars(this.changePasswordText)
       const result2 = checkingInputs.strinContainsNumbers(this.changePasswordText)
       const result3 = checkingInputs.checkStringLength(this.changePasswordText)
-      console.log(result1, result2, result3)
+      // console.log(result1, result2, result3)
       if (result1 === false) {
         this.unsuccessful = 'password needs a special character in enter new passworrd'
         return false
@@ -98,10 +101,10 @@ export default {
         this.unsuccessful = 'email is empty'
       } else {
         this.requestID = checkingInputs.makeRandomId(10)
-        this.mqtt_client.subscribe('dentistimo/register/dentist/' + this.requestID, { qos: 0 }, (error, res) => {
+        this.mqtt_client.subscribe('dentistimo/register/dentist/' + this.requestID, { qos: 2 }, (error, res) => {
           if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
         })
-        this.mqtt_client.subscribe('dentistimo/register/error/' + this.requestID, { qos: 0 }, (error, res) => {
+        this.mqtt_client.subscribe('dentistimo/register/error/' + this.requestID, { qos: 2 }, (error, res) => {
           if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
         })
         const payload = JSON.stringify({
@@ -109,11 +112,13 @@ export default {
           lastName: this.changeLastNameText,
           password: this.changePasswordText,
           passwordCheck: this.changeCheckPasswordText,
-          companyName: this.changecompanyText,
+          officeId: this.changecompanyText,
           email: this.changeEmailText,
           requestId: this.requestID
         })
         this.mqtt_client.publish(this.topic, payload, this.qos)
+        console.log('message published')
+        this.unsuccessful = 'register error please try agaain later'
       }
     }
   }
@@ -122,12 +127,14 @@ export default {
 
 <style>
 .background {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    height: 100%;
-    background-color: #80BAB2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  background-color: #80BAB2;
+  min-width: 700px;
+  min-height: 750px;
 }
 #pop-up {
     color: red;

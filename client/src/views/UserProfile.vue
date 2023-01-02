@@ -6,54 +6,47 @@
       <p id="lastName">last name: {{accoountInfo.lastName}}</p>
       <p id="company">company: {{accoountInfo.company}}</p>
       <p id="email">email: {{accoountInfo.email}}</p>
+      <p id="popUp">{{ this.unsuccessful }}</p>
+      <p id="popUp2">{{ this.successful }}</p>
     </div>
     <div class="div2">
-      <div class="in2div1">
-        <p id="popUp">{{ this.unsuccessful }}</p>
-        <p id="popUp2">{{ this.successful }}</p>
-        <p id="checkPassword">check password</p>
+      <div class="inDiv2Div1">
+        <p id="checkPassword">insert current password</p>
+        <p id="checkPassword">before making change</p>
         <input id="inputCheckPassword" v-model='checkPasswordText' placeholder="enter password">
-        <button class="btn btn-success" id="buttonChange" @click="changeFirstName">change first name</button>
-        <button class="btn btn-success" id="buttonChange" @click="changeLastName">change last name</button>
-        <button class="btn btn-success" id="buttonChange" @click="changeCompanyName">change company</button>
-        <button class="btn btn-success" id="buttonChange" @click="changeEmail">change email</button>
-        <button class="btn btn-success" id="buttonChange" @click="changePassword">change password</button>    </div>
-      <div class="in2div2">
+        <button class="btn btn-success" id="buttonChange" @click="makeChange">make change</button>
+      </div>
+      <div class="inDiv2Div2">
         <p id="changeFirstName">change first name</p>
         <input id="inputFirstName" v-model='changeFirstNameText' placeholder="enter new first name">
         <p></p>
         <p id="changelastName">change last name</p>
         <input id="inputLastName" v-model='changeLastNameText' placeholder="enter new last name">
         <p></p>
-        <p id="changeCompanyName">change company</p>
-        <input id="inputCompany" v-model='changeCompanyNameText' placeholder="enter new company">
-        </div>
-      <div class="in2div3">
+        <p id="changeCompanyId">change company ID</p>
+        <input id="inputCompany" v-model='changeCompanyIdText' placeholder="enter new company ID">
+        <p></p>
         <p id="changeEmail">change email</p>
         <input id="inputEmail" v-model='changeEmailText' placeholder="enter new email">
         <p></p>
         <p id="changePassword">change password</p>
         <input id="inputpassword" v-model='changePasswordText' placeholder="enter new password">
-        <p></p>
-        <p></p>
-        <p></p>
-        <button class="btn btn-danger" id="buttonChange" @click="deleteAccount">DELETE Account</button>
       </div>
     </div>
   </div>
 </template>
 <script>
-import checkingInputs from '../checkingInputs'
+// import checkingInputs from '../checkingInputs'
 import mymqtt from '../mymqtt'
 
 export default {
   data() {
     return {
-      topic: 'dentistimo/update-user',
-      topicError: 'dentistimo/dentists/delete/error/',
+      topic: 'dentistimo/modify-user',
+      topicError: 'dentistimo/modify-user/error/',
       changeFirstNameText: '',
       changeLastNameText: '',
-      changeCompanyNameText: '',
+      changeCompanyIdText: '',
       changeEmailText: '',
       changePasswordText: '',
       checkPasswordText: '',
@@ -66,6 +59,7 @@ export default {
         firstName: '',
         lastName: '',
         company: '',
+        officeId: '',
         email: ''
       }
     }
@@ -76,123 +70,135 @@ export default {
       this.receive = message.toString()
       this.context = message.toString()
       console.log({ topic: topic, message: message.toString() })
+      this.buildNewLocalStorage()
     }
     this.mqtt_client.on('message', msgCallback)
     this.mqtt_client.on('subscribe', (topic) => {
       console.log('Subscribed too: ', topic)
     })
-    this.accoountInfo.firstName = JSON.parse(localStorage.getItem('accountInfo')).firstName
-    this.accoountInfo.lastName = JSON.parse(localStorage.getItem('accountInfo')).lastName
-    this.accoountInfo.company = JSON.parse(localStorage.getItem('accountInfo')).companyName
-    this.accoountInfo.email = JSON.parse(localStorage.getItem('accountInfo')).email
+    this.updateDisplay()
   },
   methods: {
-    checkifblank(input) {
-      if (input === '') {
+    attributesCheck() {
+      if (this.changeFirstNameText === '' && this.changeLastNameText === '' && this.changeCompanyIdText === '' && this.changeEmailText === '' && this.changePasswordText === '') {
+        this.unsuccessful = 'please enter at least one attribute to change'
+      } else {
         return true
-      } else {
-        return false
       }
     },
-    changeFirstName() {
-      if (!this.checkifblank(this.changeFirstNameText)) {
-        const payload = JSON.stringify({
-          idToken: this.Usetoken,
-          Attribute: 'firstName',
-          newValue: this.changeFirstNameText,
-          password: this.checkPasswordText
-        })
-        this.publish(payload, this.topic, this.topicError)
-        this.changeFirstNameText = ''
-      } else {
-        this.unsuccessful = 'please enter new first name'
-      }
-    },
-    changeLastName() {
-      if (!this.checkifblank(this.changeLastNameText)) {
-        const payload = JSON.stringify({
-          idToken: this.Usetoken,
-          Attribute: 'lastName',
-          newValue: this.changeLastNameText,
-          password: this.checkPasswordText
-        })
-        this.publish(payload, this.topic, this.topicError)
-        this.changeLastNameText = ''
-      } else {
-        this.unsuccessful = 'please enter new last name'
-      }
-    },
-    changePassword() {
-      if (!this.checkifblank(this.changePasswordText)) {
-        const payload = JSON.stringify({
-          idToken: this.Usetoken,
-          Attribute: 'password',
-          newValue: this.changePasswordText,
-          password: this.checkPasswordText
-        })
-        this.publish(payload, this.topic, this.topicError)
-        this.changePasswordText = ''
-      } else {
-        this.unsuccessful = 'please enter new password'
-      }
-    },
-    changeCompanyName() {
-      if (!this.checkifblank(this.changeCompanyNameText)) {
-        const payload = JSON.stringify({
-          idToken: this.Usetoken,
-          Attribute: 'companyName',
-          newValue: this.changeCompanyNameText,
-          password: this.checkPasswordText
-        })
-        this.publish(payload, this.topic, this.topicError)
-        this.changeCompanyNameText = ''
-      } else {
-        this.unsuccessful = 'please enter new company name'
-      }
-    },
-    changeEmail() {
-      if (!this.checkifblank(this.changeEmailText)) {
-        const payload = JSON.stringify({
-          idToken: this.Usetoken,
-          Attribute: 'email',
-          newValue: this.changeEmailText,
-          password: this.checkPasswordText
-        })
-        this.publish(payload, this.topic, this.topicError)
-        this.changeEmailText = ''
-      } else {
-        this.unsuccessful = 'please enter new email'
-      }
-    },
-    deleteAccount() {
-      const payload = JSON.stringify({
+    makePayload() {
+      const payload = {
         idToken: this.Usetoken,
-        password: this.checkPasswordText,
-        delete: 'delete'
-      })
-      this.publish(payload, 'dentistimo/dentists/delete', 'dentistimo/dentists/delete/error/')
+        checkPassword: this.checkPasswordText
+      }
+      if (this.changeFirstNameText !== '') {
+        payload.firstName = this.changeFirstNameText
+        this.changeFirstNameText = ''
+      }
+      if (this.changeLastNameText !== '') {
+        payload.lastName = this.changeLastNameText
+        this.changeLastNameText = ''
+      }
+      if (this.changeCompanyIdText !== '') {
+        payload.officeId = this.changeCompanyIdText
+        this.changeCompanyIdText = ''
+      }
+      if (this.changeEmailText !== '') {
+        payload.email = this.changeEmailText
+        this.changeEmailText = ''
+      }
+      if (this.changePasswordText !== '') {
+        payload.password = this.changePasswordText
+        this.changePasswordText = ''
+      }
+      const JSONpayload = JSON.stringify(payload)
+      return JSONpayload
     },
+    makeChange() {
+      if (this.attributesCheck()) {
+        this.publish(this.makePayload(), this.topic, this.topicError)
+      }
+    },
+    // deleteAccount() { //this feature was removed from the application
+    //   const payload = JSON.stringify({
+    //     idToken: this.Usetoken,
+    //     password: this.checkPasswordText,
+    //     delete: 'delete'
+    //   })
+    //   this.publish(payload, 'dentistimo/dentists/delete', 'dentistimo/dentists/delete/error/')
+    // },
     publish(payload, publishTopic, subscribeTopic) {
-      this.Usetoken = checkingInputs.makeRandomId(10)
-      this.mqtt_client.subscribe(subscribeTopic + this.Usetoken, { qos: 0 }, (error, res) => {
+      // this.Usetoken = checkingInputs.makeRandomId(10)
+      this.mqtt_client.subscribe(publishTopic + '/' + this.Usetoken, { qos: 2 }, (error, res) => {
         if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
       })
-      const topic = publishTopic
-      const qos = 0
-      this.mqtt_client.publish(topic, payload, qos)
+      this.mqtt_client.subscribe(subscribeTopic + this.Usetoken, { qos: 2 }, (error, res) => {
+        if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
+      })
+      const qos = 2
+      this.mqtt_client.publish(publishTopic, payload, qos)
+      // location.reload()
+      /*
+      {topic: 'dentistimo/modify-user/eyJhbGciOiJIUzI1NiIsInR5cCI…udCJ9.5I8BgLecrrcL0qeOuy6NIstTie3yLqcjpjc6w9BK2nI',
+      message: 'Update successful: {"firstName":"liam","lastName":…od",
+      "email":"liamaxelrod@gmail.com",
+      "officeId":1}'}
+      */
+    },
+    buildNewLocalStorage() {
+      if (this.receive.includes('Update successful')) {
+        localStorage.setItem('temporary', this.receive)
+        const newFirstName = JSON.parse(localStorage.getItem('temporary')).firstName
+        const newLastName = JSON.parse(localStorage.getItem('temporary')).lastName
+        const newOfficeId = JSON.parse(localStorage.getItem('temporary')).officeId
+        const newEmail = JSON.parse(localStorage.getItem('temporary')).email
+        const oldIdToken = JSON.parse(localStorage.getItem('accountInfo')).IdToken
+        const oldDentistId = JSON.parse(localStorage.getItem('accountInfo')).dentistId
+        const newAccountInfo = JSON.stringify({
+          IdToken: oldIdToken,
+          firstName: newFirstName,
+          lastName: newLastName,
+          email: newEmail,
+          officeId: newOfficeId,
+          dentistId: oldDentistId
+        })
+        localStorage.setItem('accountInfo', newAccountInfo)
+        localStorage.removeItem('temporary')
+        this.updateDisplay()
+      } else if (this.receive.includes('dentistimo/modify-user/error')) {
+        this.unsuccessful = this.receive
+      }
+    },
+    updateDisplay() {
+      this.accoountInfo.firstName = JSON.parse(localStorage.getItem('accountInfo')).firstName
+      this.accoountInfo.lastName = JSON.parse(localStorage.getItem('accountInfo')).lastName
+      this.accoountInfo.officeId = JSON.parse(localStorage.getItem('accountInfo')).officeId
+      this.accoountInfo.email = JSON.parse(localStorage.getItem('accountInfo')).email
+      this.Usetoken = JSON.parse(localStorage.getItem('accountInfo')).IdToken
+      if (this.accoountInfo.officeId === 1) {
+        this.accoountInfo.company = 'Your Dentist'
+      } else if (this.accoountInfo.officeId === 2) {
+        this.accoountInfo.company = 'Tooth Fairy Dentist'
+      } else if (this.accoountInfo.officeId === 3) {
+        this.accoountInfo.company = 'The Crown'
+      } else if (this.accoountInfo.officeId === 3) {
+        this.accoountInfo.company = 'Lisebergs Dentists'
+      }
     }
   }
 }
 </script>
 
 <style>
-background{
+.background{
 display: flex;
 justify-content: center;
 align-items: center;
 flex-direction: column;
 height: 100%;
 width: 100%;
+min-width: 700px;
+min-height: 750px;
 }
 .div1 {
 display: flex;
@@ -213,29 +219,28 @@ width: 100%;
 /* border: 10px
 solid rgb(221, 255, 0); */
 }
-.in2div1 {
+.inDiv2Div1 {
 display: flex;
-justify-content: center;
 align-items: center;
 flex-direction: column;
 height: 100%;
-width: 34%;
+width: 30%;
 padding: 20px;
 /* border: 10px
 solid rgb(0, 255, 106); */
 }
-.in2div2 {
+.inDiv2Div2 {
 display: flex;
 justify-content: center;
 align-items: center;
 flex-direction: column;
 height: 100%;
-width: 33%;
+width: 70%;
 padding: 20px;
 /* border: 10px
 solid rgb(221, 255, 0); */
 }
-.in2div3 {
+/* .in2div3 {
 display: flex;
 justify-content: center;
 align-items: center;
@@ -244,8 +249,8 @@ height: 100%;
 width: 33%;
 padding: 20px;
 /* border: 10px
-solid rgb(0, 255, 106); */
-}
+solid rgb(0, 255, 106);
+} */
 #firstName, #lastName, #company, #email {
 font-size: 20px;
 }
@@ -260,5 +265,11 @@ color: green;
 #buttonChange {
 width: 21vh;
 margin: 5px;
+}
+#checkPassword {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
 }
 </style>

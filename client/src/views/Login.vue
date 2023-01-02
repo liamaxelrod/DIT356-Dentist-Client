@@ -21,11 +21,12 @@ import checkingInputs from '../checkingInputs'
 export default {
   data() {
     return {
+      notOrLogin: '',
       mqtt_client: null,
       receive: '',
       requestID: '',
-      qos: 0,
-      topic: 'dentistimo/login',
+      qos: 2,
+      topic: 'dentistimo/login/dentist',
       changeEmailText: '',
       changePasswordText: '',
       unsuccessful: ''
@@ -34,6 +35,7 @@ export default {
   mounted() {
     this.mqtt_client = mymqtt.createClient()
     const msgCallback = (topic, message) => {
+      this.unsuccessful = ''
       this.receive = message.toString()
       if (topic.includes('error')) {
         this.unsuccessful = this.receive
@@ -41,6 +43,14 @@ export default {
       } else {
         console.log('success')
         console.log(this.receive)
+        if (this.receive.includes(this.changeEmailText)) {
+          // localStorage.removeItem('accountInfo') // --> don't know if there will be an error if it doesn't existwhen you first login for the first time
+          localStorage.setItem('accountInfo', this.receive)
+          this.$router.push('/')
+          location.reload()
+        } else {
+          this.unsuccessful = 'Login failed' // not working figured out when Felix is programs not running with my
+        }
       }
       // console.log({ topic: topic, message: message.toString() })
     }
@@ -71,10 +81,11 @@ export default {
     login() {
       const test1 = JSON.stringify({
         token: '123QWE!@#',
-        firstName: 'Liam',
-        lastName: 'axelrod',
+        dentistid: 123456789,
         email: 'liamaxelrod@gmail.com',
-        companyName: 'wonder tooth'
+        firstName: 'liam',
+        lastName: 'axelrod',
+        officeId: 1
       })
       localStorage.setItem('accountInfo', test1)
       // const check = this.checkPassword()
@@ -85,10 +96,10 @@ export default {
       //   // responses in checkPassword()
       // } else {
       //   this.requestID = checkingInputs.makeRandomId(10)
-      //   this.mqtt_client.subscribe('dentistimo/login/' + this.requestID, { qos: 0 }, (error, res) => {
+      //   this.mqtt_client.subscribe('dentistimo/login/dentist/' + this.requestID, { qos: 2 }, (error, res) => {
       //     if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
       //   })
-      //   this.mqtt_client.subscribe('dentistimo/login/error/' + this.requestID, { qos: 0 }, (error, res) => {
+      //   this.mqtt_client.subscribe('dentistimo/login/error/' + this.requestID, { qos: 2 }, (error, res) => {
       //     if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
       //   })
       //   const payload = JSON.stringify({
@@ -97,12 +108,10 @@ export default {
       //     requestId: this.requestID
       //   })
       //   this.mqtt_client.publish(this.topic, payload, this.qos)
+      //   this.unsuccessful = 'login error please try again later' // if a message is received this will return to being blank
       // }
-      this.$router.push('/')
-      location.reload()
     },
     register() {
-      // not working
       this.$router.push('/register')
     }
   }
@@ -118,6 +127,8 @@ export default {
   flex-direction: column;
   height: 100%;
   background-color: #80BAB2;
+  min-width: 700px;
+  min-height: 750px;
 }
 
 #bittpnRegister {

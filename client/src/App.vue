@@ -81,6 +81,7 @@ export default {
         // do something
       } else {
         this.$router.push('/userProfile')
+        location.reload()
       }
     },
     appointments() {
@@ -88,6 +89,7 @@ export default {
         // do something
       } else {
         this.$router.push('/appointments')
+        location.reload()
       }
     },
     checkIfLogin() {
