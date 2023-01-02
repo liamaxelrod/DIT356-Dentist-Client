@@ -46,39 +46,37 @@
         <p> Friday: {{ this.workTime.friday }}</p>
         <p> Saturday: {{ this.workTime.saturday }}</p>
         <p> Sunday: {{ this.workTime.sunday }}</p>
-        <p>{{ this.unsuccessfulBreak }}</p>
+        <p></p>
+        <p id="breakDisplayed">|{{ this.DisplayedFikaBreak }}|</p>
+        <p id="breakDisplayed">|{{ this.DisplayedLunchBreak }}|</p>
       </div>
       <div class="div2-2">
-        <p>{{ this.unsuccessfulBreak }}{{ this.successfulBreak }}</p>
+        <p>{{ this.successfulBreak }}</p>
         <input type="date" v-model='breakData'>
         <p>selected Data: {{ this.breakData }}</p>
         <input type="time" v-model='breakTime'>
         <p>selected time: {{ this.breakTime }}</p>
         <button class="btn btn-primary" id="buttonFikaBreak" @click="makeFikaBreak">make fika break</button>
-        <button class="btn btn-primary" id="buttonFikaBreak" @click="changeFikaBreak">change fika break</button>
-        <button class="btn btn-danger" id="buttonFikaBreak" @click="deleteFikaBreak">delete</button>
+        <button class="btn btn-danger" id="buttonFikaBreak" @click="deleteFikaBreak">delete fika break</button>
         <p></p>
-        <input type="time" v-model='breakTime'>
-        <p>selected time: {{ this.breakTime }}</p>
         <button class="btn btn-primary" id="buttonLunchBreak" @click="makeLunchBreak">make lunch break</button>
-        <button class="btn btn-primary" id="buttonLunchBreak" @click="changeLunchBreak">change lunch break</button>
-        <button class="btn btn-danger" id="buttonLunchBreak" @click="deleteLunchBreak">delete</button>
+        <button class="btn btn-danger" id="buttonLunchBreak" @click="deleteLunchBreak">delete lunch break</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import checkingInputs from '../checkingInputs'
 import mymqtt from '../mymqtt'
 
 export default {
   data() {
     return {
       topicBreaks: 'dentistimo/dentist/breaks',
-      topicBreaksError: 'dentistimo/dentist/breaks/error/',
-      unsuccessfulBreak: '',
+      topicDelete: 'dentistimo/booking/delete-break',
       successfulBreak: '',
+      DisplayedFikaBreak: '',
+      DisplayedLunchBreak: '',
       breakData: '',
       breakTime: '',
       mqtt_client: null,
@@ -87,7 +85,7 @@ export default {
       userid: '',
       date: '',
       time: '',
-      issuanceID: '',
+      issuance: '', // this was instanceID but when I moved the idea I got rid of the errors
       cancelIssuance: '',
       news: 'none',
       subscription: {
@@ -113,20 +111,21 @@ export default {
       this.date = obj[0].date
       this.time = obj[0].time
       this.issuance = obj[0].issuance
+      // this.DisplayedFikaBreak = this.receive
+      // this.DisplayedLunchBreak = this.receive
       console.log({ topic: topic, message: message.toString() })
     }
     this.mqtt_client.on('message', msgCallback)
     this.mqtt_client.on('subscribe', (topic) => {
       console.log('Subscribed too: ', topic)
     })
-    this.mqtt_client.subscribe('dentistimo/dentist-appointment/all-appointments-day', { qos: 0 }, (error, res) => {
+    this.mqtt_client.subscribe('dentistimo/dentist-appointment/all-appointments-day', { qos: 2 }, (error, res) => {
       if (error) {
         console.log('error = ', error)
       } else {
         console.log('res = ', res)
       }
     })
-    this.Usetoken = JSON.parse(localStorage.getItem('accountInfo')).token
   },
   /*
 Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so it knows what dentist is logged in and uses that dentist
@@ -150,29 +149,53 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
       // const qos = 0
       // this.mqtt_client.publish(topic, payload, qos)
     },
-    changeFikaBreak() {
+    makeFikaBreak() {
       const payload = JSON.stringify({
-        idToken: 'need dentistid',
-        breakType: 'Fika',
+        dentistid: JSON.parse(localStorage.getItem('accountInfo')).dentistId,
         date: this.breakData,
-        time: this.breakTime
+        time: this.breakTime,
+        appointmentType: 'fika'
       })
-      this.publishMessage(payload, this.topicBreaks, this.topicBreaksError)
+      this.publishMessageSameTopic(payload, this.topicBreaks, this.topicBreaks)
     },
-    changeLunchBreak() {
+    makeLunchBreak() {
       const payload = JSON.stringify({
-        idToken: 'need dentistid',
-        breakType: 'lunch',
+        dentistid: JSON.parse(localStorage.getItem('accountInfo')).dentistId,
+        date: this.breakData,
+        time: this.breakTime,
+        appointmentType: 'lunch'
+      })
+      this.publishMessageSameTopic(payload, this.topicBreaks, this.topicBreaks)
+    },
+    deleteFikaBreak() {
+      const payload = JSON.stringify({
+        dentistid: JSON.parse(localStorage.getItem('accountInfo')).dentistId,
         date: this.breakData,
         time: this.breakTime
       })
-      const topic = 'dentistimo/dentist/breaks'
+      this.publishMessageSameTopic(payload, this.topicDelete, this.topicDelete)
+    },
+    deleteLunchBreak() {
+      const payload = JSON.stringify({
+        dentistid: JSON.parse(localStorage.getItem('accountInfo')).dentistId,
+        date: this.breakData,
+        time: this.breakTime
+      })
+      this.publishMessageSameTopic(payload, this.topicDelete, this.topicDelete)
+      // this.publishMessageSameTopic(payload, this.topicDelete, this.topicDelete)
+    },
+    publishMessage(payload, publishTopic, subscribeTopic) {
+      console.log('payload = ', payload)
+      this.mqtt_client.subscribe(subscribeTopic + JSON.parse(localStorage.getItem('accountInfo')).token, { qos: 2 }, (error, res) => {
+        if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
+      })
+      const topic = publishTopic
       const qos = 0
       this.mqtt_client.publish(topic, payload, qos)
     },
-    publishMessage(payload, publishTopic, subscribeTopic) {
-      this.Usetoken = checkingInputs.makeRandomId(10)
-      this.mqtt_client.subscribe(subscribeTopic + this.Usetoken, { qos: 0 }, (error, res) => {
+    publishMessageSameTopic(payload, publishTopic, subscribeTopic) {
+      console.log('payload = ', payload)
+      this.mqtt_client.subscribe(subscribeTopic, { qos: 2 }, (error, res) => {
         if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
       })
       const topic = publishTopic
@@ -184,33 +207,15 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
 </script>
 
 <style scoped>
-/*
-Change so it covers 100% not PX
-*/
-/* @media (max-width: 800px) {}
-.background {
+  .background {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: row;
   height: 100%;
   width: 100%;
-}
-.div1 {
-border: 10px
-solid rgb(0, 255, 106);
-}
-.div2 {
-border: 10px
-solid rgb(221, 255, 0);
-} */
-.background {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-  height: 100%;
-  width: 100%;
+  min-width: 700px;
+  min-height: 750px;
 }
 .div1 {
   /* border: 10px
@@ -223,13 +228,20 @@ solid rgb(221, 255, 0);
   /* border: 10px
   solid rgb(221, 255, 0); */
 }
+
 .div2-1 {
   height: 100%;
   width: 100%;
 }
 .div2-2 {
+  display: flex;
   height: 100%;
   width: 100%;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /* border: 10px
+  solid rgb(221, 255, 0); */
 }
 #h1 {
   /* float: center; */
@@ -239,7 +251,7 @@ solid rgb(221, 255, 0);
   /* color: rgb(0, 255, 106); */
 }
 #buttonFikaBreak, #buttonLunchBreak {
-  /* float: center; */
+  width: 160px;
   margin: 3px;
   /* color: rgb(0, 255, 106); */
 }

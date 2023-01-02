@@ -127,6 +127,8 @@ export default {
   flex-direction: column;
   height: 100%;
   background-color: #80BAB2;
+  min-width: 700px;
+  min-height: 750px;
 }
 
 #bittpnRegister {

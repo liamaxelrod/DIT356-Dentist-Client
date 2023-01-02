@@ -197,6 +197,8 @@ align-items: center;
 flex-direction: column;
 height: 100%;
 width: 100%;
+min-width: 700px;
+min-height: 750px;
 }
 .div1 {
 display: flex;
@@ -235,8 +237,8 @@ flex-direction: column;
 height: 100%;
 width: 70%;
 padding: 20px;
-border: 10px
-solid rgb(221, 255, 0);
+/* border: 10px
+solid rgb(221, 255, 0); */
 }
 /* .in2div3 {
 display: flex;
