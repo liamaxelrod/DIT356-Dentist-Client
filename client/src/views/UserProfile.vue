@@ -137,13 +137,7 @@ export default {
       })
       const qos = 2
       this.mqtt_client.publish(publishTopic, payload, qos)
-      // location.reload()
-      /*
-      {topic: 'dentistimo/modify-user/eyJhbGciOiJIUzI1NiIsInR5cCI…udCJ9.5I8BgLecrrcL0qeOuy6NIstTie3yLqcjpjc6w9BK2nI',
-      message: 'Update successful: {"firstName":"liam","lastName":…od",
-      "email":"liamaxelrod@gmail.com",
-      "officeId":1}'}
-      */
+      location.reload()
     },
     buildNewLocalStorage() {
       if (this.receive.includes('Update successful')) {
