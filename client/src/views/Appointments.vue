@@ -43,8 +43,8 @@
         <p> Saturday: {{ this.workTime.saturday }}</p>
         <p> Sunday: {{ this.workTime.sunday }}</p>
         <p></p>
-        <p id="breakDisplayed">|{{ this.DisplayedFikaBreak }}|</p>
-        <p id="breakDisplayed">|{{ this.DisplayedLunchBreak }}|</p>
+        <p id="breakDisplayed">{{ this.DisplayedFikaBreak }}</p>
+        <p id="breakDisplayed">{{ this.DisplayedLunchBreak }}</p>
       </div>
       <div class="div2-2">
         <p>{{ this.successfulBreak }}</p>
