@@ -71,7 +71,6 @@ export default {
       topicSchedule: 'dentistimo/dentist-office/fetch-one',
       topicBreaks: 'dentistimo/dentist/breaks',
       topicDelete: 'dentistimo/booking/delete-break',
-      thisDentistId: '',
       successfulBreak: '',
       DisplayedFikaBreak: '',
       DisplayedLunchBreak: '',
@@ -108,39 +107,49 @@ export default {
   },
   mounted() {
     this.mqtt_client = mymqtt.createClient()
-    this.thisDentistid = JSON.parse(localStorage.getItem('accountInfo')).dentistId
-    this.getSchedule()
+    if (this.workTime.monday === '') {
+      this.getSchedule()
+    }
     const msgCallback = (topic, message) => {
+      // console.log('message received' + message.toString())
+      this.noAppointments = ''
+      this.successfulBreak = ''
       if (message.includes('coordinate')) {
         console.log('contains office message')
         this.loadSchedule(message)
-      } else {
-        console.log('does not contain office')
-        this.noAppointments = ''
-        const obj = JSON.parse(message.toString())
-        this.userid = ''
-        this.date = ''
-        this.time = ''
-        this.issuance = ''
-        obj.forEach(bookingInformation => {
-          if (bookingInformation.appointmentType === 'appointment') {
-            console.log('appointment')
-            this.userid += (bookingInformation.userid) + ', '
-            this.date += (bookingInformation.date) + ', '
-            this.time += (bookingInformation.time) + ', '
-            this.issuance += (bookingInformation.issuance) + ', '
-          } else if (bookingInformation.appointmentType === 'lunch') {
-            console.log('lunch')
-            console.log(bookingInformation)
-            this.lunchDate += (bookingInformation.date)
-            this.lunchTime += (bookingInformation.time)
-            this.DisplayedLunchBreak = 'Lunch break: ' + this.lunchDate + ' ' + this.lunchTime
-          } else if (bookingInformation.appointmentType === 'fika') {
-            console.log('fika')
-          }
-        })
-        // console.log({ topic: topic, message: message.toString() })
       }
+      const obj = JSON.parse(message.toString())
+      this.userid = ''
+      this.date = ''
+      this.time = ''
+      this.issuance = ''
+      this.lunchDate = ''
+      this.lunchTime = ''
+      this.fikaDate = ''
+      this.fikaTime = ''
+      this.DisplayedFikaBreak = ''
+      this.DisplayedLunchBreak = ''
+      for (let i = 0; i < obj.length; i++) {
+        const element = obj[i]
+        if (element.appointmentType === 'appointment') {
+          console.log('appointment')
+          this.userid += (element.userid) + ', '
+          this.date += (element.date) + ', '
+          this.time += (element.time) + ', '
+          this.issuance += (element.issuance) + ', '
+        } else if (element.appointmentType === 'lunch') {
+          console.log('lunch')
+          this.lunchDate = (element.date)
+          this.lunchTime = (element.time)
+          this.DisplayedLunchBreak += 'Lunch break: ' + this.lunchDate + ' ' + this.lunchTime + ' \n '
+        } else if (element.appointmentType === 'fika') {
+          console.log('fika')
+          this.fikaDate = (element.date)
+          this.fikaTime = (element.time)
+          this.DisplayedFikaBreak += 'Fika break: ' + this.fikaDate + ' ' + this.fikaTime + ' \n '
+        }
+      }
+      // console.log({ topic: topic, message: message.toString() })
     }
     this.mqtt_client.on('message', msgCallback)
     this.mqtt_client.on('subscribe', (topic) => {
@@ -159,70 +168,79 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
   */
   methods: {
     appointments() {
-      const thisDentistid = JSON.parse(localStorage.getItem('accountInfo')).dentistId
+      const dentistID = JSON.parse(localStorage.getItem('accountInfo')).dentistId
       const payload = JSON.stringify({
-        dentistid: thisDentistid,
+        dentistid: dentistID,
         date: this.value
       })
       this.noAppointments = 'no appointments'
+      this.userid = ''
+      this.date = ''
+      this.time = ''
+      this.issuance = ''
       const topic = 'dentistimo/dentist-appointment/get-all-appointments-day'
-      const qos = 2
-      this.mqtt_client.publish(topic, payload, qos)
+      this.mqtt_client.publish(topic, payload, 2)
     },
     cancelAppointments() {
       const payload = JSON.stringify({
         issuance: this.cancelIssuance
       })
-      console.log(payload)
-      // const topic = 'dentistimo/booking/delete-booking'
-      // const qos = 2
-      // this.mqtt_client.publish(topic, payload, qos)
+      const topic = 'dentistimo/booking/delete-booking'
+      this.mqtt_client.publish(topic, payload, 2)
+      this.cancelIssuance = ''
+      location.reload()
     },
     makeFikaBreak() {
-      const payload = JSON.stringify({
-        dentistid: this.thisDentistId,
-        date: this.breakData,
-        time: this.breakTime,
-        appointmentType: 'fika'
-      })
-      this.publishMessageNoCheck(payload, this.topicBreaks, this.topicBreaks)
+      if (this.checkInputTime()) {
+        // this.successfulBreak = 'please insert date and time'
+        const dentistID = JSON.parse(localStorage.getItem('accountInfo')).dentistId
+        const payload = JSON.stringify({
+          dentistid: dentistID,
+          date: this.breakData,
+          time: this.breakTime,
+          appointmentType: 'fika'
+        })
+        this.publishReceive(payload, this.topicBreaks, this.topicBreaks)
+      }
     },
     makeLunchBreak() {
-      const payload = JSON.stringify({
-        dentistid: this.thisDentistId,
-        date: this.breakData,
-        time: this.breakTime,
-        appointmentType: 'lunch'
-      })
-      this.publishMessageNoCheck(payload, this.topicBreaks, this.topicBreaks)
+      if (this.checkInputTime()) {
+        // this.successfulBreak = 'please insert date and time'
+        const dentistID = JSON.parse(localStorage.getItem('accountInfo')).dentistId
+        const payload = JSON.stringify({
+          dentistid: dentistID,
+          date: this.breakData,
+          time: this.breakTime,
+          appointmentType: 'lunch'
+        })
+        this.publishReceive(payload, this.topicBreaks, this.topicBreaks)
+      }
     },
     deleteFikaBreak() {
-      const payload = JSON.stringify({
-        dentistid: this.thisDentistId,
-        date: this.breakData,
-        time: this.breakTime
-      })
-      this.publishMessageNoCheck(payload, this.topicDelete, this.topicDelete)
+      if (this.checkInputTime()) {
+        // this.successfulBreak = 'please insert date and time'
+        const dentistID = JSON.parse(localStorage.getItem('accountInfo')).dentistId
+        const payload = JSON.stringify({
+          dentistid: dentistID,
+          date: this.breakData,
+          time: this.breakTime
+        })
+        this.publishReceive(payload, this.topicDelete, this.topicDelete)
+      }
     },
     deleteLunchBreak() {
-      const payload = JSON.stringify({
-        dentistid: this.thisDentistId,
-        date: this.breakData,
-        time: this.breakTime
-      })
-      this.publishMessageNoCheck(payload, this.topicDelete, this.topicDelete)
-      // this.publishMessageNoCheck(payload, this.topicDelete, this.topicDelete)
+      if (this.checkInputTime()) {
+        // this.successfulBreak = 'please insert date and time'
+        const dentistID = JSON.parse(localStorage.getItem('accountInfo')).dentistId
+        const payload = JSON.stringify({
+          dentistid: dentistID,
+          date: this.breakData,
+          time: this.breakTime
+        })
+        this.publishReceive(payload, this.topicDelete, this.topicDelete)
+      }
     },
-    publishMessage(payload, publishTopic, subscribeTopic) {
-      console.log('payload = ', payload)
-      this.mqtt_client.subscribe(subscribeTopic + JSON.parse(localStorage.getItem('accountInfo')).token, { qos: 2 }, (error, res) => {
-        if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
-      })
-      const topic = publishTopic
-      const qos = 2
-      this.mqtt_client.publish(topic, payload, qos)
-    },
-    publishMessageNoCheck(payload, publishTopic, subscribeTopic) {
+    publishReceive(payload, publishTopic, subscribeTopic) {
       this.mqtt_client.subscribe(subscribeTopic, { qos: 2 }, (error, res) => {
         if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
       })
@@ -235,7 +253,7 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
       const payload = JSON.stringify({
         id: officeId
       })
-      this.publishMessageNoCheck(payload, 'dentistimo/dentist-office/fetch-one', 'dentistimo/dentist-office/one-office')
+      this.publishReceive(payload, 'dentistimo/dentist-office/fetch-one', 'dentistimo/dentist-office/one-office')
     },
     loadSchedule(message) {
       const dentistOffice = JSON.parse(message).openinghours
@@ -246,6 +264,17 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
       this.workTime.friday = dentistOffice.friday
       this.workTime.saturday = 'no working hours'
       this.workTime.sunday = 'no working hours'
+    },
+    checkInputTime() {
+      const time = this.breakTime
+      const timeArray = time.split(':')
+      const minute = timeArray[1]
+      if (minute === '00' || minute === '30') {
+        return true
+      } else {
+        this.successfulBreak = 'every hour or half hour'
+        return false
+      }
     }
   }
 }
@@ -303,3 +332,56 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
 }
 
 </style>
+
+<!--
+  mounted() {
+    this.mqtt_client = mymqtt.createClient()
+    this.thisDentistid = JSON.parse(localStorage.getItem('accountInfo')).dentistId
+    this.getSchedule()
+    const msgCallback = (topic, message) => {
+      this.noAppointments = ''
+      const obj = JSON.parse(message.toString())
+      this.userid = ''
+      this.date = ''
+      this.time = ''
+      this.issuance = ''
+      for (let i = 0; i < obj.length; i++) {
+        const element = obj[i]
+        console.log(element)
+      }
+      obj.forEach(bookingInformation => {
+        if (bookingInformation.appointmentType === 'appointment') {
+          console.log('appointment')
+          this.userid += (bookingInformation.userid) + ', '
+          this.date += (bookingInformation.date) + ', '
+          this.time += (bookingInformation.time) + ', '
+          this.issuance += (bookingInformation.issuance) + ', '
+        } else if (bookingInformation.appointmentType === 'lunch') {
+          console.log('lunch')
+          console.log(bookingInformation)
+          this.lunchDate = (bookingInformation.date)
+          this.lunchTime = (bookingInformation.time)
+          this.DisplayedLunchBreak = 'Lunch break: ' + this.lunchDate + ' ' + this.lunchTime
+        } else if (bookingInformation.appointmentType === 'fika') {
+          console.log('fika')
+        }
+      })
+      if (message.includes('coordinate')) {
+        console.log('contains office message')
+        this.loadSchedule(message)
+      }
+      // console.log({ topic: topic, message: message.toString() })
+    }
+    this.mqtt_client.on('message', msgCallback)
+    this.mqtt_client.on('subscribe', (topic) => {
+      console.log('Subscribed too: ', topic)
+    })
+    this.mqtt_client.subscribe('dentistimo/dentist-appointment/all-appointments-day', { qos: 2 }, (error, res) => {
+      if (error) {
+        console.log('error = ', error)
+      } else {
+        console.log('res = ', res)
+      }
+    })
+  },
+ -->
