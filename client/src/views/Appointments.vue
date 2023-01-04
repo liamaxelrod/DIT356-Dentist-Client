@@ -3,7 +3,6 @@
     <div class="div1">
       <b-row>
       <b-col md="auto">
-        <!-- ADD INFORMATION IF THERE IS NO APPOINTMENT THAT DAY -->
         <b-calendar v-model="value" locale="en-EU"></b-calendar>
       </b-col>
       </b-row>
@@ -19,6 +18,7 @@
               <li class="list-group-item" v-bind="issuance">Issuance ID: {{ issuance.slice(0,-2) }}</li>
             </ul>
             <b class="btn btn-dark" @click="appointments" style= "width: 17rem;">Get appointments</b>
+            <h4>{{ this.noAppointments }}</h4>
         </div>
         <div class="card border-danger mb-3" style="width: 17rem;">
           <div class="card-header text-danger">
@@ -32,40 +32,40 @@
       </div>
     </div>
     <div class="div2">
-      <div class="div2-1">
-        <div class="card border-info mb-3" style="width: 20rem;">
-          <div class="card-header text-info">
-            Working hours
+      <div class="card-group" style="width: 45rem;">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Working hours</h5>
+            <ul class="list-group list-group-flush text-info">
+              <li class="list-group-item" >Monday: {{ this.workTime.monday }}</li>
+              <li class="list-group-item" >Tuesday: {{ this.workTime.tuesday }}</li>
+              <li class="list-group-item" >Wednesday: {{ this.workTime.wednesday }}</li>
+              <li class="list-group-item" >Thursday:{{ this.workTime.thursday }}</li>
+              <li class="list-group-item" >Friday: {{ this.workTime.friday }}</li>
+              <li class="list-group-item" >Saturday: {{ this.workTime.saturday }}</li>
+              <li class="list-group-item" >Sunday: {{ this.workTime.sunday }}</li>
+            </ul>
+            <ul class="list-group list-group-flush text-dark">
+              <li class="list-group-item" >{{ this.DisplayedLunchBreak }}</li>
+              <li class="list-group-item" >{{ this.DisplayedFikaBreak }}</li>
+            </ul>
           </div>
-          <ul class="list-group list-group-flush">
-          <li class="list-group-item"> Monday: {{ this.workTime.monday }}</li>
-          <li class="list-group-item">Tuesday:</li>
-          <li class="list-group-item">Wednesday:</li>
-          </ul>
-       </div>
-        <p class="text-center" id="h1"> working hours </p>
-        <p> Monday: {{ this.workTime.monday }} </p>
-        <p> Tuesday: {{ this.workTime.tuesday }}</p>
-        <p> Wednesday: {{ this.workTime.wednesday }}</p>
-        <p> Thursday: {{ this.workTime.thursday }}</p>
-        <p> Friday: {{ this.workTime.friday }}</p>
-        <p> Saturday: {{ this.workTime.saturday }}</p>
-        <p> Sunday: {{ this.workTime.sunday }}</p>
-        <p></p>
-        <p id="breakDisplayed">{{ this.DisplayedFikaBreak }}</p>
-        <p id="breakDisplayed">{{ this.DisplayedLunchBreak }}</p>
-      </div>
-      <div class="div2-2">
-        <p>{{ this.successfulBreak }}</p>
-        <input type="date" v-model='breakData'>
-        <p>selected Data: {{ this.breakData }}</p>
-        <input type="time" v-model='breakTime'>
-        <p>selected time: {{ this.breakTime }}</p>
-        <button class="btn btn-primary" id="buttonFikaBreak" @click="makeFikaBreak">make fika break</button>
-        <button class="btn btn-danger" id="buttonFikaBreak" @click="deleteFikaBreak">delete fika break</button>
-        <p></p>
-        <button class="btn btn-primary" id="buttonLunchBreak" @click="makeLunchBreak">make lunch break</button>
-        <button class="btn btn-danger" id="buttonLunchBreak" @click="deleteLunchBreak">delete lunch break</button>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Create / Delete break</h5>
+            <p>{{ this.successfulBreak }}</p>
+            <input type="date" v-model='breakData'>
+            <input type="time" v-model='breakTime'>
+            <p>selected Data: {{ this.breakData }}</p>
+            <p>selected time: {{ this.breakTime }}</p>
+            <button class="btn btn-primary" id="buttonFikaBreak" @click="makeFikaBreak">make fika break</button>
+            <button class="btn btn-danger" id="buttonFikaBreak" @click="deleteFikaBreak">delete fika break</button>
+            <p></p>
+            <button class="btn btn-primary" id="buttonLunchBreak" @click="makeLunchBreak">make lunch break</button>
+            <button class="btn btn-danger" id="buttonLunchBreak" @click="deleteLunchBreak">delete lunch break</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -174,7 +174,7 @@ export default {
         dentistid: dentistID,
         date: this.value
       })
-      this.noAppointments = 'no appointments'
+      this.noAppointments = 'No bookings this date'
       this.userid = ''
       this.date = ''
       this.time = ''
@@ -183,6 +183,7 @@ export default {
       this.mqtt_client.publish(topic, payload, 2)
     },
     cancelAppointments() {
+      // Display when an appointment is cancelled or not.
       const payload = JSON.stringify({
         issuance: this.cancelIssuance
       })
@@ -297,16 +298,18 @@ export default {
   min-height: 900px;
 }
 .div1 {
-  /* border: 10px
+  /*
+ border: 10px
   solid rgb(0, 255, 106); */
 }
 
 .div2 {
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  /* border: 10px
-  solid rgb(221, 255, 0); */
+  height: 109vh;
+  width: 100%;
+  border: 0px
+  /*
+  solid rgb(221, 255, 0);
+  */
 }
 
 .div2-1 {
@@ -325,9 +328,13 @@ export default {
 }
 
 #buttonFikaBreak, #buttonLunchBreak {
+  /*
   width: 160px;
   margin: 3px;
   /* color: rgb(0, 255, 106); */
+}
+.h4{
+  font-family: "Segoe UI", Tahoma, Verdana, sans-serif;
 }
 
 </style>
