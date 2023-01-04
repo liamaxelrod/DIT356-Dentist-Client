@@ -32,69 +32,42 @@
       </div>
     </div>
     <div class="div2">
-      <div class="div2-1">
-        <div class="card-group" style="width: 45rem;">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Working hours</h5>
-                <ul class="list-group list-group-flush text-info">
-                  <li class="list-group-item" >Monday: {{ this.workTime.monday }}</li>
-                  <li class="list-group-item" >Tuesday: {{ this.workTime.tuesday }}</li>
-                  <li class="list-group-item" >Wednesday: {{ this.workTime.wednesday }}</li>
-                  <li class="list-group-item" >Thursday:{{ this.workTime.thursday }}</li>
-                  <li class="list-group-item" >Friday: {{ this.workTime.friday }}</li>
-                  <li class="list-group-item" >Saturday: {{ this.workTime.saturday }}</li>
-                  <li class="list-group-item" >Sunday: {{ this.workTime.sunday }}</li>
-                </ul>
-                <ul class="list-group list-group-flush text-dark">
-                  <li class="list-group-item" >{{ this.DisplayedLunchBreak }}</li>
-                  <li class="list-group-item" >{{ this.DisplayedFikaBreak }}</li>
-               </ul>
-            </div>
+      <div class="card-group" style="width: 45rem;">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Working hours</h5>
+            <ul class="list-group list-group-flush text-info">
+              <li class="list-group-item" >Monday: {{ this.workTime.monday }}</li>
+              <li class="list-group-item" >Tuesday: {{ this.workTime.tuesday }}</li>
+              <li class="list-group-item" >Wednesday: {{ this.workTime.wednesday }}</li>
+              <li class="list-group-item" >Thursday:{{ this.workTime.thursday }}</li>
+              <li class="list-group-item" >Friday: {{ this.workTime.friday }}</li>
+              <li class="list-group-item" >Saturday: {{ this.workTime.saturday }}</li>
+              <li class="list-group-item" >Sunday: {{ this.workTime.sunday }}</li>
+            </ul>
+            <ul class="list-group list-group-flush text-dark">
+              <li class="list-group-item" >{{ this.DisplayedLunchBreak }}</li>
+              <li class="list-group-item" >{{ this.DisplayedFikaBreak }}</li>
+            </ul>
           </div>
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Create / Delete break</h5>
-              <p>{{ this.successfulBreak }}</p>
-              <input type="date" v-model='breakData'>
-              <input type="time" v-model='breakTime'>
-              <p>selected Data: {{ this.breakData }}</p>
-              <p>selected time: {{ this.breakTime }}</p>
-              <button class="btn btn-primary" id="buttonFikaBreak" @click="makeFikaBreak">make fika break</button>
-              <button class="btn btn-danger" id="buttonFikaBreak" @click="deleteFikaBreak">delete fika break</button>
-              <p></p>
-              <button class="btn btn-primary" id="buttonLunchBreak" @click="makeLunchBreak">make lunch break</button>
-              <button class="btn btn-danger" id="buttonLunchBreak" @click="deleteLunchBreak">delete lunch break</button>
-            </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Create / Delete break</h5>
+            <p>{{ this.successfulBreak }}</p>
+            <input type="date" v-model='breakData'>
+            <input type="time" v-model='breakTime'>
+            <p>selected Data: {{ this.breakData }}</p>
+            <p>selected time: {{ this.breakTime }}</p>
+            <button class="btn btn-primary" id="buttonFikaBreak" @click="makeFikaBreak">make fika break</button>
+            <button class="btn btn-danger" id="buttonFikaBreak" @click="deleteFikaBreak">delete fika break</button>
+            <p></p>
+            <button class="btn btn-primary" id="buttonLunchBreak" @click="makeLunchBreak">make lunch break</button>
+            <button class="btn btn-danger" id="buttonLunchBreak" @click="deleteLunchBreak">delete lunch break</button>
           </div>
-          <!--
-        <p class="text-center" id="h1"> working hours </p>
-        <p> Monday: {{ this.workTime.monday }} </p>
-        <p> Tuesday: {{ this.workTime.tuesday }}</p>
-        <p> Wednesday: {{ this.workTime.wednesday }}</p>
-        <p> Thursday: {{ this.workTime.thursday }}</p>
-        <p> Friday: {{ this.workTime.friday }}</p>
-        <p> Saturday: {{ this.workTime.saturday }}</p>
-        <p> Sunday: {{ this.workTime.sunday }}</p>
-        <p></p>
-        <p id="breakDisplayed">{{ this.DisplayedFikaBreak }}</p>
-        <p id="breakDisplayed">{{ this.DisplayedLunchBreak }}</p>
-      </div>
-      <div class="div2-2">
-        <p>{{ this.successfulBreak }}</p>
-        <input type="date" v-model='breakData'>
-        <p>selected Data: {{ this.breakData }}</p>
-        <input type="time" v-model='breakTime'>
-        <p>selected time: {{ this.breakTime }}</p>
-        <button class="btn btn-primary" id="buttonFikaBreak" @click="makeFikaBreak">make fika break</button>
-        <button class="btn btn-danger" id="buttonFikaBreak" @click="deleteFikaBreak">delete fika break</button>
-        <p></p>
-        <button class="btn btn-primary" id="buttonLunchBreak" @click="makeLunchBreak">make lunch break</button>
-        <button class="btn btn-danger" id="buttonLunchBreak" @click="deleteLunchBreak">delete lunch break</button>
-         -->
+        </div>
       </div>
     </div>
-  </div>
   </div>
 </template>
 
@@ -327,10 +300,9 @@ export default {
 }
 
 .div2 {
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  border: 10px
+  height: 109vh;
+  width: 100%;
+  border: 0px
   /*
   solid rgb(221, 255, 0);
   */
