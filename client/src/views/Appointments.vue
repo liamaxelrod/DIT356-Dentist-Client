@@ -13,13 +13,12 @@
             Appointment information
           </div>
             <ul class="list-group list-group-flush text-info">
-              <li class="list-group-item">Client ID: {{ userid.slice(0,-2) }}</li>
-              <li class="list-group-item">Date: {{ date.slice(0,-2) }}</li>
-              <li class="list-group-item">Time: {{ time.slice(0,-2) }}</li>
-              <li class="list-group-item">Issuance ID: {{ issuance.slice(0,-2) }}</li>
+              <li class="list-group-item" v-bind="userid">Client ID: {{ userid.slice(0,-2) }}</li>
+              <li class="list-group-item" v-bind="date">Date: {{ date.slice(0,-2) }}</li>
+              <li class="list-group-item" v-bind="time">Time: {{ time.slice(0,-2) }}</li>
+              <li class="list-group-item" v-bind="issuance">Issuance ID: {{ issuance.slice(0,-2) }}</li>
             </ul>
             <b class="btn btn-dark" @click="appointments" style= "width: 17rem;">Get appointments</b>
-            <p>{{ this.noAppointments }}</p>
         </div>
         <div class="card border-danger mb-3" style="width: 17rem;">
           <div class="card-header text-danger">
@@ -34,6 +33,16 @@
     </div>
     <div class="div2">
       <div class="div2-1">
+        <div class="card border-info mb-3" style="width: 20rem;">
+          <div class="card-header text-info">
+            Working hours
+          </div>
+          <ul class="list-group list-group-flush">
+          <li class="list-group-item"> Monday: {{ this.workTime.monday }}</li>
+          <li class="list-group-item">Tuesday:</li>
+          <li class="list-group-item">Wednesday:</li>
+          </ul>
+       </div>
         <p class="text-center" id="h1"> working hours </p>
         <p> Monday: {{ this.workTime.monday }} </p>
         <p> Tuesday: {{ this.workTime.tuesday }}</p>
@@ -82,12 +91,7 @@ export default {
       userid: '',
       date: '',
       time: '',
-      lunchDate: '',
-      lunchTime: '',
-      fikaDate: '',
-      fikaTime: '',
       issuance: '',
-      noAppointments: '',
       cancelIssuance: '',
       news: 'none',
       subscription: {
@@ -108,28 +112,17 @@ export default {
   mounted() {
     this.mqtt_client = mymqtt.createClient()
     const msgCallback = (topic, message) => {
-      this.noAppointments = ''
+      console.log(message)
       const obj = JSON.parse(message.toString())
       this.userid = ''
       this.date = ''
       this.time = ''
       this.issuance = ''
       obj.forEach(bookingInformation => {
-        if (bookingInformation.appointmentType === 'appointment') {
-          console.log('appointment')
-          this.userid += (bookingInformation.userid) + ', '
-          this.date += (bookingInformation.date) + ', '
-          this.time += (bookingInformation.time) + ', '
-          this.issuance += (bookingInformation.issuance) + ', '
-        } else if (bookingInformation.appointmentType === 'lunch') {
-          console.log('lunch')
-          console.log(bookingInformation)
-          this.lunchDate += (bookingInformation.date)
-          this.lunchTime += (bookingInformation.time)
-          this.DisplayedLunchBreak = 'Lunch break: ' + this.lunchDate + ' ' + this.lunchTime
-        } else if (bookingInformation.appointmentType === 'fika') {
-          console.log('fika')
-        }
+        this.userid += (bookingInformation.userid) + ', '
+        this.date += (bookingInformation.date) + ', '
+        this.time += (bookingInformation.time) + ', '
+        this.issuance += (bookingInformation.issuance) + ', '
       })
       console.log({ topic: topic, message: message.toString() })
     }
@@ -155,7 +148,6 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
         dentistid: thisDentistid,
         date: this.value
       })
-      this.noAppointments = 'no appointments'
       const topic = 'dentistimo/dentist-appointment/get-all-appointments-day'
       const qos = 2
       this.mqtt_client.publish(topic, payload, qos)
@@ -276,13 +268,7 @@ Fetching the appointments of dentistid "xxxx". Next step is to incoprate it so i
   /* border: 10px
   solid rgb(221, 255, 0); */
 }
-#h1 {
-  /* float: center; */
-  font-size: 20px;
-  font-weight: bold;
-  text-align: right;
-  /* color: rgb(0, 255, 106); */
-}
+
 #buttonFikaBreak, #buttonLunchBreak {
   width: 160px;
   margin: 3px;
