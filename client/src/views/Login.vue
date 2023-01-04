@@ -49,6 +49,7 @@ export default {
           this.$router.push('/')
           location.reload()
         } else {
+          console.log('Login failed')
           this.unsuccessful = 'Login failed' // not working figured out when Felix is programs not running with my
         }
       }
@@ -81,7 +82,7 @@ export default {
     login() {
       const test1 = JSON.stringify({
         token: '123QWE!@#',
-        dentistid: 123456789,
+        dentistId: 12345,
         email: 'liamaxelrod@gmail.com',
         firstName: 'liam',
         lastName: 'axelrod',
