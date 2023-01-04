@@ -16,15 +16,17 @@
 
 <script>
 import mymqtt from '../mymqtt'
+import checkingInputs from '../checkingInputs'
 
 export default {
   data() {
     return {
+      notOrLogin: '',
       mqtt_client: null,
       receive: '',
       requestID: '',
-      qos: 0,
-      topic: 'dentistimo/login',
+      qos: 2,
+      topic: 'dentistimo/login/dentist',
       changeEmailText: '',
       changePasswordText: '',
       unsuccessful: ''
@@ -33,6 +35,7 @@ export default {
   mounted() {
     this.mqtt_client = mymqtt.createClient()
     const msgCallback = (topic, message) => {
+      this.unsuccessful = ''
       this.receive = message.toString()
       if (topic.includes('error')) {
         this.unsuccessful = this.receive
@@ -40,6 +43,15 @@ export default {
       } else {
         console.log('success')
         console.log(this.receive)
+        if (this.receive.includes(this.changeEmailText)) {
+          // localStorage.removeItem('accountInfo') // --> don't know if there will be an error if it doesn't existwhen you first login for the first time
+          localStorage.setItem('accountInfo', this.receive)
+          this.$router.push('/')
+          location.reload()
+        } else {
+          console.log('Login failed')
+          this.unsuccessful = 'Login failed' // not working figured out when Felix is programs not running with my
+        }
       }
       // console.log({ topic: topic, message: message.toString() })
     }
@@ -47,52 +59,12 @@ export default {
     this.mqtt_client.on('subscribe', (topic) => {
       console.log('Subscribed too: ', topic)
     })
-    // this.mqtt_client.subscribe('dentistimo/login', { qos: 0 }, (error, res) => {
-    //   if (error) {
-    //     console.log('error = ', error)
-    //   } else {
-    //     console.log('res = ', res)
-    //   }
-    // })
   },
   methods: {
-    makeid(n) {
-      let text = ''
-      const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-      for (let i = 0; i < n; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length))
-      }
-      return text
-    },
-    containsSpecialChars(str) {
-      const specialChars = '[`!@#$%^&*()_+-=[]{};\':"\\|,.<>/?~]/'
-      return specialChars.split('')
-        .some((specialChar) => str.includes(specialChar))
-    },
-    containsNumbers(str) {
-      const specialChars = '1234567890'
-      return specialChars.split('')
-        .some((specialChar) => str.includes(specialChar))
-    },
-    checkStringLength(str) {
-      if (str.length >= 8 && str.length <= 16) {
-        return true
-      } else {
-        return false
-      }
-    },
-    checkEmail(string) {
-      const condition = string.includes('@')
-      if (condition) {
-        return true
-      } else {
-        return false
-      }
-    },
     checkPassword() {
-      const result1 = this.containsSpecialChars(this.changePasswordText)
-      const result2 = this.containsNumbers(this.changePasswordText)
-      const result3 = this.checkStringLength(this.changePasswordText)
+      const result1 = checkingInputs.containsSpecialChars(this.changePasswordText)
+      const result2 = checkingInputs.strinContainsNumbers(this.changePasswordText)
+      const result3 = checkingInputs.checkStringLength(this.changePasswordText)
       if (result1 === false) {
         this.unsuccessful = 'password needs a special character'
         return false
@@ -100,7 +72,7 @@ export default {
         this.unsuccessful = 'password needs a number'
         return false
       } else if (result3 === false) {
-        this.unsuccessful = 'password needs to be between 8 and 16 characters'
+        this.unsuccessful = 'password needs to be between 8 and 99 characters'
         return false
       } else {
         this.unsuccessful = ''
@@ -108,24 +80,28 @@ export default {
       }
     },
     login() {
+      // const test1 = JSON.stringify({
+      //   token: '123QWE!@#',
+      //   dentistId: 12345,
+      //   email: 'liamaxelrod@gmail.com',
+      //   firstName: 'liam',
+      //   lastName: 'axelrod',
+      //   officeId: 1
+      // })
+      // localStorage.setItem('accountInfo', test1)
       const check = this.checkPassword()
-      const check2 = this.checkEmail(this.changeEmailText)
+      const check2 = checkingInputs.checkEmail(this.changeEmailText)
       if (check2 === false) {
         this.unsuccessful = 'email needs to contain @'
       } else if (check === false) {
         // responses in checkPassword()
       } else {
-        this.requestID = this.makeid(10)
-        // console.log(this.requestID)
-        this.mqtt_client.subscribe('dentistimo/login/' + this.requestID, { qos: 0 }, (error, res) => {
-          if (error) {
-            console.log('error = ', error)
-          }
+        this.requestID = checkingInputs.makeRandomId(10)
+        this.mqtt_client.subscribe('dentistimo/login/dentist/' + this.requestID, { qos: 2 }, (error, res) => {
+          if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
         })
-        this.mqtt_client.subscribe('dentistimo/login/error/' + this.requestID, { qos: 0 }, (error, res) => {
-          if (error) {
-            console.log('error = ', error)
-          }
+        this.mqtt_client.subscribe('dentistimo/login/error/' + this.requestID, { qos: 2 }, (error, res) => {
+          if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
         })
         const payload = JSON.stringify({
           email: this.changeEmailText,
@@ -133,10 +109,10 @@ export default {
           requestId: this.requestID
         })
         this.mqtt_client.publish(this.topic, payload, this.qos)
+        this.unsuccessful = 'login error please try again later' // if a message is received this will return to being blank
       }
     },
     register() {
-      // not working
       this.$router.push('/register')
     }
   }
@@ -152,6 +128,8 @@ export default {
   flex-direction: column;
   height: 100%;
   background-color: #80BAB2;
+  min-width: 700px;
+  min-height: 750px;
 }
 
 #bittpnRegister {
