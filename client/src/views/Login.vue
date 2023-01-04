@@ -80,37 +80,37 @@ export default {
       }
     },
     login() {
-      const test1 = JSON.stringify({
-        token: '123QWE!@#',
-        dentistId: 12345,
-        email: 'liamaxelrod@gmail.com',
-        firstName: 'liam',
-        lastName: 'axelrod',
-        officeId: 1
-      })
-      localStorage.setItem('accountInfo', test1)
-      // const check = this.checkPassword()
-      // const check2 = checkingInputs.checkEmail(this.changeEmailText)
-      // if (check2 === false) {
-      //   this.unsuccessful = 'email needs to contain @'
-      // } else if (check === false) {
-      //   // responses in checkPassword()
-      // } else {
-      //   this.requestID = checkingInputs.makeRandomId(10)
-      //   this.mqtt_client.subscribe('dentistimo/login/dentist/' + this.requestID, { qos: 2 }, (error, res) => {
-      //     if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
-      //   })
-      //   this.mqtt_client.subscribe('dentistimo/login/error/' + this.requestID, { qos: 2 }, (error, res) => {
-      //     if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
-      //   })
-      //   const payload = JSON.stringify({
-      //     email: this.changeEmailText,
-      //     password: this.changePasswordText,
-      //     requestId: this.requestID
-      //   })
-      //   this.mqtt_client.publish(this.topic, payload, this.qos)
-      //   this.unsuccessful = 'login error please try again later' // if a message is received this will return to being blank
-      // }
+      // const test1 = JSON.stringify({
+      //   token: '123QWE!@#',
+      //   dentistId: 12345,
+      //   email: 'liamaxelrod@gmail.com',
+      //   firstName: 'liam',
+      //   lastName: 'axelrod',
+      //   officeId: 1
+      // })
+      // localStorage.setItem('accountInfo', test1)
+      const check = this.checkPassword()
+      const check2 = checkingInputs.checkEmail(this.changeEmailText)
+      if (check2 === false) {
+        this.unsuccessful = 'email needs to contain @'
+      } else if (check === false) {
+        // responses in checkPassword()
+      } else {
+        this.requestID = checkingInputs.makeRandomId(10)
+        this.mqtt_client.subscribe('dentistimo/login/dentist/' + this.requestID, { qos: 2 }, (error, res) => {
+          if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
+        })
+        this.mqtt_client.subscribe('dentistimo/login/error/' + this.requestID, { qos: 2 }, (error, res) => {
+          if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
+        })
+        const payload = JSON.stringify({
+          email: this.changeEmailText,
+          password: this.changePasswordText,
+          requestId: this.requestID
+        })
+        this.mqtt_client.publish(this.topic, payload, this.qos)
+        this.unsuccessful = 'login error please try again later' // if a message is received this will return to being blank
+      }
     },
     register() {
       this.$router.push('/register')
