@@ -1,23 +1,25 @@
 <template>
     <div class="background">
-        <div class="warning">
-          <p id="pop-up" >{{this.unsuccessful}}</p>
-        </div>
-        <div class="aboveButtons">
-            <input id="inputFirstName" v-model='changeFirstNameText' placeholder="enter your first name">
-            <P></P>
-            <input id="inputLastName" v-model='changeLastNameText' placeholder="enter your last name">
-            <P></P>
-            <input id="inputpassword" v-model='changePasswordText' placeholder="enter new password">
-            <P></P>
-            <input id="checkPassword" v-model='changeCheckPasswordText' placeholder="reenter your password">
-            <P></P>
-            <input id="inputCompany" v-model='changecompanyText' placeholder="enter company ID number">
-            <P></P>
-            <input id="inputeEmail" v-model='changeEmailText' placeholder="enter new Email">
-            <P></P>
-            <button id="registerButton" @click="register" class="btn btn-success btn-lg">register</button>
-        </div>
+      <div class="warning">
+      <p id="pop-up">{{ this.unsuccessful }}</p>
+    </div>
+    <div class="card" style="width: 25rem;">
+  <div class="card-body">
+    <h5 class="card-title">Hello! Welcome to Dentistimo</h5>
+    <p class="card-text">Enter your details below and click register.</p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><input id="inputFirstName" v-model='changeFirstNameText' placeholder="Enter your first name"></li>
+    <li class="list-group-item"><input id="inputLastName" v-model='changeLastNameText' placeholder="Enter your last name"></li>
+    <li class="list-group-item"><input id="inputpassword" v-model='changePasswordText' placeholder="Enter new password"></li>
+    <li class="list-group-item"><input id="checkPassword" v-model='changeCheckPasswordText' placeholder="Re-enter your password"></li>
+    <li class="list-group-item"><input id="inputCompany" v-model='changecompanyText' placeholder="Enter company ID"></li>
+    <li class="list-group-item"><input id="inputeEmail" v-model='changeEmailText' placeholder="Enter new email"></li>
+  </ul>
+  <div class="card-body">
+    <button id="registerButton" @click="register" class="btn btn-dark btn-lg">Register</button>
+  </div>
+</div>
     </div>
 </template>
 

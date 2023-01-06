@@ -304,14 +304,16 @@ export default {
 }
 
 .div2 {
-  height: 109vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
   width: 100%;
   border: 0px
   /*
   solid rgb(221, 255, 0);
   */
 }
-
 .div2-1 {
   height: 100%;
   width: 100%;
