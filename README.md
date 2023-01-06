@@ -14,6 +14,8 @@ The dentist will be able to contact the patient due to change or cancel the appo
 ## **Visuals**
 ![decomposition_component](.\img\decomposition_dentist_component.png "destination decomposition_component")
 
+![](.\img\decomposition_dentist_component.png)
+
 Diagram, view page, etc. (to be added more when completed)
 
 ## **Installation** 
