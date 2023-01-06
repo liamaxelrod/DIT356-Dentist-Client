@@ -305,6 +305,10 @@ export default {
 </script>
 
 <style scoped>
+#app {
+  min-width: 1100px;
+  min-height: 800px;
+}
   .background {
   display: flex;
   justify-content: center;
@@ -312,7 +316,7 @@ export default {
   flex-direction: row;
   height: 100%;
   width: 100%;
-  min-width: 700px;
+  min-width: 1100px;
   min-height: 900px;
 }
 .div1 {

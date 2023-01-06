@@ -230,6 +230,7 @@ solid rgb(0, 255, 106); */
 }
 .div2 {
 display: flex;
+justify-content: center;
 align-items: center;
 flex-direction: column;
 height: 100%;
@@ -237,6 +238,14 @@ width: 100%;
 padding: 20px;
 /* border: 10px
 solid rgb(221, 255, 0); */
+}
+.col-sm-6 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  padding: 10px;
 }
 
 #firstName, #lastName, #company, #email {
@@ -250,8 +259,8 @@ color: red;
 font-size: 20px;
 color: green;
 }
-#buttonChange {
-width: 21vh;
+#buttonChange, #inputCheckPassword {
+width: 100%;
 margin: 5px;
 }
 #checkPassword {
