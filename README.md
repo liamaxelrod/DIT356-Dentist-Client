@@ -16,7 +16,7 @@ The dentist will be able to contact the patient due to change or cancel the appo
 
 test 
 
-![test](.\img\decomposition_dentist_component.png "Dentistimo test")
+![test](img\test.png "Dentistimo test")
 
 Diagram, view page, etc. (to be added more when completed)
 
