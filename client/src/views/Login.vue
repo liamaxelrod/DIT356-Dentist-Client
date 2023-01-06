@@ -4,23 +4,24 @@
       <p id="pop-up">{{ this.unsuccessful }}</p>
     </div>
     <div class="card" style="width: 25rem;">
-  <img class="card-img-top" src="https://img.freepik.com/free-vector/dentists-holding-instruments-examining-teeth-decay-white_1308-92127.jpg?w=740&t=st=1672838470~exp=1672839070~hmac=777c39ac851efd86106686fe5038f27eded8653e9269275f9a251ff89c35cd83" alt="Card image cap">
-  <div class="card-body">
-    <h5 class="card-title">Welcome back!</h5>
-    <p class="card-text">Enter your email and password to login or click register to be redirected to registration.</p>
-  </div>
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item"><input id="inputEmail" v-model='changeEmailText' placeholder="Email"></li>
-    <li class="list-group-item"><input id="inputPassword" v-model='changePasswordText' placeholder="Password"></li>
-    <!-- <input id="inputEmail" v-model='changeEmailText' placeholder="Email">
-    <input id="inputpassword" v-model='changePasswordText' placeholder="Password">
-  -->
-  </ul>
-  <div class="card-body">
-    <button id="bittpnLogin" @click="login" class="btn btn-info btn-lg">Login</button>
-    <button id="bittpnRegister" @click="register" class="btn btn-dark btn-lg">Register</button>
-  </div>
-</div>
+      <img class="card-img-top" src="https://img.freepik.com/free-vector/dentists-holding-instruments-examining-teeth-decay-white_1308-92127.jpg?w=740&t=st=1672838470~exp=1672839070~hmac=777c39ac851efd86106686fe5038f27eded8653e9269275f9a251ff89c35cd83" alt="Card image cap">
+      <div class="card-body">
+        <h5 class="card-title">Welcome back!</h5>
+        <p class="card-text">Enter your email and password to login or click register to be redirected to registration.</p>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><input id="inputEmail" v-model='changeEmailText' placeholder="Email"></li>
+        <li class="list-group-item"><input id="inputPassword" v-model='changePasswordText' placeholder="Password"></li>
+        <!-- <input id="inputEmail" v-model='changeEmailText' placeholder="Email">
+        <input id="inputpassword" v-model='changePasswordText' placeholder="Password">
+      -->
+      </ul>
+      <div class="card-body">
+        <button id="bittpnLogin" @click="login" class="btn btn-info btn-lg">Login</button>
+        <button id="bittpnRegister" @click="register" class="btn btn-dark btn-lg">Register</button>
+        <button id="buttonResetPassword" @click="resetPassword" class="btn btn-secondary">resent password</button>
+      </div>
+    </div>
     <!--
     <div class="inputAndButton">
       <input id="inputEmail" v-model='changeEmailText' placeholder="enter new email">
@@ -134,6 +135,9 @@ export default {
     },
     register() {
       this.$router.push('/register')
+    },
+    resetPassword() {
+      this.$router.push('/resetPassword')
     }
   }
 }
@@ -149,7 +153,7 @@ export default {
   height: 100%;
   background-color: #80BAB2;
   min-width: 700px;
-  min-height: 1000px;
+  min-height: 800px;
 }
 
 #bittpnRegister {
