@@ -12,11 +12,11 @@ The dentist will have the power to change appointments due to unforeseen circums
 The dentist will have the power to cancel appointments due to unforeseen circumstances.
 The dentist will be able to contact the patient due to change or cancel the appointment due to unforeseen circumstances.
 ## **Visuals**
-![decomposition_component](.\img\decomposition_dentist_component.png "decomposition_component")
+![decomposition_component](./img/decomposition_dentist_component.png "decomposition_component")
 
 test 
 
-![test](img\test.png "Dentistimo test")
+![test](img/test.png "Dentistimo test")
 
 Diagram, view page, etc. (to be added more when completed)
 
