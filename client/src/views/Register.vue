@@ -118,8 +118,10 @@ export default {
           email: this.changeEmailText,
           requestId: this.requestID
         })
+        this.mqtt_client.subscribe(this.topic, { qos: 2 }, (error, res) => {
+          if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
+        })
         this.mqtt_client.publish(this.topic, payload, this.qos)
-        console.log('message published')
         this.unsuccessful = 'register error please try agaain later'
       }
     }
