@@ -19,7 +19,7 @@
       <div class="card-body">
         <button id="bittpnLogin" @click="login" class="btn btn-info btn-lg">Login</button>
         <button id="bittpnRegister" @click="register" class="btn btn-dark btn-lg">Register</button>
-        <button id="buttonResetPassword" @click="resetPassword" class="btn btn-secondary">resent password</button>
+        <button id="buttonResetPassword" @click="resetPassword" class="btn btn-secondary">Reset password</button>
       </div>
     </div>
     <!--
@@ -87,13 +87,13 @@ export default {
       const result2 = checkingInputs.strinContainsNumbers(this.changePasswordText)
       const result3 = checkingInputs.checkStringLength(this.changePasswordText)
       if (result1 === false) {
-        this.unsuccessful = 'password needs a special character'
+        this.unsuccessful = 'Password needs a special character'
         return false
       } else if (result2 === false) {
-        this.unsuccessful = 'password needs a number'
+        this.unsuccessful = 'Password needs a number'
         return false
       } else if (result3 === false) {
-        this.unsuccessful = 'password needs to be between 8 and 99 characters'
+        this.unsuccessful = 'Password needs to be between 8 and 99 characters'
         return false
       } else {
         this.unsuccessful = ''
@@ -113,7 +113,7 @@ export default {
       const check = this.checkPassword()
       const check2 = checkingInputs.checkEmail(this.changeEmailText)
       if (check2 === false) {
-        this.unsuccessful = 'email needs to contain @'
+        this.unsuccessful = 'Email needs to contain @'
       } else if (check === false) {
         // responses in checkPassword()
       } else {
@@ -130,7 +130,7 @@ export default {
           requestId: this.requestID
         })
         this.mqtt_client.publish(this.topic, payload, this.qos)
-        this.unsuccessful = 'login error please try again later' // if a message is received this will return to being blank
+        this.unsuccessful = 'Login error please try again later' // if a message is received this will return to being blank
       }
     },
     register() {

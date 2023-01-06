@@ -17,7 +17,12 @@ The dentist will be able to contact the patient due to change or cancel the appo
 Diagram, view page, etc. (to be added more when completed)
 
 ## **Installation** 
-No installation required for this repository.
+To run Dentistimos dentist-client component you need to do the following steps:
+
+Clone the repository on to your device.
+Open a terminal and navigate to the client folder, where you will first type "npm install" which will install the neccesary dependencies.
+When the installation is complete you will type "npm run serve". Copy the adress into web browser of your choice.
+Create an account and enjoy all features of a dentist!
 ## **Technologies**
 *Vue*
 

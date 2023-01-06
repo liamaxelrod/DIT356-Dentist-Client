@@ -42,11 +42,11 @@
               <h5>Enter the details you want to change</h5>
             </div>
             <ul class="list-group list-group-flush">
-              <li class="list-group-item"><input id="inputFirstName" v-model='changeFirstNameText' placeholder="enter new first name"></li>
-              <li class="list-group-item"><input id="inputLastName" v-model='changeLastNameText' placeholder="enter new last name"></li>
-              <li class="list-group-item"><input id="inputCompany" v-model='changeCompanyIdText' placeholder="enter new company ID"></li>
-              <li class="list-group-item"><input id="inputEmail" v-model='changeEmailText' placeholder="enter new email"></li>
-              <li class="list-group-item"><input id="inputpassword" v-model='changePasswordText' placeholder="enter new password"></li>
+              <li class="list-group-item"><input id="inputFirstName" v-model='changeFirstNameText' placeholder="Enter new first name"></li>
+              <li class="list-group-item"><input id="inputLastName" v-model='changeLastNameText' placeholder="Enter new last name"></li>
+              <li class="list-group-item"><input id="inputCompany" v-model='changeCompanyIdText' placeholder="Enter new company ID"></li>
+              <li class="list-group-item"><input id="inputEmail" v-model='changeEmailText' placeholder="Enter new email"></li>
+              <li class="list-group-item"><input id="inputpassword" v-model='changePasswordText' placeholder="Enter new password"></li>
             </ul>
           </div>
         </div>
@@ -101,7 +101,7 @@ export default {
   methods: {
     attributesCheck() {
       if (this.changeFirstNameText === '' && this.changeLastNameText === '' && this.changeCompanyIdText === '' && this.changeEmailText === '' && this.changePasswordText === '') {
-        this.unsuccessful = 'please enter at least one attribute to change'
+        this.unsuccessful = 'Please enter at least one attribute to change'
       } else {
         return true
       }
