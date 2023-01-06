@@ -7,10 +7,12 @@
               <li class="list-group-item" id="lastName">Last name: {{accoountInfo.lastName}}</li>
               <li class="list-group-item" id="company">Company: {{accoountInfo.company}}</li>
               <li class="list-group-item" id="email">Email: {{accoountInfo.email}}</li>
-              <li class="list-group-item" id="popUp">{{ this.unsuccessful }}</li>
-              <li class="list-group-item" id="popUp2">{{ this.successful }}</li>
             </ul>
         </div>
+        <div>
+          <p id="popUp">{{ this.unsuccessful }} </p>
+          <p id="popUp2">{{ this.successful }} </p>
+    </div>
       <!--
       <p></p>
       <p id="firstName">first name: {{accoountInfo.firstName}}</p>
@@ -227,7 +229,7 @@ display: flex;
 align-items: center;
 flex-direction: column;
 height: 100%;
-width: 30%;
+width: 100%;
 padding: 20px;
 /* border: 10px
 solid rgb(221, 255, 0); */
