@@ -300,7 +300,7 @@ export default {
 }
 
 .div2 {
-  height: 109vh;
+  height: 89vh;
   width: 100%;
   border: 0px
   /*

@@ -1,6 +1,17 @@
 <template>
   <div class="background">
     <div class="div1">
+      <div class="card border mb-3" style="width: 17rem;">
+            <ul class="list-group list-group-flush text-info">
+              <li class="list-group-item" id="lastName">First name: {{accoountInfo.firstName}}</li>
+              <li class="list-group-item" id="lastName">Last name: {{accoountInfo.lastName}}</li>
+              <li class="list-group-item" id="company">Company: {{accoountInfo.company}}</li>
+              <li class="list-group-item" id="email">Email: {{accoountInfo.email}}</li>
+              <li class="list-group-item" id="popUp">{{ this.unsuccessful }}</li>
+              <li class="list-group-item" id="popUp2">{{ this.successful }}</li>
+            </ul>
+        </div>
+      <!--
       <p></p>
       <p id="firstName">first name: {{accoountInfo.firstName}}</p>
       <p id="lastName">last name: {{accoountInfo.lastName}}</p>
@@ -8,31 +19,37 @@
       <p id="email">email: {{accoountInfo.email}}</p>
       <p id="popUp">{{ this.unsuccessful }}</p>
       <p id="popUp2">{{ this.successful }}</p>
+      -->
     </div>
     <div class="div2">
-      <div class="inDiv2Div1">
-        <p id="checkPassword">insert current password</p>
-        <p id="checkPassword">before making change</p>
-        <input id="inputCheckPassword" v-model='checkPasswordText' placeholder="enter password">
-        <button class="btn btn-success" id="buttonChange" @click="makeChange">make change</button>
-      </div>
-      <div class="inDiv2Div2">
-        <p id="changeFirstName">change first name</p>
-        <input id="inputFirstName" v-model='changeFirstNameText' placeholder="enter new first name">
-        <p></p>
-        <p id="changelastName">change last name</p>
-        <input id="inputLastName" v-model='changeLastNameText' placeholder="enter new last name">
-        <p></p>
-        <p id="changeCompanyId">change company ID</p>
-        <input id="inputCompany" v-model='changeCompanyIdText' placeholder="enter new company ID">
-        <p></p>
-        <p id="changeEmail">change email</p>
-        <input id="inputEmail" v-model='changeEmailText' placeholder="enter new email">
-        <p></p>
-        <p id="changePassword">change password</p>
-        <input id="inputpassword" v-model='changePasswordText' placeholder="enter new password">
+      <div class="row">
+  <div class="col-sm-6">
+    <div class="card" style="width: 20rem;">
+      <div class="card-body">
+        <h5 class="card-title">Insert your password</h5>
+        <ul class="list-group list-group-flush">
+         <li class="list-group-item"><input id="inputCheckPassword" v-model='checkPasswordText' placeholder="Enter password"></li>
+       </ul>
+        <button class="btn btn-danger" id="buttonChange" @click="makeChange">make change</button>
       </div>
     </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card" style="width: 20rem;">
+      <div class="card-body">
+        <h5>Enter the details you want to change</h5>
+      </div>
+        <ul class="list-group list-group-flush">
+        <li class="list-group-item"><input id="inputFirstName" v-model='changeFirstNameText' placeholder="enter new first name"></li>
+        <li class="list-group-item"><input id="inputLastName" v-model='changeLastNameText' placeholder="enter new last name"></li>
+        <li class="list-group-item"><input id="inputCompany" v-model='changeCompanyIdText' placeholder="enter new company ID"></li>
+        <li class="list-group-item"><input id="inputEmail" v-model='changeEmailText' placeholder="enter new email"></li>
+        <li class="list-group-item"><input id="inputpassword" v-model='changePasswordText' placeholder="enter new password"></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
   </div>
 </template>
 <script>
@@ -207,44 +224,15 @@ solid rgb(0, 255, 106); */
 }
 .div2 {
 display: flex;
-flex-direction: row;
-height: 100%;
-width: 100%;
-/* border: 10px
-solid rgb(221, 255, 0); */
-}
-.inDiv2Div1 {
-display: flex;
 align-items: center;
 flex-direction: column;
 height: 100%;
 width: 30%;
 padding: 20px;
 /* border: 10px
-solid rgb(0, 255, 106); */
-}
-.inDiv2Div2 {
-display: flex;
-justify-content: center;
-align-items: center;
-flex-direction: column;
-height: 100%;
-width: 70%;
-padding: 20px;
-/* border: 10px
 solid rgb(221, 255, 0); */
 }
-/* .in2div3 {
-display: flex;
-justify-content: center;
-align-items: center;
-flex-direction: column;
-height: 100%;
-width: 33%;
-padding: 20px;
-/* border: 10px
-solid rgb(0, 255, 106);
-} */
+
 #firstName, #lastName, #company, #email {
 font-size: 20px;
 }
