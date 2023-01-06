@@ -196,7 +196,9 @@ export default {
       if (this.checkInputTime()) {
         // this.successfulBreak = 'please insert date and time'
         const dentistID = JSON.parse(localStorage.getItem('accountInfo')).dentistId
+        const officeId = JSON.parse(localStorage.getItem('accountInfo')).officeId
         const payload = JSON.stringify({
+          dentistOfficeId: officeId,
           dentistid: dentistID,
           date: this.breakData,
           time: this.breakTime,
@@ -209,7 +211,9 @@ export default {
       if (this.checkInputTime()) {
         // this.successfulBreak = 'please insert date and time'
         const dentistID = JSON.parse(localStorage.getItem('accountInfo')).dentistId
+        const officeId = JSON.parse(localStorage.getItem('accountInfo')).officeId
         const payload = JSON.stringify({
+          dentistOfficeId: officeId,
           dentistid: dentistID,
           date: this.breakData,
           time: this.breakTime,

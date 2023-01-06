@@ -136,7 +136,7 @@ export default {
   height: 100%;
   background-color: #80BAB2;
   min-width: 700px;
-  min-height:750px;
+  min-height: 600px;
 }
 .aboveButtons{
   height: 550px

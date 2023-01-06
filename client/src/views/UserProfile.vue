@@ -88,6 +88,7 @@ export default {
     const msgCallback = (topic, message) => {
       this.receive = message.toString()
       this.context = message.toString()
+      console.log(message)
       console.log({ topic: topic, message: message.toString() })
       this.buildNewLocalStorage()
     }
@@ -108,7 +109,7 @@ export default {
     makePayload() {
       const payload = {
         idToken: this.Usetoken,
-        checkPassword: this.checkPasswordText
+        oldPassword: this.checkPasswordText
       }
       if (this.changeFirstNameText !== '') {
         payload.firstName = this.changeFirstNameText
@@ -127,7 +128,7 @@ export default {
         this.changeEmailText = ''
       }
       if (this.changePasswordText !== '') {
-        payload.password = this.changePasswordText
+        payload.newPassword = this.changePasswordText
         this.changePasswordText = ''
       }
       const JSONpayload = JSON.stringify(payload)
@@ -156,7 +157,7 @@ export default {
       })
       const qos = 2
       this.mqtt_client.publish(publishTopic, payload, qos)
-      location.reload()
+      // location.reload()
     },
     buildNewLocalStorage() {
       if (this.receive.includes('Update successful')) {

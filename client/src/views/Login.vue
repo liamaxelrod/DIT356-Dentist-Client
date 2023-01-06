@@ -4,23 +4,24 @@
       <p id="pop-up">{{ this.unsuccessful }}</p>
     </div>
     <div class="card" style="width: 25rem;">
-  <img class="card-img-top" src="https://img.freepik.com/free-vector/dentists-holding-instruments-examining-teeth-decay-white_1308-92127.jpg?w=740&t=st=1672838470~exp=1672839070~hmac=777c39ac851efd86106686fe5038f27eded8653e9269275f9a251ff89c35cd83" alt="Card image cap">
-  <div class="card-body">
-    <h5 class="card-title">Welcome back!</h5>
-    <p class="card-text">Enter your email and password to login or click register to be redirected to registration.</p>
-  </div>
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item"><input id="inputEmail" v-model='changeEmailText' placeholder="Email"></li>
-    <li class="list-group-item"><input id="inputPassword" v-model='changePasswordText' placeholder="Password"></li>
-    <!-- <input id="inputEmail" v-model='changeEmailText' placeholder="Email">
-    <input id="inputpassword" v-model='changePasswordText' placeholder="Password">
-  -->
-  </ul>
-  <div class="card-body">
-    <button id="bittpnLogin" @click="login" class="btn btn-info btn-lg">Login</button>
-    <button id="bittpnRegister" @click="register" class="btn btn-dark btn-lg">Register</button>
-  </div>
-</div>
+      <img class="card-img-top" src="https://img.freepik.com/free-vector/dentists-holding-instruments-examining-teeth-decay-white_1308-92127.jpg?w=740&t=st=1672838470~exp=1672839070~hmac=777c39ac851efd86106686fe5038f27eded8653e9269275f9a251ff89c35cd83" alt="Card image cap">
+      <div class="card-body">
+        <h5 class="card-title">Welcome back!</h5>
+        <p class="card-text">Enter your email and password to login or click register to be redirected to registration.</p>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><input id="inputEmail" v-model='changeEmailText' placeholder="Email"></li>
+        <li class="list-group-item"><input id="inputPassword" v-model='changePasswordText' placeholder="Password"></li>
+        <!-- <input id="inputEmail" v-model='changeEmailText' placeholder="Email">
+        <input id="inputpassword" v-model='changePasswordText' placeholder="Password">
+      -->
+      </ul>
+      <div class="card-body">
+        <button id="bittpnLogin" @click="login" class="btn btn-info btn-lg">Login</button>
+        <button id="bittpnRegister" @click="register" class="btn btn-dark btn-lg">Register</button>
+        <button id="buttonResetPassword" @click="resetPassword" class="btn btn-secondary">resent password</button>
+      </div>
+    </div>
     <!--
     <div class="inputAndButton">
       <input id="inputEmail" v-model='changeEmailText' placeholder="enter new email">
@@ -100,40 +101,43 @@ export default {
       }
     },
     login() {
-      const test1 = JSON.stringify({
-        token: '123QWE!@#',
-        dentistId: 12345,
-        email: 'liamaxelrod@gmail.com',
-        firstName: 'liam',
-        lastName: 'axelrod',
-        officeId: 1
-      })
-      localStorage.setItem('accountInfo', test1)
-      // const check = this.checkPassword()
-      // const check2 = checkingInputs.checkEmail(this.changeEmailText)
-      // if (check2 === false) {
-      //   this.unsuccessful = 'email needs to contain @'
-      // } else if (check === false) {
-      //   // responses in checkPassword()
-      // } else {
-      //   this.requestID = checkingInputs.makeRandomId(10)
-      //   this.mqtt_client.subscribe('dentistimo/login/dentist/' + this.requestID, { qos: 2 }, (error, res) => {
-      //     if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
-      //   })
-      //   this.mqtt_client.subscribe('dentistimo/login/error/' + this.requestID, { qos: 2 }, (error, res) => {
-      //     if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
-      //   })
-      //   const payload = JSON.stringify({
-      //     email: this.changeEmailText,
-      //     password: this.changePasswordText,
-      //     requestId: this.requestID
-      //   })
-      //   this.mqtt_client.publish(this.topic, payload, this.qos)
-      //   this.unsuccessful = 'login error please try again later' // if a message is received this will return to being blank
-      // }
+      // const test1 = JSON.stringify({
+      //   token: '123QWE!@#',
+      //   dentistId: 12345,
+      //   email: 'liamaxelrod@gmail.com',
+      //   firstName: 'liam',
+      //   lastName: 'axelrod',
+      //   officeId: 1
+      // })
+      // localStorage.setItem('accountInfo', test1)
+      const check = this.checkPassword()
+      const check2 = checkingInputs.checkEmail(this.changeEmailText)
+      if (check2 === false) {
+        this.unsuccessful = 'email needs to contain @'
+      } else if (check === false) {
+        // responses in checkPassword()
+      } else {
+        this.requestID = checkingInputs.makeRandomId(10)
+        this.mqtt_client.subscribe('dentistimo/login/dentist/' + this.requestID, { qos: 2 }, (error, res) => {
+          if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
+        })
+        this.mqtt_client.subscribe('dentistimo/login/error/' + this.requestID, { qos: 2 }, (error, res) => {
+          if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
+        })
+        const payload = JSON.stringify({
+          email: this.changeEmailText,
+          password: this.changePasswordText,
+          requestId: this.requestID
+        })
+        this.mqtt_client.publish(this.topic, payload, this.qos)
+        this.unsuccessful = 'login error please try again later' // if a message is received this will return to being blank
+      }
     },
     register() {
       this.$router.push('/register')
+    },
+    resetPassword() {
+      this.$router.push('/resetPassword')
     }
   }
 }
@@ -149,7 +153,7 @@ export default {
   height: 100%;
   background-color: #80BAB2;
   min-width: 700px;
-  min-height: 1000px;
+  min-height: 800px;
 }
 
 #bittpnRegister {
