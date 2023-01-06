@@ -300,7 +300,10 @@ export default {
 }
 
 .div2 {
-  height: 89vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
   width: 100%;
   border: 0px
   /*

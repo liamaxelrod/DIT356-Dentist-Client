@@ -2,15 +2,17 @@
   <div class="background">
     <div class="div1">
       <div class="card border mb-3" style="width: 17rem;">
-            <ul class="list-group list-group-flush text-info">
-              <li class="list-group-item" id="lastName">First name: {{accoountInfo.firstName}}</li>
-              <li class="list-group-item" id="lastName">Last name: {{accoountInfo.lastName}}</li>
-              <li class="list-group-item" id="company">Company: {{accoountInfo.company}}</li>
-              <li class="list-group-item" id="email">Email: {{accoountInfo.email}}</li>
-              <li class="list-group-item" id="popUp">{{ this.unsuccessful }}</li>
-              <li class="list-group-item" id="popUp2">{{ this.successful }}</li>
-            </ul>
-        </div>
+        <ul class="list-group list-group-flush text-info">
+          <li class="list-group-item" id="lastName">First name: {{accoountInfo.firstName}}</li>
+          <li class="list-group-item" id="lastName">Last name: {{accoountInfo.lastName}}</li>
+          <li class="list-group-item" id="company">Company: {{accoountInfo.company}}</li>
+          <li class="list-group-item" id="email">Email: {{accoountInfo.email}}</li>
+        </ul>
+      </div>
+      <div>
+        <p id="popUp">{{ this.unsuccessful }}</p>
+        <p id="popUp2">{{ this.successful }}</p>
+      </div>
       <!--
       <p></p>
       <p id="firstName">first name: {{accoountInfo.firstName}}</p>
@@ -23,33 +25,33 @@
     </div>
     <div class="div2">
       <div class="row">
-  <div class="col-sm-6">
-    <div class="card" style="width: 20rem;">
-      <div class="card-body">
-        <h5 class="card-title">Insert your password</h5>
-        <ul class="list-group list-group-flush">
-         <li class="list-group-item"><input id="inputCheckPassword" v-model='checkPasswordText' placeholder="Enter password"></li>
-       </ul>
-        <button class="btn btn-danger" id="buttonChange" @click="makeChange">make change</button>
+        <div class="col-sm-6">
+          <div class="card" style="width: 20rem;">
+            <div class="card-body">
+              <h5 class="card-title">Insert your password</h5>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item"><input id="inputCheckPassword" v-model='checkPasswordText' placeholder="Enter password"></li>
+              </ul>
+              <button class="btn btn-danger" id="buttonChange" @click="makeChange">make change</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="card" style="width: 20rem;">
+            <div class="card-body">
+              <h5>Enter the details you want to change</h5>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item"><input id="inputFirstName" v-model='changeFirstNameText' placeholder="enter new first name"></li>
+              <li class="list-group-item"><input id="inputLastName" v-model='changeLastNameText' placeholder="enter new last name"></li>
+              <li class="list-group-item"><input id="inputCompany" v-model='changeCompanyIdText' placeholder="enter new company ID"></li>
+              <li class="list-group-item"><input id="inputEmail" v-model='changeEmailText' placeholder="enter new email"></li>
+              <li class="list-group-item"><input id="inputpassword" v-model='changePasswordText' placeholder="enter new password"></li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="col-sm-6">
-    <div class="card" style="width: 20rem;">
-      <div class="card-body">
-        <h5>Enter the details you want to change</h5>
-      </div>
-        <ul class="list-group list-group-flush">
-        <li class="list-group-item"><input id="inputFirstName" v-model='changeFirstNameText' placeholder="enter new first name"></li>
-        <li class="list-group-item"><input id="inputLastName" v-model='changeLastNameText' placeholder="enter new last name"></li>
-        <li class="list-group-item"><input id="inputCompany" v-model='changeCompanyIdText' placeholder="enter new company ID"></li>
-        <li class="list-group-item"><input id="inputEmail" v-model='changeEmailText' placeholder="enter new email"></li>
-        <li class="list-group-item"><input id="inputpassword" v-model='changePasswordText' placeholder="enter new password"></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
   </div>
 </template>
 <script>
@@ -227,7 +229,7 @@ display: flex;
 align-items: center;
 flex-direction: column;
 height: 100%;
-width: 30%;
+width: 100%;
 padding: 20px;
 /* border: 10px
 solid rgb(221, 255, 0); */
