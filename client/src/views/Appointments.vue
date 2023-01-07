@@ -80,6 +80,7 @@ export default {
       topicSchedule: 'dentistimo/dentist-office/fetch-one',
       topicBreaks: 'dentistimo/dentist/breaks',
       topicDelete: 'dentistimo/booking/delete-break',
+      noAppointments: '',
       successfulBreak: '',
       DisplayedFikaBreak: '',
       DisplayedLunchBreak: '',
@@ -112,10 +113,11 @@ export default {
   mounted() {
     this.mqtt_client = mymqtt.createClient()
     if (this.workTime.monday === '') {
+      console.log('get schedule')
       this.getSchedule()
     }
     const msgCallback = (topic, message) => {
-      // console.log('message received' + message.toString())
+      console.log('message received' + message.toString())
       this.noAppointments = ''
       this.successfulBreak = ''
       if (message.includes('coordinate')) {
@@ -159,7 +161,7 @@ export default {
     this.mqtt_client.on('subscribe', (topic) => {
       console.log('Subscribed too: ', topic)
     })
-    this.mqtt_client.subscribe('dentistimo/dentist-appointment/all-appointments-day', { qos: 2 }, (error, res) => {
+    this.mqtt_client.subscribe('dentistimo/dentist-appointment/all-appointments-day/' + JSON.parse(localStorage.getItem('accountInfo')).idToken, { qos: 2 }, (error, res) => {
       if (error) {
         console.log('error = ', error)
       } else {
@@ -171,6 +173,7 @@ export default {
     appointments() {
       const dentistID = JSON.parse(localStorage.getItem('accountInfo')).dentistId
       const payload = JSON.stringify({
+        idToken: JSON.parse(localStorage.getItem('accountInfo')).idToken,
         dentistid: dentistID,
         date: this.value
       })
@@ -180,11 +183,17 @@ export default {
       this.time = ''
       this.issuance = ''
       const topic = 'dentistimo/dentist-appointment/get-all-appointments-day'
+      console.log('topic ' + topic)
+      console.log('test ' + payload)
+      this.mqtt_client.subscribe(topic + '/' + JSON.parse(localStorage.getItem('accountInfo')).idToken, { qos: 2 }, (error, res) => {
+        if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
+      })
       this.mqtt_client.publish(topic, payload, 2)
     },
     cancelAppointments() {
       // Display when an appointment is cancelled or not.
       const payload = JSON.stringify({
+        idToken: JSON.parse(localStorage.getItem('accountInfo')).idToken,
         issuance: this.cancelIssuance
       })
       const topic = 'dentistimo/booking/delete-booking'
@@ -198,11 +207,16 @@ export default {
         const dentistID = JSON.parse(localStorage.getItem('accountInfo')).dentistId
         const officeId = JSON.parse(localStorage.getItem('accountInfo')).officeId
         const payload = JSON.stringify({
+          idToken: JSON.parse(localStorage.getItem('accountInfo')).idToken,
           dentistOfficeId: officeId,
           dentistid: dentistID,
           date: this.breakData,
           time: this.breakTime,
           appointmentType: 'fika'
+        })
+        console.log('payload = ', payload)
+        this.mqtt_client.subscribe(this.topicBreaks, { qos: 2 }, (error, res) => {
+          if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
         })
         this.publishReceive(payload, this.topicBreaks, this.topicBreaks)
       }
@@ -213,6 +227,7 @@ export default {
         const dentistID = JSON.parse(localStorage.getItem('accountInfo')).dentistId
         const officeId = JSON.parse(localStorage.getItem('accountInfo')).officeId
         const payload = JSON.stringify({
+          idToken: JSON.parse(localStorage.getItem('accountInfo')).idToken,
           dentistOfficeId: officeId,
           dentistid: dentistID,
           date: this.breakData,
@@ -227,6 +242,7 @@ export default {
         // this.successfulBreak = 'please insert date and time'
         const dentistID = JSON.parse(localStorage.getItem('accountInfo')).dentistId
         const payload = JSON.stringify({
+          idToken: JSON.parse(localStorage.getItem('accountInfo')).idToken,
           dentistid: dentistID,
           date: this.breakData,
           time: this.breakTime
@@ -239,6 +255,7 @@ export default {
         // this.successfulBreak = 'please insert date and time'
         const dentistID = JSON.parse(localStorage.getItem('accountInfo')).dentistId
         const payload = JSON.stringify({
+          idToken: JSON.parse(localStorage.getItem('accountInfo')).idToken,
           dentistid: dentistID,
           date: this.breakData,
           time: this.breakTime
@@ -247,7 +264,7 @@ export default {
       }
     },
     publishReceive(payload, publishTopic, subscribeTopic) {
-      this.mqtt_client.subscribe(subscribeTopic, { qos: 2 }, (error, res) => {
+      this.mqtt_client.subscribe(subscribeTopic + '/' + JSON.parse(localStorage.getItem('accountInfo')).idToken, { qos: 2 }, (error, res) => {
         if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
       })
       const topic = publishTopic
@@ -257,6 +274,7 @@ export default {
     getSchedule() {
       const officeId = JSON.parse(localStorage.getItem('accountInfo')).officeId
       const payload = JSON.stringify({
+        idToken: JSON.parse(localStorage.getItem('accountInfo')).idToken,
         id: officeId
       })
       this.publishReceive(payload, 'dentistimo/dentist-office/fetch-one', 'dentistimo/dentist-office/one-office')
@@ -287,6 +305,10 @@ export default {
 </script>
 
 <style scoped>
+#app {
+  min-width: 1100px;
+  min-height: 800px;
+}
   .background {
   display: flex;
   justify-content: center;
@@ -294,7 +316,7 @@ export default {
   flex-direction: row;
   height: 100%;
   width: 100%;
-  min-width: 700px;
+  min-width: 1100px;
   min-height: 900px;
 }
 .div1 {

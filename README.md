@@ -3,18 +3,16 @@
 # Dentist Client
 
 ## **Name**
-undecided
+Dentistimo
 
 ## **Description**
-An interactive GUI that permits dentists to view, change, cancel or contact the user which has made an appointment.
-The dentist can view what their working hours will be for each day.
-The dentist will have the power to change appointments due to unforeseen circumstances.
-The dentist will have the power to cancel appointments due to unforeseen circumstances.
-The dentist will be able to contact the patient due to change or cancel the appointment due to unforeseen circumstances.
+an interactive GUI that permits dentists to easily see what they're working hours are, and to access information on clients who have made an appointment with them. It also gives the dentist the ability to cancel any appointments with them for unforeseen reasons. 
+dentists will also have the ability to control when they want to have their breaks. They can decide what time they want to have their lunch and fika breaks, and they can also remove those breaks if they so choose 
+dentists also have the ability to change the first name, last name, email address, and password that they have signed up with the account.
+the point of this GUI is to allow dentist to easily and quickly be aware of their working schedule and control their break time. As well as pulling up relative information about what appointments I have that day or the foreseeable future
 ## **Visuals**
-![decomposition_component](.\img\decomposition_dentist_component.png "destination decomposition_component")
+![decomposition_component](./img/decomposition_dentist_component.png "decomposition_component")
 
-Diagram, view page, etc. (to be added more when completed)
 
 ## **Installation** 
 No installation required for this repository.
@@ -27,9 +25,29 @@ No installation required for this repository.
 
 *MQTT*
 ## **Usage**
-permit dentist easy usage of the system to access their appointments, control their break time, access client contact information, and change/cancel dentist appointments.
+permit dentist easy usage of the system to access what appointments they have, to cancel appointments they have, control and their breaks are, to know when they're working, and easily change their account information like first name, last name, email address, and password
 ## **Authors and acknowledgment**
 Liam Jason Axelrod 
 Adrian Niklasson
 ## **License**
-Not yet added
+MIT License
+
+Copyright (c) 2022 Liam Jason Axelrod and Adrian Niklasson
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

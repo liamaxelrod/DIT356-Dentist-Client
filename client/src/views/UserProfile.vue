@@ -44,7 +44,7 @@
             <ul class="list-group list-group-flush">
               <li class="list-group-item"><input id="inputFirstName" v-model='changeFirstNameText' placeholder="enter new first name"></li>
               <li class="list-group-item"><input id="inputLastName" v-model='changeLastNameText' placeholder="enter new last name"></li>
-              <li class="list-group-item"><input id="inputCompany" v-model='changeCompanyIdText' placeholder="enter new company ID"></li>
+              <!-- <li class="list-group-item"><input id="inputCompany" v-model='changeCompanyIdText' placeholder="enter new company ID"></li> -->
               <li class="list-group-item"><input id="inputEmail" v-model='changeEmailText' placeholder="enter new email"></li>
               <li class="list-group-item"><input id="inputpassword" v-model='changePasswordText' placeholder="enter new password"></li>
             </ul>
@@ -107,8 +107,10 @@ export default {
       }
     },
     makePayload() {
+      this.Usetoken = JSON.parse(localStorage.getItem('accountInfo')).idToken
+      console.log(this.Usetoken + ' asd')
       const payload = {
-        idToken: this.Usetoken,
+        idToken: JSON.parse(localStorage.getItem('accountInfo')).idToken,
         oldPassword: this.checkPasswordText
       }
       if (this.changeFirstNameText !== '') {
@@ -119,10 +121,10 @@ export default {
         payload.lastName = this.changeLastNameText
         this.changeLastNameText = ''
       }
-      if (this.changeCompanyIdText !== '') {
-        payload.officeId = this.changeCompanyIdText
-        this.changeCompanyIdText = ''
-      }
+      // if (this.changeCompanyIdText !== '') {
+      //   payload.officeId = this.changeCompanyIdText
+      //   this.changeCompanyIdText = ''
+      // }
       if (this.changeEmailText !== '') {
         payload.email = this.changeEmailText
         this.changeEmailText = ''
@@ -136,7 +138,9 @@ export default {
     },
     makeChange() {
       if (this.attributesCheck()) {
-        this.publish(this.makePayload(), this.topic, this.topicError)
+        const payload = this.makePayload()
+        console.log(payload)
+        this.publish(payload, this.topic, this.topicError)
       }
     },
     // deleteAccount() { //this feature was removed from the application
@@ -164,16 +168,15 @@ export default {
         localStorage.setItem('temporary', this.receive)
         const newFirstName = JSON.parse(localStorage.getItem('temporary')).firstName
         const newLastName = JSON.parse(localStorage.getItem('temporary')).lastName
-        const newOfficeId = JSON.parse(localStorage.getItem('temporary')).officeId
+        const oldOfficeId = JSON.parse(localStorage.getItem('accountInfo')).officeId
         const newEmail = JSON.parse(localStorage.getItem('temporary')).email
-        const oldIdToken = JSON.parse(localStorage.getItem('accountInfo')).IdToken
         const oldDentistId = JSON.parse(localStorage.getItem('accountInfo')).dentistId
         const newAccountInfo = JSON.stringify({
-          IdToken: oldIdToken,
+          idToken: JSON.parse(localStorage.getItem('accountInfo')).idToken,
           firstName: newFirstName,
           lastName: newLastName,
           email: newEmail,
-          officeId: newOfficeId,
+          officeId: oldOfficeId,
           dentistId: oldDentistId
         })
         localStorage.setItem('accountInfo', newAccountInfo)
@@ -227,6 +230,7 @@ solid rgb(0, 255, 106); */
 }
 .div2 {
 display: flex;
+justify-content: center;
 align-items: center;
 flex-direction: column;
 height: 100%;
@@ -234,6 +238,14 @@ width: 100%;
 padding: 20px;
 /* border: 10px
 solid rgb(221, 255, 0); */
+}
+.col-sm-6 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  padding: 10px;
 }
 
 #firstName, #lastName, #company, #email {
@@ -247,8 +259,8 @@ color: red;
 font-size: 20px;
 color: green;
 }
-#buttonChange {
-width: 21vh;
+#buttonChange, #inputCheckPassword {
+width: 100%;
 margin: 5px;
 }
 #checkPassword {

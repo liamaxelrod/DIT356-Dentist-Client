@@ -118,8 +118,10 @@ export default {
           email: this.changeEmailText,
           requestId: this.requestID
         })
+        this.mqtt_client.subscribe(this.topic, { qos: 2 }, (error, res) => {
+          if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
+        })
         this.mqtt_client.publish(this.topic, payload, this.qos)
-        console.log('message published')
         this.unsuccessful = 'register error please try agaain later'
       }
     }
@@ -136,7 +138,7 @@ export default {
   height: 100%;
   background-color: #80BAB2;
   min-width: 700px;
-  min-height: 600px;
+  min-height: 800px;
 }
 .aboveButtons{
   height: 550px

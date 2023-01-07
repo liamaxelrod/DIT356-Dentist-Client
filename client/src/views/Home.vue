@@ -7,7 +7,9 @@
 
 export default {
   name: 'home',
-  components: {}
+  components: {
+
+  }
 }
 
 </script>
@@ -18,8 +20,12 @@ export default {
   align-items: center;
   flex-direction: column;
   height: 100%;
+  width: 100%;
+  min-width: 600px;
+  min-height: 800px;
   background-color: #80BAB2;
 }
+
 #image {
   width: 100%;
   height: 100%;

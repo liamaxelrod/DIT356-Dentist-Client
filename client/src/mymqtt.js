@@ -4,17 +4,17 @@ const Mqtt = {}
 
 Mqtt.settings = {
   connection: {
-    protocol: 'wss',
-    host: 'e33e41c289ad4ac69ae5ef60f456e9c3.s2.eu.hivemq.cloud',
-    port: 8884,
+    protocol: 'ws',
+    host: 'broker.emqx.io',
+    port: 8083,
     endpoint: '/mqtt',
     keepalive: 60,
     clean: true,
     connectTimeout: 4000,
     reconnectPeriod: 4000,
-    clientId: `mqtt_${Math.random().toString(16).slice(3)}`,
-    username: 'group6_dentistimo',
-    password: 'dentistimo123!'
+    clientId: `mqtt_${Math.random().toString(16).slice(3)}`
+    // username: 'group6_dentistimo',
+    // password: 'dentistimo123!'
   },
   subscription: {
     topic: 'dentistimo/dentist-appointment/all-appointments',
@@ -37,17 +37,17 @@ Mqtt.settings = {
 
 Mqtt.createClient = () => {
   const settings = {
-    protocol: 'wss',
-    host: 'e33e41c289ad4ac69ae5ef60f456e9c3.s2.eu.hivemq.cloud',
-    port: 8884,
+    protocol: 'ws',
+    host: 'broker.emqx.io',
+    port: 8083,
     endpoint: '/mqtt',
     keepalive: 60,
     clean: true,
     connectTimeout: 4000,
     reconnectPeriod: 4000,
-    clientId: `mqtt_${Math.random().toString(16).slice(3)}`,
-    username: 'group6_dentistimo',
-    password: 'dentistimo123!'
+    clientId: `mqtt_${Math.random().toString(16).slice(3)}`
+    // username: 'group6_dentistimo',
+    // password: 'dentistimo123!'
   }
   const { protocol, host, port, endpoint, ...options } = settings
   return mqtt.connect(
