@@ -3,14 +3,13 @@
 # Dentist Client
 
 ## **Name**
-undecided
+Dentistimos Dentist Client  
 
 ## **Description**
-An interactive GUI that permits dentists to view, change, cancel or contact the user which has made an appointment.
-The dentist can view what their working hours will be for each day.
-The dentist will have the power to change appointments due to unforeseen circumstances.
+Dentistimo Dentist Client is part of a four part component system. Dentist Client is targeting the dentist.  
+Dentist Client is an interactive GUI that permits dentists to view, schedule breaks, or cancel an appointment which an user has made.  
+The dentist can view what their working hours will be for each day.  
 The dentist will have the power to cancel appointments due to unforeseen circumstances.
-The dentist will be able to contact the patient due to change or cancel the appointment due to unforeseen circumstances.
 ## **Visuals**
 ![decomposition_component](.\img\decomposition_dentist_component.png "destination decomposition_component")
 
@@ -32,7 +31,7 @@ Create an account and enjoy all features of a dentist!
 
 *MQTT*
 ## **Usage**
-permit dentist easy usage of the system to access their appointments, control their break time, access client contact information, and change/cancel dentist appointments.
+Permit dentists easy usage of the system to access their appointments, control their break time, access client contact information and cancel dentist appointments.  
 ## **Authors and acknowledgment**
 Liam Jason Axelrod 
 Adrian Niklasson
