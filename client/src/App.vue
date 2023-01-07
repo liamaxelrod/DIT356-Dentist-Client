@@ -119,12 +119,12 @@ export default {
   flex-grow: 1;
   height: 100%;
   width: 100%;
-  min-width: 700px;
+  min-width: 1100px;
   min-height: 800px;
 }
-#fullNavbar {
+/* #fullNavbar {
   min-width: 1100px;
-}
+} */
   #footer {
   position: absolute;
   bottom: 0;
