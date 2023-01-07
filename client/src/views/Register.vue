@@ -122,7 +122,8 @@ export default {
           if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
         })
         this.mqtt_client.publish(this.topic, payload, this.qos)
-        this.unsuccessful = 'register error please try agaain later'
+        console.log('message published')
+        this.unsuccessful = 'Register error please try again later'
       }
     }
   }

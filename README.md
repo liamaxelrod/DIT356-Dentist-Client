@@ -15,7 +15,12 @@ the point of this GUI is to allow dentist to easily and quickly be aware of thei
 
 
 ## **Installation** 
-No installation required for this repository.
+To run Dentistimos dentist-client component you need to do the following steps:
+
+Clone the repository on to your device.   
+Open a terminal and navigate to the client folder, where you will first type "npm install" which will install the neccesary dependencies.   
+When the installation is complete you will type "npm run serve". Copy the adress into web browser of your choice.   
+Create an account and enjoy all features of a dentist!
 ## **Technologies**
 *Vue*
 
@@ -25,7 +30,7 @@ No installation required for this repository.
 
 *MQTT*
 ## **Usage**
-permit dentist easy usage of the system to access what appointments they have, to cancel appointments they have, control and their breaks are, to know when they're working, and easily change their account information like first name, last name, email address, and password
+Permit dentists easy usage of the system to access their appointments, control their break time, access client contact information and cancel dentist appointments.  
 ## **Authors and acknowledgment**
 Liam Jason Axelrod 
 Adrian Niklasson

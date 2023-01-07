@@ -6,17 +6,17 @@
     <div class="card" style="width: 25rem;">
       <img class="card-img-top" src="https://cdn-icons-png.flaticon.com/512/6195/6195699.png" alt="Card image cap">
       <div class="card-body">
-        <h5 class="card-title">resetting your password</h5>
+        <h5 class="card-title">Resetting your password</h5>
         <p class="card-text">Enter your email and password to login or click register to be redirected to registration.</p>
       </div>
       <ul class="list-group list-group-flush">
-        <li class="list-group-item"><input id="inputEmail" v-model='emailText' placeholder="Email"> <button id="requestCode" @click="emailCode" class="btn btn-info">email code</button></li>
-        <li class="list-group-item"><input id="inputcode" v-model='codeText' placeholder="insert code"></li>
-        <li class="list-group-item"><input id="inputnewPassword" v-model='newPasswordText' placeholder="new password"></li>
-        <li class="list-group-item"><input id="inputconfirmPassword" v-model='confirmPasswordText' placeholder="confirm password"></li>
+        <li class="list-group-item"><input id="inputEmail" v-model='emailText' placeholder="Email"> <button id="requestCode" @click="emailCode" class="btn btn-info">Email code</button></li>
+        <li class="list-group-item"><input id="inputcode" v-model='codeText' placeholder="Insert code"></li>
+        <li class="list-group-item"><input id="inputnewPassword" v-model='newPasswordText' placeholder="New password"></li>
+        <li class="list-group-item"><input id="inputconfirmPassword" v-model='confirmPasswordText' placeholder="Confirm password"></li>
       </ul>
       <div class="card-body">
-        <button id="buttonResetPassword" @click="resetPassword" class="btn btn-secondary">resent password</button>
+        <button id="buttonResetPassword" @click="resetPassword" class="btn btn-secondary">Re-sent password</button>
       </div>
     </div>
   </div>
@@ -88,7 +88,7 @@ export default {
         })
         this.publishReceive(payload, this.topicReset, this.topicSubscribeReset)
       } else if (result2 === false) {
-        this.unsuccessful = 'passwords do not match'
+        this.unsuccessful = 'Passwords do not match'
       }
     },
     publishReceive(payload, publishTopic, subscribeTopic) {
@@ -102,13 +102,13 @@ export default {
       const result2 = checkingInputs.strinContainsNumbers(this.newPasswordText)
       const result3 = checkingInputs.checkStringLength(this.newPasswordText)
       if (result1 === false) {
-        this.unsuccessful = 'password needs a special character'
+        this.unsuccessful = 'Password needs a special character'
         return false
       } else if (result2 === false) {
-        this.unsuccessful = 'password needs a number'
+        this.unsuccessful = 'Password needs a number'
         return false
       } else if (result3 === false) {
-        this.unsuccessful = 'password needs to be between 8 and 99 characters'
+        this.unsuccessful = 'Password needs to be between 8 and 99 characters'
         return false
       } else {
         this.unsuccessful = ''

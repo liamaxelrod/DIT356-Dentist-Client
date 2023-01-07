@@ -101,7 +101,7 @@ export default {
   methods: {
     attributesCheck() {
       if (this.changeFirstNameText === '' && this.changeLastNameText === '' && this.changeCompanyIdText === '' && this.changeEmailText === '' && this.changePasswordText === '') {
-        this.unsuccessful = 'please enter at least one attribute to change'
+        this.unsuccessful = 'Please enter at least one attribute to change'
       } else {
         return true
       }
