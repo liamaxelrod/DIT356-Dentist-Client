@@ -133,11 +133,10 @@ min-height: 1100px;
 }
 .card {
   height: 100%;
-  width: 30%;
+  width: 35%;
 }
 #requestCode {
 position: relative;
-left: 20px;
 padding: 5px;
 }
 

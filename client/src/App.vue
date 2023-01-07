@@ -120,7 +120,9 @@ export default {
   height: 100%;
   width: 100%;
   min-width: 1100px;
-  min-height: 800px;
+  min-height: 100%;
+  max-width: 100%;
+  max-height: 100%;
 }
 /* #fullNavbar {
   min-width: 1100px;

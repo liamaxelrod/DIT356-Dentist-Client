@@ -21,8 +21,10 @@ export default {
   flex-direction: column;
   height: 100%;
   width: 100%;
-  min-width: 600px;
-  min-height: 800px;
+  min-width: 100%;
+  min-height: 100%;
+  max-width: 100%;
+  max-height: 100%;
   background-color: #80BAB2;
 }
 
