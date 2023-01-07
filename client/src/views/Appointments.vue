@@ -32,8 +32,8 @@
       </div>
     </div>
     <div class="div2">
-      <div class="card-group" style="width: 45rem;">
-        <div class="card">
+      <div class="card-group" style="width: 25rem;">
+        <div id="card1" class="card">
           <div class="card-body">
             <h5 class="card-title">Working hours</h5>
             <ul class="list-group list-group-flush text-info">
@@ -49,10 +49,6 @@
               <li class="list-group-item" >{{ this.DisplayedLunchBreak }}</li>
               <li class="list-group-item" >{{ this.DisplayedFikaBreak }}</li>
             </ul>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-body">
             <h5 class="card-title">Create / Delete break</h5>
             <p>{{ this.successfulBreak }}</p>
             <input type="date" v-model='breakData'>
@@ -305,10 +301,6 @@ export default {
 </script>
 
 <style scoped>
-#app {
-  min-width: 1100px;
-  min-height: 800px;
-}
   .background {
   display: flex;
   justify-content: center;
@@ -319,46 +311,29 @@ export default {
   min-width: 1100px;
   min-height: 900px;
 }
-.div1 {
-  /*
- border: 10px
-  solid rgb(0, 255, 106); */
-}
-
 .div2 {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
   width: 100%;
-  border: 0px
-  /*
-  solid rgb(221, 255, 0);
-  */
-}
-.div2-1 {
-  height: 100%;
-  width: 100%;
-}
-.div2-2 {
-  display: flex;
-  height: 100%;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
   /* border: 10px
   solid rgb(221, 255, 0); */
 }
 
+#card1 {
+  height: 100%;
+  width: 100%;
+}
+
+#card2 {
+  height: 100%;
+  width: 100%;
+}
+
 #buttonFikaBreak, #buttonLunchBreak {
-  /*
   width: 160px;
   margin: 3px;
-  /* color: rgb(0, 255, 106); */
-}
-.h4{
-  font-family: "Segoe UI", Tahoma, Verdana, sans-serif;
 }
 
 </style>
