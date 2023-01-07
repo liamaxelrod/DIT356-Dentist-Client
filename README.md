@@ -30,7 +30,9 @@ Create an account and enjoy all features of a dentist!
 
 *MQTT*
 ## **Usage**
-Permit dentists easy usage of the system to access their appointments, control their break time, access client contact information and cancel dentist appointments.  
+permit dentist easy usage of the system to access what appointments they have, to cancel appointments they have with their user clients and control when their breaks take place. 
+Furthermore, the system permits them to know when their working hours are going to be, and easily change their account information like first name, last name, email address, and password
+
 ## **Authors and acknowledgment**
 Liam Jason Axelrod 
 Adrian Niklasson
