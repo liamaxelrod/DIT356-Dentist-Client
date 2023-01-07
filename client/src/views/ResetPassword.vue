@@ -3,7 +3,7 @@
     <div class="warning">
       <p id="pop-up">{{ this.unsuccessful }}</p>
     </div>
-    <div class="card" style="width: 25rem;">
+    <div class="card" style="width: 25rareem;">
       <img class="card-img-top" src="https://cdn-icons-png.flaticon.com/512/6195/6195699.png" alt="Card image cap">
       <div class="card-body">
         <h5 class="card-title">resetting your password</h5>
@@ -129,12 +129,15 @@ flex-direction: column;
 height: 100%;
 background-color: #80BAB2;
 min-width: 700px;
-min-height: 1000px;
+min-height: 1100px;
 }
-
+.card {
+  height: 100%;
+  width: 30%;
+}
 #requestCode {
 position: relative;
-left: 85px;
+left: 20px;
 padding: 5px;
 }
 

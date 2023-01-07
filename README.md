@@ -11,8 +11,33 @@ dentists will also have the ability to control when they want to have their brea
 dentists also have the ability to change the first name, last name, email address, and password that they have signed up with the account.
 the point of this GUI is to allow dentist to easily and quickly be aware of their working schedule and control their break time. As well as pulling up relative information about what appointments I have that day or the foreseeable future
 ## **Visuals**
+component dentist client of the functional decomposition diagram
+
 ![decomposition_component](./img/decomposition_dentist_component.png "decomposition_component")
 
+homepage
+
+![homepage](./img/homepage.png "homepage")
+
+login page
+
+![login](./img/login.png "login")
+
+register page
+
+![register](./img/register.png "register")
+
+reset page
+
+![reset](./img/reset.png "reset")
+
+user profile page
+
+![userProfile](./img/userProfile.png "userProfile")
+
+appointment page
+
+![appointments](./img/appointments.png "appointments")
 
 ## **Installation** 
 No installation required for this repository.
