@@ -4,7 +4,7 @@
       <p id="pop-up">{{ this.unsuccessful }}</p>
     </div>
     <div class="card" style="width: 25rem;">
-      <img class="card-img-top" alt="Card image cap">
+      <img class="card-img-top" src="https://cdn-icons-png.flaticon.com/512/6195/6195699.png" alt="Card image cap">
       <div class="card-body">
         <h5 class="card-title">Resetting your password</h5>
         <p class="card-text">Enter your email and password to login or click register to be redirected to registration.</p>
