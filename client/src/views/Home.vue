@@ -8,7 +8,6 @@
 export default {
   name: 'home',
   components: {
-
   }
 }
 
@@ -22,7 +21,7 @@ export default {
   height: 100%;
   width: 100%;
   min-width: 100%;
-  min-height: 100%;
+  min-height: 800px;
   max-width: 100%;
   max-height: 100%;
   background-color: #80BAB2;

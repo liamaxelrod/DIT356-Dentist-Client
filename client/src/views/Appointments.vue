@@ -15,6 +15,7 @@
               <li class="list-group-item" v-bind="userid">Client ID: {{ userid.slice(0,-2) }}</li>
               <li class="list-group-item" v-bind="date">Date: {{ date.slice(0,-2) }}</li>
               <li class="list-group-item" v-bind="time">Time: {{ time.slice(0,-2) }}</li>
+              <li class="list-group-item" v-bind="visitReason">Reason: {{ visitReason.slice(0,-2) }}</li>
               <li class="list-group-item" v-bind="issuance">Issuance ID: {{ issuance.slice(0,-2) }}</li>
             </ul>
             <b class="btn btn-dark" @click="appointments" style= "width: 17rem;">Get appointments</b>
@@ -40,7 +41,7 @@
               <li class="list-group-item" >Monday: {{ this.workTime.monday }}</li>
               <li class="list-group-item" >Tuesday: {{ this.workTime.tuesday }}</li>
               <li class="list-group-item" >Wednesday: {{ this.workTime.wednesday }}</li>
-              <li class="list-group-item" >Thursday:{{ this.workTime.thursday }}</li>
+              <li class="list-group-item" >Thursday: {{ this.workTime.thursday }}</li>
               <li class="list-group-item" >Friday: {{ this.workTime.friday }}</li>
               <li class="list-group-item" >Saturday: {{ this.workTime.saturday }}</li>
               <li class="list-group-item" >Sunday: {{ this.workTime.sunday }}</li>
@@ -49,17 +50,19 @@
               <li class="list-group-item" >{{ this.DisplayedLunchBreak }}</li>
               <li class="list-group-item" >{{ this.DisplayedFikaBreak }}</li>
             </ul>
+            <h>Fika break is 30 minutes</h>
+            <p>Lunch break is 1 hour</p>
             <h5 class="card-title">Create / Delete break</h5>
             <p>{{ this.successfulBreak }}</p>
             <input type="date" v-model='breakData'>
             <input type="time" v-model='breakTime'>
-            <p>selected Data: {{ this.breakData }}</p>
-            <p>selected time: {{ this.breakTime }}</p>
-            <button class="btn btn-primary" id="buttonFikaBreak" @click="makeFikaBreak">make fika break</button>
-            <button class="btn btn-danger" id="buttonFikaBreak" @click="deleteFikaBreak">delete fika break</button>
+            <p>Selected Date: {{ this.breakData }}</p>
+            <p>Selected Time: {{ this.breakTime }}</p>
+            <button class="btn btn-primary" id="buttonFikaBreak" @click="makeFikaBreak">Add fika break</button>
+            <button class="btn btn-danger" id="buttonFikaBreak" @click="deleteFikaBreak">Delete fika break</button>
             <p></p>
-            <button class="btn btn-primary" id="buttonLunchBreak" @click="makeLunchBreak">make lunch break</button>
-            <button class="btn btn-danger" id="buttonLunchBreak" @click="deleteLunchBreak">delete lunch break</button>
+            <button class="btn btn-primary" id="buttonLunchBreak" @click="makeLunchBreak">Add lunch break</button>
+            <button class="btn btn-danger" id="buttonLunchBreak" @click="deleteLunchBreak">Delete lunch break</button>
           </div>
         </div>
       </div>
@@ -76,6 +79,10 @@ export default {
       topicSchedule: 'dentistimo/dentist-office/fetch-one',
       topicBreaks: 'dentistimo/dentist/breaks',
       topicDelete: 'dentistimo/booking/delete-break',
+      topicSubscribeDelete: 'dentistimo/booking/deleted-break',
+      topicFika: 'dentistimo/dentist/fika-booked',
+      topicLunch: 'dentistimo/dentist/lunch-booked',
+      topicError: 'dentistimo/error',
       noAppointments: '',
       successfulBreak: '',
       DisplayedFikaBreak: '',
@@ -89,7 +96,9 @@ export default {
       date: '',
       time: '',
       issuance: '',
+      visitReason: '',
       cancelIssuance: '',
+      lunchMessage: 0,
       news: 'none',
       subscription: {
         topic: 'dentistimo/dentist-appointment/all-appointments-day',
@@ -113,6 +122,7 @@ export default {
       this.getSchedule()
     }
     const msgCallback = (topic, message) => {
+      // console.log('topic received' + topic.toString())
       console.log('message received' + message.toString())
       this.noAppointments = ''
       this.successfulBreak = ''
@@ -120,35 +130,55 @@ export default {
         console.log('contains office message')
         this.loadSchedule(message)
       }
-      const obj = JSON.parse(message.toString())
-      this.userid = ''
-      this.date = ''
-      this.time = ''
-      this.issuance = ''
-      this.lunchDate = ''
-      this.lunchTime = ''
-      this.fikaDate = ''
-      this.fikaTime = ''
-      this.DisplayedFikaBreak = ''
-      this.DisplayedLunchBreak = ''
-      for (let i = 0; i < obj.length; i++) {
-        const element = obj[i]
-        if (element.appointmentType === 'appointment') {
-          console.log('appointment')
-          this.userid += (element.userid) + ', '
-          this.date += (element.date) + ', '
-          this.time += (element.time) + ', '
-          this.issuance += (element.issuance) + ', '
-        } else if (element.appointmentType === 'lunch') {
-          console.log('lunch')
-          this.lunchDate = (element.date)
-          this.lunchTime = (element.time)
-          this.DisplayedLunchBreak += 'Lunch break: ' + this.lunchDate + ' ' + this.lunchTime + ' \n '
-        } else if (element.appointmentType === 'fika') {
-          console.log('fika')
-          this.fikaDate = (element.date)
-          this.fikaTime = (element.time)
-          this.DisplayedFikaBreak += 'Fika break: ' + this.fikaDate + ' ' + this.fikaTime + ' \n '
+      if (message.includes('Successful break registered')) {
+        // location.reload()
+        this.successfulBreak = 'break made'
+      }
+      if (message.includes('break has succesfully been removed')) {
+        // location.reload()
+        this.successfulBreak = 'break deleted'
+      }
+      if (message.includes('You cannot book a break on a weekend')) {
+        // location.reload()
+        this.successfulBreak = 'You cannot book a break on a weekend'
+      }
+      if (topic.includes('dentistimo/dentist-appointment/all-appointments-day')) {
+        const obj = JSON.parse(message.toString())
+        this.userid = ''
+        this.date = ''
+        this.time = ''
+        this.issuance = ''
+        this.visitReason = ''
+        this.lunchDate = ''
+        this.lunchTime = ''
+        this.fikaDate = ''
+        this.fikaTime = ''
+        this.DisplayedFikaBreak = ''
+        this.DisplayedLunchBreak = ''
+        for (let i = 0; i < obj.length; i++) {
+          const element = obj[i]
+          if (element.appointmentType === 'appointment') {
+            console.log('appointment')
+            this.userid += (element.userid) + ', '
+            this.date += (element.date) + ', '
+            this.time += (element.time) + ', '
+            this.visitReason += (element.visitReason) + ', '
+            this.issuance += (element.issuance) + ', '
+          } else if (element.appointmentType === 'lunch') {
+            console.log('lunch')
+            this.lunchMessage = this.lunchMessage + 1
+            if (this.lunchMessage === 1) {
+              this.lunchDate = (element.date)
+              this.lunchTime = (element.time)
+              this.DisplayedLunchBreak = 'Lunch break: ' + this.lunchDate + ' ' + this.lunchTime
+              this.lunchMessage = 0
+            }
+          } else if (element.appointmentType === 'fika') {
+            console.log('fika')
+            this.fikaDate = (element.date)
+            this.fikaTime = (element.time)
+            this.DisplayedFikaBreak += 'Fika break: ' + this.fikaDate + ' ' + this.fikaTime + ' \n '
+          }
         }
       }
       // console.log({ topic: topic, message: message.toString() })
@@ -164,6 +194,9 @@ export default {
         console.log('res = ', res)
       }
     })
+    this.mqtt_client.subscribe('dentistimo/error' + '/' + JSON.parse(localStorage.getItem('accountInfo')).idToken, { qos: 2 }, (error, res) => {
+      if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
+    })
   },
   methods: {
     appointments() {
@@ -178,9 +211,9 @@ export default {
       this.date = ''
       this.time = ''
       this.issuance = ''
+      this.DisplayedFikaBreak = 'No break'
+      this.DisplayedLunchBreak = 'No break'
       const topic = 'dentistimo/dentist-appointment/get-all-appointments-day'
-      console.log('topic ' + topic)
-      console.log('test ' + payload)
       this.mqtt_client.subscribe(topic + '/' + JSON.parse(localStorage.getItem('accountInfo')).idToken, { qos: 2 }, (error, res) => {
         if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
       })
@@ -210,11 +243,7 @@ export default {
           time: this.breakTime,
           appointmentType: 'fika'
         })
-        console.log('payload = ', payload)
-        this.mqtt_client.subscribe(this.topicBreaks, { qos: 2 }, (error, res) => {
-          if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
-        })
-        this.publishReceive(payload, this.topicBreaks, this.topicBreaks)
+        this.publishReceive(payload, this.topicBreaks, this.topicFika)
       }
     },
     makeLunchBreak() {
@@ -230,11 +259,12 @@ export default {
           time: this.breakTime,
           appointmentType: 'lunch'
         })
-        this.publishReceive(payload, this.topicBreaks, this.topicBreaks)
+        this.publishReceive(payload, this.topicBreaks, this.topicLunch)
       }
     },
     deleteFikaBreak() {
       if (this.checkInputTime()) {
+        this.DisplayedFikaBreak = ''
         // this.successfulBreak = 'please insert date and time'
         const dentistID = JSON.parse(localStorage.getItem('accountInfo')).dentistId
         const payload = JSON.stringify({
@@ -243,11 +273,12 @@ export default {
           date: this.breakData,
           time: this.breakTime
         })
-        this.publishReceive(payload, this.topicDelete, this.topicDelete)
+        this.publishReceive(payload, this.topicDelete, this.topicSubscribeDelete)
       }
     },
     deleteLunchBreak() {
       if (this.checkInputTime()) {
+        this.DisplayedLunchBreak = ''
         // this.successfulBreak = 'please insert date and time'
         const dentistID = JSON.parse(localStorage.getItem('accountInfo')).dentistId
         const payload = JSON.stringify({
@@ -256,7 +287,7 @@ export default {
           date: this.breakData,
           time: this.breakTime
         })
-        this.publishReceive(payload, this.topicDelete, this.topicDelete)
+        this.publishReceive(payload, this.topicDelete, this.topicSubscribeDelete)
       }
     },
     publishReceive(payload, publishTopic, subscribeTopic) {
@@ -271,7 +302,7 @@ export default {
       const officeId = JSON.parse(localStorage.getItem('accountInfo')).officeId
       const payload = JSON.stringify({
         idToken: JSON.parse(localStorage.getItem('accountInfo')).idToken,
-        id: officeId
+        dentistOfficeId: officeId
       })
       this.publishReceive(payload, 'dentistimo/dentist-office/fetch-one', 'dentistimo/dentist-office/one-office')
     },
@@ -282,8 +313,8 @@ export default {
       this.workTime.wednesday = dentistOffice.wednesday
       this.workTime.thursday = dentistOffice.thursday
       this.workTime.friday = dentistOffice.friday
-      this.workTime.saturday = 'no working hours'
-      this.workTime.sunday = 'no working hours'
+      this.workTime.saturday = 'No working hours'
+      this.workTime.sunday = 'No working hours'
     },
     checkInputTime() {
       const time = this.breakTime
@@ -292,7 +323,7 @@ export default {
       if (minute === '00' || minute === '30') {
         return true
       } else {
-        this.successfulBreak = 'every hour or half hour'
+        this.successfulBreak = 'Only every whole or half hour'
         return false
       }
     }

@@ -88,9 +88,14 @@ export default {
     const msgCallback = (topic, message) => {
       this.receive = message.toString()
       this.context = message.toString()
-      console.log(message)
+      console.log('you get' + message)
       console.log({ topic: topic, message: message.toString() })
       this.buildNewLocalStorage()
+      if (topic.includes('modify-user/error')) {
+        this.unsuccessful = this.receive
+      } else {
+        this.unsuccessful = ''
+      }
     }
     this.mqtt_client.on('message', msgCallback)
     this.mqtt_client.on('subscribe', (topic) => {
@@ -100,7 +105,7 @@ export default {
   },
   methods: {
     attributesCheck() {
-      if (this.changeFirstNameText === '' && this.changeLastNameText === '' && this.changeCompanyIdText === '' && this.changeEmailText === '' && this.changePasswordText === '') {
+      if (this.changeFirstNameText === '' && this.changeEmailText === '' && this.changePasswordText === '') {
         this.unsuccessful = 'Please enter at least one attribute to change'
       } else {
         return true
@@ -108,7 +113,6 @@ export default {
     },
     makePayload() {
       this.Usetoken = JSON.parse(localStorage.getItem('accountInfo')).idToken
-      console.log(this.Usetoken + ' asd')
       const payload = {
         idToken: JSON.parse(localStorage.getItem('accountInfo')).idToken,
         oldPassword: this.checkPasswordText
@@ -139,7 +143,6 @@ export default {
     makeChange() {
       if (this.attributesCheck()) {
         const payload = this.makePayload()
-        console.log(payload)
         this.publish(payload, this.topic, this.topicError)
       }
     },
@@ -153,10 +156,10 @@ export default {
     // },
     publish(payload, publishTopic, subscribeTopic) {
       // this.Usetoken = checkingInputs.makeRandomId(10)
-      this.mqtt_client.subscribe(publishTopic + '/' + this.Usetoken, { qos: 2 }, (error, res) => {
+      this.mqtt_client.subscribe(publishTopic + '/' + JSON.parse(localStorage.getItem('accountInfo')).idToken, { qos: 2 }, (error, res) => {
         if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
       })
-      this.mqtt_client.subscribe(subscribeTopic + this.Usetoken, { qos: 2 }, (error, res) => {
+      this.mqtt_client.subscribe(subscribeTopic + JSON.parse(localStorage.getItem('accountInfo')).idToken, { qos: 2 }, (error, res) => {
         if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
       })
       const qos = 2

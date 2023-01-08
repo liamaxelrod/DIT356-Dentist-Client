@@ -53,11 +53,11 @@ export default {
     const msgCallback = (topic, message) => {
       this.unsuccessful = ''
       this.receive = message.toString()
-      console.log(topic)
+      // console.log(topic)
       console.log('message received' + message.toString())
-      if (topic.includes('error')) {
+      if (topic.includes('dentistimo/register/error')) {
         this.unsuccessful = this.receive
-      } else if (message.includes(this.changeEmailText)) {
+      } else if (topic.includes('dentistimo/register/dentist')) {
         console.log('success')
         this.$router.push('/login')
       }
@@ -103,12 +103,6 @@ export default {
         this.unsuccessful = 'email is empty'
       } else {
         this.requestID = checkingInputs.makeRandomId(10)
-        this.mqtt_client.subscribe('dentistimo/register/dentist/' + this.requestID, { qos: 2 }, (error, res) => {
-          if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
-        })
-        this.mqtt_client.subscribe('dentistimo/register/error/' + this.requestID, { qos: 2 }, (error, res) => {
-          if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
-        })
         const payload = JSON.stringify({
           firstName: this.changeFirstNameText,
           lastName: this.changeLastNameText,
@@ -118,7 +112,10 @@ export default {
           email: this.changeEmailText,
           requestId: this.requestID
         })
-        this.mqtt_client.subscribe(this.topic, { qos: 2 }, (error, res) => {
+        this.mqtt_client.subscribe(this.topic + '/' + this.requestID, { qos: 2 }, (error, res) => {
+          if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
+        })
+        this.mqtt_client.subscribe('dentistimo/register/error/' + this.requestID, { qos: 2 }, (error, res) => {
           if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
         })
         this.mqtt_client.publish(this.topic, payload, this.qos)

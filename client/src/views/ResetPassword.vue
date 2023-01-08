@@ -51,12 +51,14 @@ export default {
     const msgCallback = (topic, message) => {
       this.unsuccessful = ''
       this.receive = message.toString()
+      console.log(this.receive)
       if (topic.includes('error')) {
         this.unsuccessful = this.receive
         console.log('failure')
-      } else if (topic.includes('success')) {
+      } else if (message.includes('Reset successful')) {
         console.log('success')
         console.log(this.receive)
+        this.$router.push('/login')
       }
     // console.log({ topic: topic, message: message.toString() })
     }
@@ -93,6 +95,9 @@ export default {
     },
     publishReceive(payload, publishTopic, subscribeTopic) {
       this.mqtt_client.subscribe(subscribeTopic + this.requestID, { qos: this.qos }, (error, res) => {
+        if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
+      })
+      this.mqtt_client.subscribe(this.topicSubscribeError + this.requestID, { qos: this.qos }, (error, res) => {
         if (error) { console.log('error = ', error) } else { console.log('res = ', res) }
       })
       this.mqtt_client.publish(publishTopic, payload, this.qos)
